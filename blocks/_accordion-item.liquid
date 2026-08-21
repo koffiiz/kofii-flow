@@ -1,0 +1,76 @@
+{%- comment -%}
+  Kofii Flow — Accordion item
+  ---------------------------------------------------------------------------
+  A private theme block (leading underscore): only usable inside blocks that
+  explicitly allow it. Used by blocks/product-accordion.liquid.
+
+  Content can come from a page, a metafield or typed text, so merchants can
+  reuse one shipping policy across every product instead of retyping it.
+{%- endcomment -%}
+
+{%- liquid
+  assign body = block.settings.content
+  if block.settings.page != blank
+    assign body = block.settings.page.content
+  endif
+-%}
+
+{%- if block.settings.heading != blank -%}
+  <details class="kf-accordion__item" {{ block.shopify_attributes }}>
+    <summary class="kf-accordion__summary">
+      <span class="kf-cluster">
+        {%- if block.settings.icon != 'none' -%}
+          {%- render 'kf-icon', name: block.settings.icon, size: 'sm' -%}
+        {%- endif -%}
+        <span>{{ block.settings.heading | escape }}</span>
+      </span>
+      {%- render 'kf-icon', name: 'chevron', class: 'kf-accordion__icon', size: 'sm' -%}
+    </summary>
+
+    <div class="kf-accordion__panel">
+      <div class="kf-accordion__panel-inner kf-rte kf-text-sm">
+        {{ body }}
+      </div>
+    </div>
+  </details>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Accordion row",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shipping and returns"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Describe delivery times, costs and how returns work.</p>"
+    },
+    {
+      "type": "page",
+      "id": "page",
+      "label": "Or use a page",
+      "info": "When set, the page content replaces the text above. Useful for policies you reuse across products."
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "star", "label": "Star" },
+        { "value": "globe", "label": "Globe" },
+        { "value": "cart", "label": "Cart" }
+      ],
+      "default": "none"
+    }
+  ]
+}
+{% endschema %}

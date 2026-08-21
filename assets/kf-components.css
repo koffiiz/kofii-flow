@@ -546,6 +546,39 @@
 }
 
 /* ==========================================================================
+   Rating stars
+   --------------------------------------------------------------------------
+   Global rather than component-scoped: the same markup is rendered by the
+   product card snippet and by the product-rating theme block, which can appear
+   on templates that never load the card stylesheet.
+
+   Two identical star rows stacked on top of each other — the filled one is
+   clipped to `--kf-rating`. That gives exact fractional ratings without
+   needing half-star icons or an SVG mask.
+   ========================================================================== */
+
+.kf-stars {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.kf-stars__row {
+  display: inline-flex;
+  gap: 1px;
+  color: var(--kf-color-border-strong);
+}
+
+.kf-stars__row--fill {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: var(--kf-rating, 0%);
+  overflow: hidden;
+  color: var(--kf-color-accent);
+}
+
+/* ==========================================================================
    Swatch
    ========================================================================== */
 

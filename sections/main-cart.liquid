@@ -1,0 +1,134 @@
+{%- comment -%}
+  Kofii Flow — Cart page
+  ---------------------------------------------------------------------------
+  The full cart. Shares every piece with the drawer: the same line item
+  snippet, the same summary, the same shipping bar, the same <kf-cart-items>
+  behaviour. Nothing about cart rendering exists twice.
+
+  `data-kf-cart-section` must be {{ section.id }}, not a hardcoded name: this
+  is a JSON-template section, so its real id is template--<id>__main.
+  `[data-kf-cart-content]` is the swap target.
+
+  Without JavaScript this is a plain cart form: quantity inputs named
+  `updates[]` and an Update button post to /cart and reload the page.
+{%- endcomment -%}
+
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
+
+<div
+  data-kf-cart-section="{{ section.id }}"
+  {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-cart-page' %}
+>
+  <div class="kf-container">
+    <div data-kf-cart-content>
+      {%- if cart.item_count > 0 -%}
+        <header class="kf-section-header">
+          <h1 class="kf-h2">{{ 'cart.title' | t }}</h1>
+          <p class="kf-section-header__text">
+            {{ 'general.cart.item_count' | t: count: cart.item_count }}
+          </p>
+        </header>
+
+        {%- form 'cart', cart, id: 'KfCartPageForm', class: 'kf-cart-page__form' -%}
+          <div class="kf-cart-page__layout">
+            <div class="kf-cart-page__items">
+              {%- render 'kf-cart-shipping-bar' -%}
+
+              <kf-cart-items>
+                <ul class="kf-cart-items" role="list">
+                  {%- for item in cart.items -%}
+                    {%- render 'kf-cart-item', item: item, scope: 'Page' -%}
+                  {%- endfor -%}
+                </ul>
+              </kf-cart-items>
+
+              {%- comment -%}
+                Only shown without JavaScript: with it, quantity changes save
+                as soon as they are made and this button is redundant.
+              {%- endcomment -%}
+              <noscript>
+                <button type="submit" name="update" class="kf-button kf-button--secondary">
+                  <span class="kf-button__label">{{ 'cart.update' | t }}</span>
+                </button>
+              </noscript>
+            </div>
+
+            <aside class="kf-cart-page__summary">
+              {%- render 'kf-cart-summary', scope: 'Page' -%}
+            </aside>
+          </div>
+        {%- endform -%}
+
+        {%- if section.settings.show_recommendations and settings.cart_recommendations -%}
+          <kf-cart-recommendations
+            class="kf-cart-recommendations kf-cart-recommendations--page"
+            data-product-id="{{ cart.items.first.product_id }}"
+            data-limit="{{ settings.cart_recommendations_count }}"
+          ></kf-cart-recommendations>
+        {%- endif -%}
+      {%- else -%}
+        <div class="kf-empty kf-cart-empty kf-cart-empty--page">
+          <h1 class="kf-h2">{{ 'cart.empty' | t }}</h1>
+          <p class="kf-text-lg">{{ 'cart.empty_text' | t }}</p>
+          {%- assign continue_label = 'cart.continue_shopping' | t -%}
+          {%- render 'kf-button',
+            label: continue_label,
+            href: routes.all_products_collection_url,
+            style: 'primary',
+            size: 'lg',
+            icon: 'arrow'
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "kf-cart-section",
+  "enabled_on": {
+    "templates": ["cart"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_recommendations",
+      "label": "Show recommended products",
+      "default": true,
+      "info": "Also needs to be enabled in Theme settings > Cart."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

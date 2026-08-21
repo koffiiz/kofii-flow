@@ -1,0 +1,71 @@
+{%- comment -%}
+  Kofii Flow — Product structured data
+  ---------------------------------------------------------------------------
+  Product JSON-LD, emitted once by `sections/main-product.liquid`.
+
+  Deliberately kept out of `kf-structured-data.liquid`: that snippet emits the
+  site-level Organization and WebSite graph on the homepage only, so the two
+  never overlap and no page declares the same entity twice.
+
+  Uses an `offers` array so multi-variant products expose real per-variant
+  prices and availability rather than a single collapsed offer.
+
+  Parameters:
+    product (product, required)
+{%- endcomment -%}
+
+{%- liquid
+  assign media_count = product.media | size
+  assign og_description = product.description | strip_html | truncate: 500
+-%}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": {{ product.url | prepend: shop.url | append: '#product' | json }},
+    "name": {{ product.title | json }},
+    "url": {{ product.url | prepend: shop.url | json }},
+    {% if og_description != blank %}"description": {{ og_description | json }},{% endif %}
+    {% if product.vendor != blank %}"brand": { "@type": "Brand", "name": {{ product.vendor | json }} },{% endif %}
+    {% if product.selected_or_first_available_variant.sku != blank %}
+      "sku": {{ product.selected_or_first_available_variant.sku | json }},
+    {% endif %}
+    {% if media_count > 0 %}
+      "image": [
+        {%- for media in product.media limit: 5 -%}
+          {%- if media.media_type == 'image' -%}
+            {{ media.preview_image | image_url: width: 1200 | prepend: 'https:' | json }}
+            {%- unless forloop.last -%},{%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ],
+    {% endif %}
+    {%- if product.metafields.reviews.rating.value.rating and product.metafields.reviews.rating_count.value > 0 -%}
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": {{ product.metafields.reviews.rating.value.rating | json }},
+        "bestRating": {{ product.metafields.reviews.rating.value.scale_max | json }},
+        "worstRating": {{ product.metafields.reviews.rating.value.scale_min | json }},
+        "ratingCount": {{ product.metafields.reviews.rating_count.value | json }}
+      },
+    {%- endif -%}
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type": "Offer",
+          "@id": {{ variant.url | prepend: shop.url | json }},
+          "url": {{ variant.url | prepend: shop.url | json }},
+          {% if variant.sku != blank %}"sku": {{ variant.sku | json }},{% endif %}
+          {% if variant.barcode.size == 12 %}"gtin12": {{ variant.barcode | json }},{% endif %}
+          {% if variant.barcode.size == 13 %}"gtin13": {{ variant.barcode | json }},{% endif %}
+          "name": {{ variant.title | json }},
+          "price": {{ variant.price | divided_by: 100.0 | json }},
+          "priceCurrency": {{ cart.currency.iso_code | json }},
+          "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+          "itemCondition": "https://schema.org/NewCondition"
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  }
+</script>

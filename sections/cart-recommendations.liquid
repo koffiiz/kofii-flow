@@ -1,0 +1,37 @@
+{%- comment -%}
+  Kofii Flow — Cart recommendations
+  ---------------------------------------------------------------------------
+  Rendered on its own by Shopify when <kf-cart-recommendations> requests
+  /recommendations/products?section_id=cart-recommendations.
+
+  Uses the shared product card, so an upsell in the cart looks identical to the
+  same product in a collection grid.
+
+  Outputs nothing when Shopify returns no recommendations, which is what lets
+  the element stay invisible rather than showing an empty heading.
+{%- endcomment -%}
+
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+
+{%- if recommendations.performed and recommendations.products_count > 0 -%}
+  <div class="kf-recommendations" data-kf-recommendations>
+    <h3 class="kf-label kf-text-muted kf-recommendations__title">
+      {{ 'cart.recommendations' | t }}
+    </h3>
+
+    <ul class="kf-recommendations__list" role="list">
+      {%- for product in recommendations.products -%}
+        <li class="kf-recommendations__item">
+          {%- render 'kf-product-card',
+            product: product,
+            heading_tag: 'h4',
+            sizes: '(min-width: 990px) 12rem, 40vw',
+            show_swatches: false,
+            show_vendor: false,
+            class: 'kf-product-card--mini'
+          -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

@@ -118,7 +118,20 @@
       {%- endif -%}
 
       {%- if section.settings.show_cart -%}
-        <a class="kf-icon-button kf-icon-button--counted" href="{{ routes.cart_url }}">
+        {%- comment -%}
+          Always a real link to the cart page. When the drawer is enabled the
+          shared opener intercepts the click; if scripting fails, the link
+          simply navigates, so the cart is never unreachable.
+        {%- endcomment -%}
+        <a
+          class="kf-icon-button kf-icon-button--counted"
+          href="{{ routes.cart_url }}"
+          {% if settings.cart_type == 'drawer' %}
+            data-kf-drawer-open="kf-CartDrawer"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+          {% endif %}
+        >
           {%- render 'kf-icon', name: 'cart' -%}
           <span class="kf-visually-hidden">{{ 'general.cart.title' | t }}</span>
           <span class="kf-icon-button__count" data-kf-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>

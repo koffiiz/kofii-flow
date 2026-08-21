@@ -65,14 +65,85 @@
   "products": {
     "product": {
       "sold_out": "Sold out",
+      "unavailable": "Unavailable",
       "on_sale": "Sale",
       "save_percent": "Save {{ percent }}%",
       "save_amount": "Save {{ amount }}",
       "price_from_html": "From {{ price }}",
       "regular_price": "Regular price",
       "placeholder_title": "Example product",
-      "rating_value": "{{ rating }} out of {{ max }} stars"
+      "rating_value": "{{ rating }} out of {{ max }} stars",
+      "rating_count": {
+        "one": "{{ count }} review",
+        "other": "{{ count }} reviews"
+      },
+
+      "add_to_cart": "Add to cart",
+      "added_to_cart": "Added to cart",
+      "view_cart": "View cart",
+      "choose_variant": "Choose an option",
+      "tax_and_shipping_html": "Taxes included. <a href=\"{{ link }}policies/shipping-policy\">Shipping</a> calculated at checkout.",
+
+      "quantity": "Quantity",
+      "quantity_increase": "Increase quantity",
+      "quantity_decrease": "Decrease quantity",
+      "quantity_rule": "Sold in multiples of {{ increment }}, minimum {{ min }}.",
+
+      "sku": "SKU",
+      "barcode": "Barcode",
+      "read_more": "Read more",
+
+      "inventory_in": "In stock",
+      "inventory_low": "Low stock",
+      "inventory_out": "Out of stock",
+      "inventory_in_count": {
+        "one": "{{ count }} in stock",
+        "other": "{{ count }} in stock"
+      },
+      "inventory_low_count": {
+        "one": "Only {{ count }} left",
+        "other": "Only {{ count }} left"
+      },
+      "inventory_incoming": "More on the way, expected {{ date }}",
+
+      "media_gallery": "Product media",
+      "media_item": "Show image {{ index }}",
+      "previous_media": "Previous image",
+      "next_media": "Next image",
+
+      "share": "Share",
+      "share_copied": "Link copied",
+      "share_failed": "Could not copy the link",
+
+      "pickup_available": "Pickup available at {{ location }}",
+      "pickup_unavailable": "Pickup currently unavailable at {{ location }}",
+      "pickup_in_stock": "In stock",
+      "pickup_out_of_stock": "Out of stock",
+      "pickup_other_locations": {
+        "one": "Check another location",
+        "other": "Check all {{ count }} locations"
+      }
     }
+  },
+
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "empty_text": "Once you add something, it will show up here.",
+    "continue_shopping": "Continue shopping",
+    "subtotal": "Subtotal",
+    "taxes_note": "Taxes, discounts and shipping are calculated at checkout.",
+    "checkout": "Checkout",
+    "view_cart": "View cart",
+    "update": "Update cart",
+    "remove_item": "Remove {{ title }}",
+    "note": "Add an order note",
+    "note_placeholder": "Anything we should know about this order?",
+    "note_saved": "Note saved",
+    "recommendations": "You may also like",
+    "shipping_qualified": "You have unlocked free shipping",
+    "shipping_remaining_html": "You are {{ amount }} away from free shipping",
+    "shipping_progress": "Progress towards free shipping"
   },
 
   "newsletter": {

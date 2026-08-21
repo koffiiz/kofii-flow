@@ -1,0 +1,113 @@
+{%- comment -%}
+  Kofii Flow — Pickup availability block
+  ---------------------------------------------------------------------------
+  Lists the locations where the selected variant can be collected.
+
+  Rendered entirely server-side inside `[data-kf-variant-region="pickup"]`.
+  When the shopper changes variant, <kf-variant-picker> re-renders the section
+  and this region updates with it — so there is no separate pickup-availability
+  fetch, no extra endpoint and no JavaScript in this block at all.
+
+  Shows nothing when the store has no pickup-enabled locations, which is the
+  correct empty state rather than a "not available" message.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+  assign variant = target.selected_or_first_available_variant
+  assign pickup_locations = variant.store_availabilities | where: 'pick_up_enabled', true
+-%}
+
+{%- if target != blank -%}
+  <div data-kf-variant-region="pickup" {{ block.shopify_attributes }}>
+    {%- if pickup_locations.size > 0 -%}
+      {%- assign primary = pickup_locations.first -%}
+
+      <div class="kf-pickup">
+        <p class="kf-cluster">
+          {%- if primary.available -%}
+            {%- render 'kf-icon', name: 'check', size: 'sm', class: 'kf-text-accent' -%}
+            <span>
+              {{ 'products.product.pickup_available' | t: location: primary.location.name }}
+            </span>
+          {%- else -%}
+            {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+            <span class="kf-text-muted">
+              {{ 'products.product.pickup_unavailable' | t: location: primary.location.name }}
+            </span>
+          {%- endif -%}
+        </p>
+
+        {%- if primary.available and primary.pick_up_time != blank -%}
+          <p class="kf-text-sm kf-text-muted">{{ primary.pick_up_time }}</p>
+        {%- endif -%}
+
+        {%- if pickup_locations.size > 1 -%}
+          <details class="kf-pickup__more">
+            <summary class="kf-link kf-text-sm">
+              {{ 'products.product.pickup_other_locations' | t: count: pickup_locations.size }}
+            </summary>
+
+            <ul class="kf-pickup__list">
+              {%- for availability in pickup_locations -%}
+                <li class="kf-pickup__location">
+                  <span class="kf-pickup__location-name">{{ availability.location.name }}</span>
+                  <span class="kf-text-sm {% if availability.available %}kf-text-accent{% else %}kf-text-muted{% endif %}">
+                    {%- if availability.available -%}
+                      {{ 'products.product.pickup_in_stock' | t }}
+                    {%- else -%}
+                      {{ 'products.product.pickup_out_of_stock' | t }}
+                    {%- endif -%}
+                  </span>
+                  {%- if availability.location.address != blank -%}
+                    <address class="kf-text-sm kf-text-muted">
+                      {{ availability.location.address | format_address }}
+                    </address>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+.kf-pickup__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  margin-top: var(--kf-space-2xs);
+  list-style: none;
+}
+
+.kf-pickup__location {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.kf-pickup__location-name {
+  color: var(--kf-color-heading);
+}
+
+.kf-pickup address {
+  font-style: normal;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pickup availability",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows automatically once you have locations with local pickup enabled."
+    }
+  ],
+  "presets": [{ "name": "Pickup availability" }]
+}
+{% endschema %}

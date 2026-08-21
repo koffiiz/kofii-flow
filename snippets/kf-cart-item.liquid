@@ -1,0 +1,150 @@
+{%- comment -%}
+  Kofii Flow — Cart line item
+  ---------------------------------------------------------------------------
+  One implementation, used by both the cart drawer and the cart page. Cart item
+  markup must never be duplicated.
+
+  Quantity inputs are named `updates[]` and the remove control is a real link
+  to /cart/change, so the cart still works when the AJAX layer is unavailable —
+  the page form posts and reloads.
+
+  Parameters:
+    item     (line_item, required)
+    compact  (boolean)  drawer layout: smaller media, tighter rows
+    sizes    (string)
+    scope    (string)   id prefix. REQUIRED when the drawer and the cart page
+                        can both be on the page, or their input ids collide.
+{%- endcomment -%}
+
+{%- liquid
+  assign media_size = '100px'
+  if compact
+    assign media_size = '72px'
+  endif
+
+  assign item_class = 'kf-cart-item'
+  if compact
+    assign item_class = item_class | append: ' kf-cart-item--compact'
+  endif
+
+  assign remove_label = 'cart.remove_item' | t: title: item.title
+-%}
+
+<li class="{{ item_class }}" data-kf-cart-line="{{ forloop.index }}">
+  <a class="kf-cart-item__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+    {%- render 'kf-media',
+      image: item.image,
+      ratio: 'square',
+      sizes: media_size,
+      widths: '72,100,144,200,300',
+      alt: item.image.alt
+    -%}
+  </a>
+
+  <div class="kf-cart-item__body">
+    <a class="kf-cart-item__title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
+
+    {%- unless item.product.has_only_default_variant -%}
+      <p class="kf-cart-item__variant kf-text-sm kf-text-muted">
+        {%- for option in item.options_with_values -%}
+          {{ option.name }}: {{ option.value }}{% unless forloop.last %}, {% endunless %}
+        {%- endfor -%}
+      </p>
+    {%- endunless -%}
+
+    {%- comment -%} Line item properties, skipping Shopify internals (_prefixed). {%- endcomment -%}
+    {%- if item.properties.size > 0 -%}
+      <ul class="kf-cart-item__properties kf-text-sm kf-text-muted">
+        {%- for property in item.properties -%}
+          {%- assign first_char = property.first | slice: 0 -%}
+          {%- if property.last != blank and first_char != '_' -%}
+            <li>{{ property.first }}: {{ property.last }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if item.selling_plan_allocation -%}
+      <p class="kf-cart-item__plan kf-text-sm kf-text-muted">
+        {{ item.selling_plan_allocation.selling_plan.name }}
+      </p>
+    {%- endif -%}
+
+    {%- comment -%}
+      Discounts are rendered from Shopify's own allocations so the displayed
+      saving always matches what checkout will actually apply.
+    {%- endcomment -%}
+    {%- if item.line_level_discount_allocations.size > 0 -%}
+      <ul class="kf-cart-item__discounts">
+        {%- for allocation in item.line_level_discount_allocations -%}
+          <li class="kf-badge kf-badge--accent">
+            {{ allocation.discount_application.title }}
+            (&minus;{{ allocation.amount | money }})
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="kf-cart-item__controls">
+      <kf-quantity class="kf-cart-item__quantity">
+        <button
+          type="button"
+          class="kf-quantity__button"
+          data-kf-quantity-step="down"
+          aria-label="{{ 'products.product.quantity_decrease' | t }}"
+        >
+          {%- render 'kf-icon', name: 'minus', size: 'sm' -%}
+        </button>
+
+        <label class="kf-visually-hidden" for="CartQty-{{ scope }}-{{ item.key }}">
+          {{- 'products.product.quantity' | t }} — {{ item.product.title | escape -}}
+        </label>
+        <input
+          class="kf-quantity__input"
+          id="CartQty-{{ scope }}-{{ item.key }}"
+          type="number"
+          name="updates[]"
+          value="{{ item.quantity }}"
+          min="0"
+          inputmode="numeric"
+          autocomplete="off"
+          data-kf-cart-quantity="{{ forloop.index }}"
+        >
+
+        <button
+          type="button"
+          class="kf-quantity__button"
+          data-kf-quantity-step="up"
+          aria-label="{{ 'products.product.quantity_increase' | t }}"
+        >
+          {%- render 'kf-icon', name: 'plus', size: 'sm' -%}
+        </button>
+      </kf-quantity>
+
+      <a
+        class="kf-cart-item__remove kf-icon-button"
+        href="{{ item.url_to_remove }}"
+        data-kf-cart-remove="{{ forloop.index }}"
+        data-kf-item-title="{{ item.product.title | escape }}"
+      >
+        {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+        <span class="kf-visually-hidden">{{ remove_label }}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="kf-cart-item__price">
+    {%- if item.original_line_price != item.final_line_price -%}
+      <s class="kf-price__compare">{{ item.original_line_price | money }}</s>
+      <span class="kf-cart-item__total">{{ item.final_line_price | money }}</span>
+    {%- else -%}
+      <span class="kf-cart-item__total">{{ item.original_line_price | money }}</span>
+    {%- endif -%}
+
+    {%- if item.unit_price_measurement -%}
+      <span class="kf-price__unit">
+        {{- item.unit_price | money }}/{{ item.unit_price_measurement.reference_unit -}}
+      </span>
+    {%- endif -%}
+  </div>
+</li>

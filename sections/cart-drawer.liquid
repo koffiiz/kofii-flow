@@ -1,0 +1,108 @@
+{%- comment -%}
+  Kofii Flow — Cart drawer
+  ---------------------------------------------------------------------------
+  Rendered once from `layout/theme.liquid`, so it is available on every page.
+
+  The drawer shell is the shared <kf-drawer> component — focus trap, Escape,
+  scroll lock and focus restore all come from there rather than being written
+  again here.
+
+  `data-kf-cart-section` carries the REAL section id, which the cart AJAX
+  layer asks Shopify to re-render. It must be {{ section.id }} and never a
+  hardcoded name: for template sections the id is template--<id>__main.
+  `[data-kf-cart-content]` is the element whose contents get swapped.
+{%- endcomment -%}
+
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-drawer.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
+
+<kf-drawer id="kf-CartDrawer" data-kf-cart-section="{{ section.id }}">
+  <div class="kf-overlay" data-kf-overlay></div>
+
+  <div
+    class="kf-drawer kf-drawer--right kf-cart-drawer kf-scheme kf-scheme--{{ section.settings.color_scheme.id }}"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="kf-CartDrawer-title"
+    tabindex="-1"
+  >
+    <div class="kf-drawer__header">
+      <h2 class="kf-h6" id="kf-CartDrawer-title">
+        {{ 'cart.title' | t }}
+        <span class="kf-text-muted">({{ cart.item_count }})</span>
+      </h2>
+      <button type="button" class="kf-icon-button" data-kf-close>
+        {%- render 'kf-icon', name: 'close' -%}
+        <span class="kf-visually-hidden">{{ 'general.accessibility.close' | t }}</span>
+      </button>
+    </div>
+
+    <div data-kf-cart-content class="kf-cart-drawer__content">
+      {%- if cart.item_count > 0 -%}
+        {%- form 'cart', cart, id: 'KfCartDrawerForm', class: 'kf-cart-drawer__form' -%}
+          <div class="kf-drawer__body">
+            {%- render 'kf-cart-shipping-bar' -%}
+
+            <kf-cart-items>
+              <ul class="kf-cart-items" role="list">
+                {%- for item in cart.items -%}
+                  {%- render 'kf-cart-item', item: item, compact: true, scope: 'Drawer' -%}
+                {%- endfor -%}
+              </ul>
+            </kf-cart-items>
+
+            {%- if section.settings.show_recommendations and settings.cart_recommendations -%}
+              <kf-cart-recommendations
+                class="kf-cart-recommendations"
+                data-product-id="{{ cart.items.first.product_id }}"
+                data-limit="{{ settings.cart_recommendations_count }}"
+              ></kf-cart-recommendations>
+            {%- endif -%}
+          </div>
+
+          <div class="kf-drawer__footer">
+            {%- render 'kf-cart-summary', compact: true, scope: 'Drawer' -%}
+          </div>
+        {%- endform -%}
+      {%- else -%}
+        <div class="kf-drawer__body">
+          <div class="kf-empty kf-cart-empty">
+            {%- render 'kf-icon', name: 'cart', size: 'lg' -%}
+            <p class="kf-text-lg">{{ 'cart.empty' | t }}</p>
+            {%- assign continue_label = 'cart.continue_shopping' | t -%}
+            {%- render 'kf-button',
+              label: continue_label,
+              href: routes.all_products_collection_url,
+              style: 'primary',
+              icon: 'arrow'
+            -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</kf-drawer>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_recommendations",
+      "label": "Show recommended products",
+      "default": true,
+      "info": "Also needs to be enabled in Theme settings > Cart."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

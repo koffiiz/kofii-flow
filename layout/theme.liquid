@@ -3,6 +3,7 @@
   class="no-js"
   lang="{{ request.locale.iso_code }}"
   data-kf-flow="{{ settings.flow_mode }}"
+  data-kf-cart-type="{{ settings.cart_type }}"
   {% if settings.motion_parallax == false %}data-kf-parallax="off"{% endif %}
 >
   <head>
@@ -107,5 +108,15 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {%- comment -%}
+      The cart drawer lives in the layout so it is available on every template,
+      and so `sections: 'cart-drawer'` on the Cart AJAX API always has
+      something to re-render. Skipped entirely when the merchant has chosen the
+      cart page instead, rather than rendered and hidden.
+    {%- endcomment -%}
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'cart-drawer' %}
+    {%- endif -%}
   </body>
 </html>

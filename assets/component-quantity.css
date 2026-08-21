@@ -1,0 +1,62 @@
+/* ==========================================================================
+   Kofii Flow — Quantity stepper
+   --------------------------------------------------------------------------
+   Base styles for <kf-quantity>, used by the product page and by every cart
+   line item.
+
+   These deliberately do NOT live in section-product.css. `kf-quantity` is a
+   shared component, and a shared component's styles must load with the
+   component — otherwise the second section to use it gets a bare
+   <input type="number"> with no container.
+
+   Load this from any section that renders <kf-quantity>, alongside
+   assets/kf-quantity.js.
+   ========================================================================== */
+
+kf-quantity {
+  display: inline-flex;
+  align-items: center;
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+  border-radius: var(--kf-button-radius);
+  overflow: hidden;
+  width: fit-content;
+}
+
+.kf-quantity__button {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--kf-color-heading);
+  transition: background-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-quantity__button[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .kf-quantity__button:not([disabled]):hover {
+    background-color: var(--kf-color-surface-strong);
+  }
+}
+
+.kf-quantity__input {
+  width: 3rem;
+  height: 2.75rem;
+  border: 0;
+  background: none;
+  text-align: center;
+  font-size: var(--kf-text-sm);
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* The custom buttons replace the native spinners. */
+.kf-quantity__input::-webkit-outer-spin-button,
+.kf-quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

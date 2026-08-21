@@ -1,0 +1,105 @@
+{%- comment -%}
+  Kofii Flow — Product media item
+  ---------------------------------------------------------------------------
+  Renders one entry from `product.media`, whatever its type.
+
+  Every media type gets the SAME ratio frame, so all gallery slides are the
+  same size and the scroll track has one consistent row height. Inside that
+  frame the media is contained, never cropped:
+
+    image           kf-media handles ratio, srcset and focal point
+    video           object-fit: contain inside the frame
+    external_video  an iframe cannot be object-fit, so it is centred at its own
+                    aspect ratio and capped to the frame
+    model           fills the frame
+
+  The frame is what makes `height: 100%` resolvable. Without it a video sits in
+  an auto-height parent, the percentage height is indeterminate, and the media
+  collapses to a sliver of its intended size.
+
+  Parameters:
+    media    (media, required)
+    ratio    (string)   frame ratio, defaults to portrait
+    sizes    (string)
+    loading  (string)   lazy (default) | eager
+    priority (boolean)  LCP image only — the first media on the page
+    zoom     (boolean)  marks images as zoom targets for kf-product-gallery
+    class    (string)
+{%- endcomment -%}
+
+{%- liquid
+  assign media_ratio = ratio | default: 'portrait'
+  assign media_sizes = sizes | default: '(min-width: 990px) 55vw, 100vw'
+
+  comment
+    Non-image media needs the frame built by hand, because it does not go
+    through kf-media. Keep this in step with the frame kf-media produces.
+  endcomment
+  assign frame_class = 'kf-media kf-media--ratio kf-product-media'
+  assign frame_style = ''
+
+  if media_ratio == 'adapt'
+    assign frame_style = '--kf-media-ratio: ' | append: media.preview_image.aspect_ratio | append: ';'
+  else
+    assign frame_class = frame_class | append: ' kf-media--' | append: media_ratio
+  endif
+
+  if class != blank
+    assign frame_class = frame_class | append: ' ' | append: class
+  endif
+-%}
+
+{%- case media.media_type -%}
+  {%- when 'image' -%}
+    <div {% if zoom %}data-kf-gallery-zoom{% endif %} class="kf-product-media {{ class }}">
+      {%- render 'kf-media',
+        image: media.preview_image,
+        ratio: media_ratio,
+        sizes: media_sizes,
+        loading: loading,
+        priority: priority,
+        alt: media.alt
+      -%}
+    </div>
+
+  {%- when 'video' -%}
+    <div class="{{ frame_class }} kf-product-media--video" style="{{ frame_style }}">
+      {{
+        media
+        | video_tag:
+          class: 'kf-media__video',
+          controls: true,
+          preload: 'metadata',
+          image_size: '1200x'
+      }}
+    </div>
+
+  {%- when 'external_video' -%}
+    {%- comment -%}
+      Rendered without autoplay so a product page never starts making noise on
+      its own, and lazily so the embed is not requested until it is on screen.
+    {%- endcomment -%}
+    <div
+      class="{{ frame_class }} kf-product-media--embed"
+      style="{{ frame_style }}--kf-embed-ratio: {{ media.aspect_ratio | default: 1.7778 }};"
+    >
+      {{ media | external_video_tag: class: 'kf-product-media__embed', loading: 'lazy' }}
+    </div>
+
+  {%- when 'model' -%}
+    <div class="{{ frame_class }} kf-product-media--model" style="{{ frame_style }}">
+      {{ media | model_viewer_tag: image_size: '1200x', reveal: 'interaction', toggleable: true }}
+    </div>
+
+  {%- else -%}
+    {%- comment -%} Unknown media types fall back to the preview image. {%- endcomment -%}
+    <div class="kf-product-media {{ class }}">
+      {%- render 'kf-media',
+        image: media.preview_image,
+        ratio: media_ratio,
+        sizes: media_sizes,
+        loading: loading,
+        alt: media.alt
+      -%}
+    </div>
+{%- endcase -%}

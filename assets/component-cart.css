@@ -1,0 +1,317 @@
+/* ==========================================================================
+   Kofii Flow — Cart
+   Shared by sections/cart-drawer.liquid and sections/main-cart.liquid, so the
+   drawer and the cart page cannot drift apart visually.
+   ========================================================================== */
+
+.kf-cart-drawer__content,
+.kf-cart-drawer__form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* While a mutation is in flight the rows stay readable but are not clickable,
+   so a shopper cannot queue two changes to the same line. */
+[data-kf-cart-busy] {
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+/* ==========================================================================
+   Line items
+   ========================================================================== */
+
+.kf-cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  list-style: none;
+}
+
+.kf-cart-item {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) auto;
+  gap: var(--kf-space-xs);
+  align-items: start;
+  padding-bottom: var(--kf-space-sm);
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-cart-items > .kf-cart-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.kf-cart-item--compact {
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-cart-item__media {
+  display: block;
+  border-radius: var(--kf-media-radius);
+  overflow: hidden;
+}
+
+.kf-cart-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  min-width: 0;
+}
+
+.kf-cart-item__title {
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-heading);
+  transition: color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+@media (hover: hover) {
+  .kf-cart-item__title:hover {
+    color: var(--kf-color-accent);
+  }
+}
+
+.kf-cart-item__properties,
+.kf-cart-item__discounts {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.kf-cart-item__properties {
+  flex-direction: column;
+  gap: 0;
+}
+
+.kf-cart-item__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-3xs);
+  margin-top: var(--kf-space-3xs);
+}
+
+/* A smaller quantity stepper than the product page: cart rows are dense. */
+.kf-cart-item__quantity .kf-quantity__button {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.kf-cart-item__quantity .kf-quantity__input {
+  width: 2.5rem;
+  height: 2.25rem;
+}
+
+.kf-cart-item__remove {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  color: var(--kf-color-muted);
+}
+
+@media (hover: hover) {
+  .kf-cart-item__remove:hover {
+    color: var(--kf-color-heading);
+  }
+}
+
+.kf-cart-item__price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.kf-cart-item__total {
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-heading);
+}
+
+@media (max-width: 479px) {
+  .kf-cart-item {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+
+  /* The price drops under the details rather than squeezing a third column. */
+  .kf-cart-item__price {
+    grid-column: 2;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   Free shipping progress
+   ========================================================================== */
+
+.kf-shipping-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  padding: var(--kf-space-xs);
+  margin-bottom: var(--kf-space-sm);
+  border-radius: var(--kf-radius-md);
+  background-color: var(--kf-color-surface);
+}
+
+.kf-shipping-bar__message {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--kf-color-heading);
+}
+
+.kf-shipping-bar--qualified .kf-shipping-bar__message {
+  color: var(--kf-color-accent);
+}
+
+.kf-shipping-bar__track {
+  height: 0.35rem;
+  border-radius: var(--kf-radius-pill);
+  background-color: var(--kf-color-border);
+  overflow: hidden;
+}
+
+.kf-shipping-bar__fill {
+  display: block;
+  height: 100%;
+  width: var(--kf-progress, 0%);
+  border-radius: inherit;
+  background-color: var(--kf-color-accent);
+  transition: width var(--kf-motion-slow) var(--kf-ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-shipping-bar__fill {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Summary
+   ========================================================================== */
+
+.kf-cart-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-xs);
+}
+
+.kf-cart-summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-cart-summary__discounts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  list-style: none;
+}
+
+.kf-cart-summary__row--subtotal {
+  font-size: var(--kf-text-lg);
+  color: var(--kf-color-heading);
+}
+
+.kf-cart-summary__amount {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.kf-cart-summary__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  align-items: center;
+}
+
+.kf-cart-summary__actions .kf-button {
+  width: 100%;
+}
+
+.kf-cart-note__field {
+  margin-top: var(--kf-space-3xs);
+}
+
+.kf-cart-note__details summary {
+  display: inline-block;
+}
+
+/* ==========================================================================
+   Cart page layout
+   ========================================================================== */
+
+.kf-cart-page__layout {
+  display: grid;
+  gap: var(--kf-space-lg);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 990px) {
+  .kf-cart-page__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+    gap: var(--kf-space-xl);
+  }
+
+  .kf-cart-page__summary {
+    position: sticky;
+    top: calc(var(--kf-sticky-offset) + var(--kf-space-md));
+    padding: var(--kf-space-md);
+    border: var(--kf-border-width) solid var(--kf-color-border);
+    border-radius: var(--kf-radius-lg);
+  }
+}
+
+.kf-cart-empty {
+  gap: var(--kf-space-sm);
+}
+
+.kf-cart-empty--page {
+  padding-block: var(--kf-space-2xl);
+}
+
+/* ==========================================================================
+   Recommendations
+   ========================================================================== */
+
+kf-cart-recommendations {
+  display: block;
+}
+
+kf-cart-recommendations:empty {
+  display: none;
+}
+
+.kf-recommendations {
+  margin-top: var(--kf-space-md);
+  padding-top: var(--kf-space-sm);
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-recommendations__title {
+  margin-bottom: var(--kf-space-2xs);
+}
+
+.kf-recommendations__list {
+  display: grid;
+  gap: var(--kf-space-sm);
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  list-style: none;
+}
+
+.kf-cart-recommendations--page .kf-recommendations__list {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+.kf-product-card--mini .kf-product-card__title {
+  font-size: var(--kf-text-xs);
+}

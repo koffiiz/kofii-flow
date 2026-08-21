@@ -75,9 +75,105 @@ function flattenLocaleKeys(node, prefix = '', out = new Set()) {
   return out;
 }
 
+/**
+ * Shopify rejects a theme upload when a range setting is malformed, and the
+ * error message is not always specific about which setting is at fault.
+ * Rules: min < max, step > 0, (max - min) must be divisible by step, at most
+ * 101 steps, and the default must sit inside the range.
+ */
+function checkRange(setting, relPath, scope) {
+  const { id, min, max, step, default: value } = setting;
+  const where = `${scope} range "${id}"`;
+
+  if (typeof min !== 'number' || typeof max !== 'number' || typeof step !== 'number') {
+    fail(relPath, `${where} needs numeric min, max and step`);
+    return;
+  }
+  if (min >= max) fail(relPath, `${where} has min >= max`);
+  if (step <= 0) fail(relPath, `${where} has a step of ${step}`);
+
+  const span = max - min;
+  // Compare against a small epsilon so decimal steps do not trip on float error.
+  if (step > 0 && Math.abs(span / step - Math.round(span / step)) > 1e-9) {
+    fail(relPath, `${where}: (max - min) = ${span} is not divisible by step ${step}`);
+  }
+  if (step > 0 && span / step > 101) {
+    fail(relPath, `${where} has ${Math.round(span / step)} steps; Shopify allows at most 101`);
+  }
+  if (typeof value === 'number' && (value < min || value > max)) {
+    fail(relPath, `${where} has default ${value} outside ${min}–${max}`);
+  }
+}
+
+/**
+ * `role` maps color scheme definition ids onto the roles Shopify uses to draw
+ * the scheme preview and to color native elements.
+ *
+ * All ten are documented as Required, and any key outside the set is rejected
+ * on upload. `shadow` is the common false friend: a legitimate *definition* id
+ * (Shopify's own reference example has one) but never a role.
+ *
+ * Definition ids that are not role-mapped are fine — Kofii Flow reads `heading`
+ * and `shadow` directly in Liquid via `scheme.settings.*`.
+ */
+const COLOR_SCHEME_ROLES = new Set([
+  'background',
+  'text',
+  'links',
+  'icons',
+  'primary_button',
+  'on_primary_button',
+  'primary_button_border',
+  'secondary_button',
+  'on_secondary_button',
+  'secondary_button_border'
+]);
+
+function checkColorSchemeGroup(setting, relPath) {
+  const allowedTypes = new Set(['header', 'color', 'color_background']);
+  const definedIds = new Set();
+
+  for (const entry of setting.definition || []) {
+    if (!allowedTypes.has(entry.type)) {
+      fail(
+        relPath,
+        `color_scheme_group definition cannot contain "${entry.type}" — only header, color and color_background`
+      );
+    }
+    if (entry.id) definedIds.add(entry.id);
+  }
+
+  const roles = setting.role || {};
+
+  for (const required of COLOR_SCHEME_ROLES) {
+    if (!(required in roles)) {
+      fail(relPath, `color scheme role "${required}" is required but missing`);
+    }
+  }
+
+  for (const [role, target] of Object.entries(roles)) {
+    if (!COLOR_SCHEME_ROLES.has(role)) {
+      fail(
+        relPath,
+        `"${role}" is not a valid color scheme role (valid: ${[...COLOR_SCHEME_ROLES].join(', ')})`
+      );
+      continue;
+    }
+    const targets = typeof target === 'string' ? [target] : Object.values(target);
+    for (const targetId of targets) {
+      if (!definedIds.has(targetId)) {
+        fail(relPath, `role "${role}" points at "${targetId}", which is not in the definition`);
+      }
+    }
+  }
+}
+
 function collectSettingIds(schemaSettings, into, relPath, scope) {
   const seen = new Set();
   for (const setting of schemaSettings || []) {
+    if (setting.type === 'range') checkRange(setting, relPath, scope);
+    if (setting.type === 'color_scheme_group') checkColorSchemeGroup(setting, relPath);
+
     if (!setting.id) continue;
     if (seen.has(setting.id)) {
       fail(relPath, `duplicate setting id "${setting.id}" in ${scope}`);
@@ -110,9 +206,9 @@ const globalSettingIds = (() => {
   const ids = new Set();
   if (!Array.isArray(data)) return ids;
   for (const group of data) {
-    for (const setting of group.settings || []) {
-      if (setting.id) ids.add(setting.id);
-    }
+    // Same structural checks the section schemas get: ranges, color scheme
+    // roles and duplicate ids all block a theme upload.
+    collectSettingIds(group.settings, ids, relPath, `group "${group.name}"`);
   }
   return ids;
 })();

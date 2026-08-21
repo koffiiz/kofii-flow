@@ -98,25 +98,6 @@
   color: var(--kf-color-muted);
 }
 
-/* Rating stars ----------------------------------------------------------- */
-
-.kf-stars {
-  position: relative;
-  display: inline-block;
-  line-height: 0;
-}
-
-.kf-stars__row {
-  display: inline-flex;
-  gap: 1px;
-  color: var(--kf-color-border-strong);
-}
-
-.kf-stars__row--fill {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  width: var(--kf-rating, 0%);
-  overflow: hidden;
-  color: var(--kf-color-accent);
-}
+/* Rating stars live in kf-components.css: they are shared with the
+   product-rating theme block, which can appear on pages that never load this
+   stylesheet. Do not move them back here. */

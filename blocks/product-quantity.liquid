@@ -1,0 +1,89 @@
+{%- comment -%}
+  Kofii Flow — Quantity block
+  ---------------------------------------------------------------------------
+  The input lives outside the product form and is bound to it with the HTML
+  `form` attribute, so merchants can place quantity anywhere in the block order
+  without the form having to wrap it.
+
+  Respects Shopify quantity rules (minimum, increment) and caps the maximum at
+  the available stock when the store does not allow overselling.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+  assign variant = target.selected_or_first_available_variant
+  assign form_id = 'KfProductForm-' | append: target.id
+  assign input_id = form_id | append: '-quantity'
+
+  assign min = variant.quantity_rule.min | default: 1
+  assign step = variant.quantity_rule.increment | default: 1
+
+  assign max = variant.quantity_rule.max
+  if max == blank and variant.inventory_management != blank and variant.inventory_policy == 'deny'
+    assign max = variant.inventory_quantity
+  endif
+-%}
+
+{%- if target != blank -%}
+  <div class="kf-field kf-product__quantity" {{ block.shopify_attributes }}>
+    {%- if block.settings.show_label -%}
+      <label class="kf-field__label" for="{{ input_id }}">{{ 'products.product.quantity' | t }}</label>
+    {%- endif -%}
+
+    <kf-quantity>
+      <button
+        type="button"
+        class="kf-quantity__button"
+        data-kf-quantity-step="down"
+        aria-label="{{ 'products.product.quantity_decrease' | t }}"
+      >
+        {%- render 'kf-icon', name: 'minus', size: 'sm' -%}
+      </button>
+
+      <input
+        class="kf-quantity__input"
+        id="{{ input_id }}"
+        type="number"
+        name="quantity"
+        form="{{ form_id }}"
+        value="{{ min }}"
+        min="{{ min }}"
+        step="{{ step }}"
+        {% if max != blank %}max="{{ max }}"{% endif %}
+        inputmode="numeric"
+        autocomplete="off"
+      >
+
+      <button
+        type="button"
+        class="kf-quantity__button"
+        data-kf-quantity-step="up"
+        aria-label="{{ 'products.product.quantity_increase' | t }}"
+      >
+        {%- render 'kf-icon', name: 'plus', size: 'sm' -%}
+      </button>
+    </kf-quantity>
+
+    {%- if variant.quantity_rule.increment > 1 or variant.quantity_rule.min > 1 -%}
+      <p class="kf-text-sm kf-text-muted">
+        {{ 'products.product.quantity_rule' | t: min: variant.quantity_rule.min, increment: variant.quantity_rule.increment }}
+      </p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Quantity",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_label",
+      "label": "Show label",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "Quantity" }]
+}
+{% endschema %}

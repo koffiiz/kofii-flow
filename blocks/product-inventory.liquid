@@ -1,0 +1,89 @@
+{%- comment -%}
+  Kofii Flow — Inventory block
+  ---------------------------------------------------------------------------
+  Honest stock messaging. Three states, driven entirely by Shopify inventory:
+
+    in    tracked and comfortably in stock, or not tracked at all
+    low   tracked and at or below the merchant's threshold
+    out   unavailable
+
+  Wrapped in `[data-kf-variant-region="inventory"]` so it re-renders with the
+  variant. Exact counts are opt-in, because publishing real stock numbers is a
+  business decision, not a default.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+  assign variant = target.selected_or_first_available_variant
+
+  assign state = 'in'
+  assign tracked = false
+  if variant.inventory_management != blank
+    assign tracked = true
+  endif
+
+  if variant.available == false
+    assign state = 'out'
+  elsif tracked and variant.inventory_quantity <= block.settings.low_threshold and variant.inventory_quantity > 0
+    assign state = 'low'
+  endif
+-%}
+
+{%- if target != blank -%}
+  <div data-kf-variant-region="inventory" {{ block.shopify_attributes }}>
+    <p class="kf-inventory kf-inventory--{{ state }}">
+      <span class="kf-inventory__dot" aria-hidden="true"></span>
+      <span>
+        {%- case state -%}
+          {%- when 'out' -%}
+            {{ 'products.product.inventory_out' | t }}
+          {%- when 'low' -%}
+            {%- if block.settings.show_count -%}
+              {{ 'products.product.inventory_low_count' | t: count: variant.inventory_quantity }}
+            {%- else -%}
+              {{ 'products.product.inventory_low' | t }}
+            {%- endif -%}
+          {%- else -%}
+            {%- if block.settings.show_count and tracked -%}
+              {{ 'products.product.inventory_in_count' | t: count: variant.inventory_quantity }}
+            {%- else -%}
+              {{ 'products.product.inventory_in' | t }}
+            {%- endif -%}
+        {%- endcase -%}
+      </span>
+    </p>
+
+    {%- if state != 'out' and variant.incoming and variant.next_incoming_date -%}
+      {%- assign incoming_date = variant.next_incoming_date | date: format: 'date' -%}
+      <p class="kf-text-sm kf-text-muted">
+        {{ 'products.product.inventory_incoming' | t: date: incoming_date }}
+      </p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Inventory status",
+  "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "low_threshold",
+      "label": "Low stock threshold",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 10,
+      "info": "Shows the low stock message at or below this quantity."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show exact quantity",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "Inventory status" }]
+}
+{% endschema %}

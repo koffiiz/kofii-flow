@@ -1,0 +1,139 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "meta": {
+          "type": "product-meta",
+          "settings": {
+            "show_vendor": true,
+            "link_vendor": true,
+            "show_type": false,
+            "show_sku": false,
+            "show_barcode": false
+          }
+        },
+        "title": {
+          "type": "product-title",
+          "settings": {
+            "heading_size": "kf-h2",
+            "heading_tag": "h1",
+            "animation": "none"
+          }
+        },
+        "rating": {
+          "type": "product-rating",
+          "settings": { "show_value": true, "show_count": true }
+        },
+        "price": {
+          "type": "product-price",
+          "settings": {
+            "show_sale_badge": true,
+            "sale_badge_style": "percent",
+            "show_tax_note": false
+          }
+        },
+        "variants": {
+          "type": "product-variant-picker",
+          "settings": {
+            "style": "auto",
+            "show_selected_value": true,
+            "update_url": true
+          }
+        },
+        "inventory": {
+          "type": "product-inventory",
+          "settings": { "low_threshold": 10, "show_count": false }
+        },
+        "quantity": {
+          "type": "product-quantity",
+          "settings": { "show_label": true }
+        },
+        "buy": {
+          "type": "product-buy-buttons",
+          "settings": { "show_dynamic_checkout": true }
+        },
+        "pickup": {
+          "type": "product-pickup",
+          "settings": {}
+        },
+        "trust": {
+          "type": "trust-row",
+          "blocks": {
+            "item-1": {
+              "type": "_trust-item",
+              "settings": { "text": "Free shipping over $75", "icon": "check" }
+            },
+            "item-2": {
+              "type": "_trust-item",
+              "settings": { "text": "30 day returns", "icon": "check" }
+            }
+          },
+          "block_order": ["item-1", "item-2"],
+          "settings": { "animation": "none", "animation_delay": 0 }
+        },
+        "description": {
+          "type": "product-description",
+          "settings": { "collapse": false }
+        },
+        "accordion": {
+          "type": "product-accordion",
+          "blocks": {
+            "shipping": {
+              "type": "_accordion-item",
+              "settings": {
+                "heading": "Shipping and returns",
+                "content": "<p>Describe delivery times, costs and how returns work.</p>",
+                "icon": "none"
+              }
+            },
+            "care": {
+              "type": "_accordion-item",
+              "settings": {
+                "heading": "Care",
+                "content": "<p>Explain how to look after this product so it lasts.</p>",
+                "icon": "none"
+              }
+            }
+          },
+          "block_order": ["shipping", "care"],
+          "settings": { "single": true, "animation": "none", "animation_delay": 0 }
+        },
+        "share": {
+          "type": "product-share",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "meta",
+        "title",
+        "rating",
+        "price",
+        "variants",
+        "inventory",
+        "quantity",
+        "buy",
+        "pickup",
+        "trust",
+        "description",
+        "accordion",
+        "share"
+      ],
+      "settings": {
+        "gallery_layout": "thumbs-left",
+        "show_thumbnails": true,
+        "media_ratio": "portrait",
+        "media_position": "left",
+        "media_size": "medium",
+        "zoom": "lightbox",
+        "sticky_info": true,
+        "sticky_atc": true,
+        "sticky_color_scheme": "scheme-1",
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": ["main"]
+}

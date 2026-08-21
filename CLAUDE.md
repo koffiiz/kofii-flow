@@ -59,6 +59,16 @@ Consequences: the theme renders correctly even with missing settings, the Theme 
 
 Derived color tokens (`--kf-color-border`, `--kf-color-muted`, shadows) are declared on `.kf-scheme` in `kf-tokens.css`, **not** on `:root`. This is deliberate: a custom property is substituted where it is declared, not where it is inherited, so a derived token on `:root` would never pick up a section's scheme colors.
 
+### color_scheme_group constraints
+
+Shopify rejects the theme on upload if these are violated, so they are worth knowing before editing `config/settings_schema.json`:
+
+- `definition` accepts only `header`, `color` and `color_background`.
+- `role` accepts **only** these keys: `background`, `text`, `links`, `icons`, `primary_button`, `on_primary_button`, `primary_button_border`, `secondary_button`, `on_secondary_button`, `secondary_button_border`.
+- **`shadow` is not a role.** It is a perfectly valid definition *id* — Shopify's own reference example defines one — but mapping it in `role` is an error. Kofii Flow defines `shadow` and reads it in Liquid as `scheme.settings.shadow`, which needs no role mapping.
+
+`npm run validate` enforces all of the above, plus the range rules (`min < max`, `(max - min)` divisible by `step`, ≤ 101 steps, default inside the range) that also block an upload.
+
 ---
 
 ## 3. Kofii Motion
@@ -198,6 +208,17 @@ Open the section with:
 
 which requires `color_scheme`, `padding_top`, `padding_bottom` settings (and optionally `section_transition`).
 
+**Where a component's CSS goes.** This has bitten the theme more than once, so the rule is explicit:
+
+| The markup is rendered by | Its CSS belongs in |
+| --- | --- |
+| One section only | `section-<name>.css`, loaded by that section |
+| A snippet or custom element used by **more than one** section | `component-<name>.css`, loaded by **every** section that renders it |
+| A generic `@theme` block (placeable in any section) | the block's own `{% stylesheet %}` |
+| Markup shared across unrelated components | `kf-components.css` (global) |
+
+Putting a shared component's styles in a section stylesheet is the failure mode to watch for: it looks correct on the section you built it for, and silently renders unstyled everywhere else. `<kf-quantity>` (product + cart), `.kf-stars` (product card + rating block) and the accordion block have all been moved for exactly this reason — do not move them back.
+
 **Naming:** marketing sections are `kf-*.liquid`. Shopify template sections keep canonical names (`main-product.liquid`, `main-collection-product-grid.liquid`, `main-cart.liquid`). Snippets and assets are `kf-*`. CSS classes are `kf-block__element--modifier`, max two nesting levels, no descendant chains.
 
 **Empty states:** every section must look intentional in the Theme Editor before configuration. Use `placeholder_svg_tag` through `kf-media`, and never emit a broken `<img>` or a JS error when data is missing.
@@ -261,15 +282,30 @@ Then check by hand:
 
 ## 10. Current state and roadmap
 
+**Phase 3a — cart (complete).** `cart-drawer.liquid` (rendered from the layout, on every page), `main-cart.liquid`, `cart-recommendations.liquid`, `<kf-cart-items>`, `<kf-cart-note>`, `<kf-cart-recommendations>`, free-shipping progress, order note, line and cart level discounts, empty states, and `templates/cart.json`. The drawer and the cart page share one line-item snippet and one summary snippet.
+
+**Cart rules — do not break these:**
+
+- **`data-kf-cart-section` must be `{{ section.id }}`, never a hardcoded name.** A section in a JSON template has the id `template--<theme_id>__main`, so a literal `"main-cart"` silently never re-renders.
+- **No money arithmetic in JavaScript, ever.** Every mutation asks Shopify to re-render the cart sections in the same request (`sections` on the Cart AJAX API) and swaps the HTML in. A total the theme calculated itself will eventually disagree with checkout.
+- The Cart AJAX API returns the full `<div id="shopify-section-…">` wrapper, so swaps target the inner `[data-kf-cart-content]` anchor.
+- Anything rendered in both the drawer and the cart page needs a `scope` prefix on its element ids, or `/cart` ends up with duplicate ids.
+
+**Phase 2 — product page (complete).** `main-product.liquid` with a fully block-driven information column; `<kf-product-gallery>` (thumbnails, keyboard nav, video and external video, hover magnify, native-`<dialog>` lightbox); `<kf-variant-picker>` (Section Rendering API, no duplicated price logic in JS); `<kf-product-form>` (AJAX add, real error surfacing); `<kf-quantity>`; `<kf-accordion>`; `<kf-share>`; `<kf-sticky-atc>`; 13 product theme blocks; Product JSON-LD; `templates/product.json`.
+
 **Phase 1 — foundation (complete).** Design tokens, color schemes, typography, spacing, base CSS, component CSS, Kofii Motion, `KF` core, drawer/disclosure/header/predictive-search elements, theme blocks, header (with mega menus, mobile nav, predictive search), footer, hero, search page, page, 404, apps section, `index`/`page`/`search`/`404` templates.
 
 **Not built yet — do not pretend otherwise:**
 
-- Templates: `product`, `collection`, `cart`, `blog`, `article`, `list-collections`, `gift_card`, `password`, customer templates.
-- Sections: `main-product`, `main-collection-product-grid`, `main-cart`, `main-blog`, `main-article`, and the marketing library (bento, marquee, image-with-text, featured collection, product spotlight, testimonials, logo cloud, comparison, before/after, video, lookbook, FAQ, tabs, timeline, stats, scrolling story, image reveal, newsletter, rich text, spacer, custom Liquid).
-- Components: cart drawer, product gallery, variant picker, quick add, slider, marquee element, tabs, accordion.
+- Templates: `collection`, `blog`, `article`, `list-collections`, `gift_card`, `password`, customer templates.
+- Sections: `main-collection-product-grid`, `main-blog`, `main-article`, and the marketing library (bento, marquee, image-with-text, featured collection, product spotlight, testimonials, logo cloud, comparison, before/after, video, lookbook, FAQ, tabs, timeline, stats, scrolling story, image reveal, newsletter, rich text, spacer).
+- Components: quick add, slider, marquee element, tabs.
 - Product card quick-add (the card itself is complete and in use).
+- Complementary / related products on the product page — needs a section of its own.
+- **3D models are not wired up.** `kf-product-media.liquid` emits the correct `model_viewer_tag` markup and the frame CSS exists, but the theme never loads Shopify's model-viewer feature (`Shopify.loadFeatures` with `model-viewer-ui`). Because the tag is rendered with `reveal: 'interaction'`, a model currently degrades to its poster image rather than breaking — but it is not interactive. Do not claim 3D support until the loader is added and tested on a product that actually has a model.
 - Art-directed mobile images in `kf-media` (focal point covers the common case today).
 - Schema label translation (`locales/*.schema.json`). Schema labels are currently authored in English inline.
 
-**Phase order:** 2 — product + collection + cart. 3 — marketing section library. 4 — Theme Store readiness (schema i18n, remaining templates, full locale set).
+**Known product-page limitation, by design:** the quantity input is deliberately *outside* the variant region, so a shopper's chosen quantity survives a variant change. The trade-off is that its `max` attribute does not re-render, so an over-order is caught server-side — `<kf-product-form>` surfaces Shopify's own message. Do not "fix" this by recomputing stock limits in JavaScript; that would create a second source of truth for inventory.
+
+**Phase order:** 3b — collection + native filtering. 4 — marketing section library. 5 — Theme Store readiness (schema i18n, remaining templates, full locale set).

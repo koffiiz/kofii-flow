@@ -1,0 +1,67 @@
+{%- comment -%}
+  Kofii Flow — Product meta block
+  ---------------------------------------------------------------------------
+  Vendor, SKU, barcode and product type in one compact row. Grouped rather than
+  split into four blocks because merchants almost always want them together and
+  four near-empty blocks would clutter the block picker.
+
+  SKU and barcode are variant-specific, so the row sits inside
+  `[data-kf-variant-region="meta"]`.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+  assign variant = target.selected_or_first_available_variant
+-%}
+
+{%- if target != blank -%}
+  <div data-kf-variant-region="meta" {{ block.shopify_attributes }}>
+    <div class="kf-product-meta">
+      {%- if block.settings.show_vendor and target.vendor != blank -%}
+        <span class="kf-product-meta__item">
+          {%- if block.settings.link_vendor -%}
+            <a class="kf-link" href="{{ target.vendor | url_for_vendor }}">{{ target.vendor | escape }}</a>
+          {%- else -%}
+            {{ target.vendor | escape }}
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+
+      {%- if block.settings.show_type and target.type != blank -%}
+        <span class="kf-product-meta__item">{{ target.type | escape }}</span>
+      {%- endif -%}
+
+      {%- if block.settings.show_sku and variant.sku != blank -%}
+        <span class="kf-product-meta__item">
+          {{ 'products.product.sku' | t }}: {{ variant.sku | escape }}
+        </span>
+      {%- endif -%}
+
+      {%- if block.settings.show_barcode and variant.barcode != blank -%}
+        <span class="kf-product-meta__item">
+          {{ 'products.product.barcode' | t }}: {{ variant.barcode | escape }}
+        </span>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product meta",
+  "tag": null,
+  "settings": [
+    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": true },
+    {
+      "type": "checkbox",
+      "id": "link_vendor",
+      "label": "Link the vendor to its products",
+      "default": true
+    },
+    { "type": "checkbox", "id": "show_type", "label": "Show product type", "default": false },
+    { "type": "checkbox", "id": "show_sku", "label": "Show SKU", "default": false },
+    { "type": "checkbox", "id": "show_barcode", "label": "Show barcode", "default": false }
+  ],
+  "presets": [{ "name": "Product meta" }]
+}
+{% endschema %}

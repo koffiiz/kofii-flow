@@ -1,0 +1,641 @@
+/* ==========================================================================
+   Kofii Flow — Product page
+   Loaded by sections/main-product.liquid.
+   ========================================================================== */
+
+.kf-product__layout {
+  display: grid;
+  gap: var(--kf-space-lg);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 990px) {
+  .kf-product__layout {
+    grid-template-columns: minmax(0, var(--kf-product-media-width, 1.15fr)) minmax(0, 1fr);
+    gap: var(--kf-space-xl);
+  }
+
+  .kf-product--media-right .kf-product__media {
+    order: 2;
+  }
+
+  /* The info column tracks the gallery on long product pages. */
+  .kf-product--sticky-info .kf-product__info {
+    position: sticky;
+    top: calc(var(--kf-sticky-offset) + var(--kf-space-md));
+  }
+}
+
+.kf-product__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  min-width: 0;
+  max-width: 34rem;
+}
+
+/* Dim the info column while a variant re-render is in flight, so a stale
+   price is visibly stale rather than silently wrong. */
+[data-kf-updating] .kf-product__info {
+  opacity: 0.6;
+  transition: opacity var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+/* ==========================================================================
+   Gallery
+   ========================================================================== */
+
+/* The gallery has exactly three direct children — viewer, thumbs, nav row —
+   and each layout is a different arrangement of those three. None of them may
+   be wrapped in an extra container, or they stop being grid items.
+   The base case uses auto-placement rather than named areas so that a product
+   with one image (no thumbs, no nav) produces no empty rows or stray gaps. */
+kf-product-gallery {
+  display: grid;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.kf-gallery__nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-gallery__viewer {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: var(--kf-space-2xs);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border-radius: var(--kf-media-radius);
+}
+
+.kf-gallery__viewer::-webkit-scrollbar {
+  display: none;
+}
+
+.kf-gallery__slide {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.kf-gallery__slide .kf-media {
+  width: 100%;
+}
+
+/* Non-image media -----------------------------------------------------------
+   Each of these sits in the same ratio frame as an image slide, and is
+   contained rather than cropped. `.kf-media--ratio` already absolutely
+   positions `.kf-media__video`; the rest is about not distorting the media. */
+
+.kf-product-media--video .kf-media__video {
+  /* contain, not cover: a product video must never be cropped. */
+  object-fit: contain;
+  background-color: #000;
+}
+
+/* An <iframe> cannot be object-fit, so the embed is centred in the frame at
+   its own aspect ratio and capped to the frame on both axes. */
+.kf-product-media--embed {
+  display: grid;
+  place-items: center;
+  background-color: #000;
+}
+
+.kf-product-media__embed {
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--kf-embed-ratio, 16 / 9);
+  max-width: 100%;
+  max-height: 100%;
+  border: 0;
+}
+
+.kf-product-media--model model-viewer,
+.kf-product-media--model .shopify-model-viewer-ui {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Stacked layout: every image in one column, no horizontal scrolling. */
+.kf-gallery--stacked .kf-gallery__viewer {
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  overflow-x: visible;
+  scroll-snap-type: none;
+}
+
+/* Thumbnails ------------------------------------------------------------- */
+
+.kf-gallery__thumbs {
+  display: flex;
+  gap: var(--kf-space-3xs);
+  overflow-x: auto;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.kf-gallery__thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.kf-gallery__thumb {
+  flex: 0 0 auto;
+  width: 4.5rem;
+  border-radius: var(--kf-radius-sm);
+  overflow: hidden;
+  border: var(--kf-border-width-thick) solid transparent;
+  opacity: 0.6;
+  transition: opacity var(--kf-motion-fast) var(--kf-ease-standard),
+              border-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-gallery__thumb[aria-current="true"] {
+  opacity: 1;
+  border-color: var(--kf-color-heading);
+}
+
+@media (hover: hover) {
+  .kf-gallery__thumb:hover {
+    opacity: 1;
+  }
+}
+
+.kf-gallery__thumb .kf-media {
+  border-radius: 0;
+}
+
+@media (min-width: 990px) {
+  /* Thumbnail rail on the left spanning both rows, viewer and its nav stacked
+     in the wider second column. Scoped with :has() so the two-column mapping
+     only applies when thumbnails actually exist — otherwise the viewer would
+     be squeezed into the empty 4.5rem rail. */
+  .kf-gallery--thumbs-left:has(.kf-gallery__thumbs) {
+    grid-template-columns: var(--kf-thumb-rail, 4.5rem) minmax(0, 1fr);
+    grid-template-areas:
+      "thumbs viewer"
+      "thumbs nav";
+    align-items: start;
+  }
+
+  .kf-gallery--thumbs-left:has(.kf-gallery__thumbs) .kf-gallery__thumbs {
+    grid-area: thumbs;
+    flex-direction: column;
+    overflow-x: visible;
+    overflow-y: auto;
+    max-height: 34rem;
+  }
+
+  .kf-gallery--thumbs-left:has(.kf-gallery__thumbs) .kf-gallery__viewer {
+    grid-area: viewer;
+  }
+
+  .kf-gallery--thumbs-left:has(.kf-gallery__thumbs) .kf-gallery__nav-row {
+    grid-area: nav;
+  }
+
+  .kf-gallery--thumbs-left .kf-gallery__thumb {
+    width: 100%;
+  }
+}
+
+/* Stacked shows every image at once, so thumbnails and paging are redundant. */
+.kf-gallery--stacked .kf-gallery__thumbs,
+.kf-gallery--stacked .kf-gallery__nav-row {
+  display: none;
+}
+
+/* Controls --------------------------------------------------------------- */
+
+.kf-gallery__counter {
+  font-size: var(--kf-text-xs);
+  color: var(--kf-color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.kf-gallery__nav {
+  display: flex;
+  gap: var(--kf-space-3xs);
+}
+
+.kf-gallery__prev .kf-icon {
+  transform: rotate(180deg);
+}
+
+.kf-gallery__nav button[disabled] {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Zoom ------------------------------------------------------------------- */
+
+[data-kf-gallery-zoom] {
+  cursor: zoom-in;
+}
+
+[data-kf-gallery-zoom] .kf-media__img {
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out);
+}
+
+.kf-motion-hover [data-kf-gallery-zoom][data-zooming] .kf-media__img {
+  transform: scale(1.9);
+  transform-origin: var(--kf-zoom-x, 50%) var(--kf-zoom-y, 50%);
+  transition-duration: var(--kf-motion-fast);
+}
+
+/* Lightbox --------------------------------------------------------------- */
+
+.kf-lightbox {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100svh;
+  max-height: 100svh;
+  padding: 0;
+  border: 0;
+  background-color: var(--kf-color-background);
+  color: var(--kf-color-text);
+}
+
+.kf-lightbox::backdrop {
+  background-color: color-mix(in oklab, #000 70%, transparent);
+}
+
+.kf-lightbox__track {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--kf-space-lg) var(--kf-page-gutter);
+  display: grid;
+  gap: var(--kf-space-sm);
+  justify-items: center;
+}
+
+.kf-lightbox__slide {
+  max-width: min(100%, 60rem);
+  width: 100%;
+}
+
+.kf-lightbox__close {
+  position: fixed;
+  inset-block-start: var(--kf-space-2xs);
+  inset-inline-end: var(--kf-space-2xs);
+  z-index: 2;
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-sm);
+}
+
+/* ==========================================================================
+   Variant picker
+   ========================================================================== */
+
+.kf-variant-option {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+}
+
+.kf-variant-option__legend {
+  display: flex;
+  gap: 0.35em;
+  align-items: baseline;
+  padding: 0;
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-muted);
+}
+
+.kf-variant-option__value {
+  color: var(--kf-color-heading);
+}
+
+.kf-variant-option__values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-3xs);
+}
+
+/* The radio itself is hidden but focusable; the label is the visible control,
+   so :focus-visible on the input styles the label via a sibling selector. */
+.kf-variant-option__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.kf-variant-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.5em 0.9em;
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+  border-radius: var(--kf-button-radius);
+  font-size: var(--kf-text-sm);
+  cursor: pointer;
+  transition: border-color var(--kf-motion-fast) var(--kf-ease-standard),
+              background-color var(--kf-motion-fast) var(--kf-ease-standard),
+              color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-variant-option__input:checked + .kf-variant-button {
+  border-color: var(--kf-color-heading);
+  background-color: var(--kf-color-heading);
+  color: var(--kf-color-background);
+}
+
+.kf-variant-option__input:focus-visible + .kf-variant-button {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: var(--kf-focus-offset);
+}
+
+@media (hover: hover) {
+  .kf-variant-button:hover {
+    border-color: var(--kf-color-heading);
+  }
+}
+
+/* Unavailable combinations stay selectable — a shopper is allowed to look at
+   a sold-out size — but they are visibly struck through. */
+[data-unavailable] .kf-variant-button,
+.kf-variant-button[data-unavailable] {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+/* Color swatches --------------------------------------------------------- */
+
+.kf-variant-swatch {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: var(--kf-radius-circle);
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+  background-color: var(--kf-swatch-color, var(--kf-color-surface));
+  background-image: var(--kf-swatch-image, none);
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: box-shadow var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-variant-option__input:checked + .kf-variant-swatch {
+  box-shadow: 0 0 0 2px var(--kf-color-background), 0 0 0 4px var(--kf-color-heading);
+}
+
+.kf-variant-option__input:focus-visible + .kf-variant-swatch {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: var(--kf-focus-offset);
+}
+
+[data-unavailable] .kf-variant-swatch {
+  opacity: 0.4;
+}
+
+/* Struck-through diagonal for unavailable swatches. */
+[data-unavailable] .kf-variant-swatch {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-unavailable] .kf-variant-swatch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 1px),
+    var(--kf-color-heading) 50%,
+    transparent calc(50% + 1px)
+  );
+}
+
+/* Quantity stepper styles live in component-quantity.css, because <kf-quantity>
+   is shared with the cart. Do not move them back here. */
+
+/* ==========================================================================
+   Buy buttons
+   ========================================================================== */
+
+.kf-buy-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+}
+
+/* A custom element is `display: inline` by default. Without this, the wrapper
+   above has a single inline child and its gap never reaches the real controls,
+   which sit inside the <form>. */
+kf-product-form {
+  display: block;
+}
+
+/* The form is where Add to cart, the dynamic checkout button and the status
+   messages actually live, so the spacing has to be applied here. */
+.kf-product-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-buy-buttons__row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-buy-buttons__row .kf-button {
+  flex: 1;
+}
+
+kf-product-form[data-loading] .kf-button.is-loading .kf-button__label {
+  opacity: 0.35;
+}
+
+.kf-button.is-loading::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  width: 1.1em;
+  height: 1.1em;
+  margin: -0.55em 0 0 -0.55em;
+  z-index: 3;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: kf-spin 700ms linear infinite;
+}
+
+@keyframes kf-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-button.is-loading::before {
+    animation-duration: 2s;
+  }
+}
+
+.kf-form-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-accent);
+}
+
+/* Shopify renders the dynamic checkout buttons; keep them on our rhythm. */
+.shopify-payment-button__button {
+  border-radius: var(--kf-button-radius) !important;
+  font-family: var(--kf-font-body) !important;
+  min-height: 2.9rem;
+}
+
+.shopify-payment-button__more-options {
+  margin-top: var(--kf-space-3xs);
+  font-size: var(--kf-text-sm);
+}
+
+/* ==========================================================================
+   Inventory
+   ========================================================================== */
+
+.kf-inventory {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--kf-text-sm);
+}
+
+.kf-inventory__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--kf-inventory-color, var(--kf-color-muted));
+  flex: 0 0 auto;
+}
+
+.kf-inventory--in { --kf-inventory-color: #2E9E5B; }
+.kf-inventory--low { --kf-inventory-color: #C9862B; }
+.kf-inventory--out { --kf-inventory-color: #C0453C; }
+
+/* Accordion styles live in blocks/product-accordion.liquid, because that block
+   is a generic @theme block that can be placed in any section. Do not move
+   them back here. */
+
+/* ==========================================================================
+   Sticky add to cart
+   ========================================================================== */
+
+kf-sticky-atc {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: var(--kf-z-sticky);
+  display: block;
+  transform: translateY(101%);
+  visibility: hidden;
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out),
+              visibility var(--kf-motion-normal) linear;
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+  box-shadow: var(--kf-shadow-lg);
+  padding-block: var(--kf-space-2xs);
+  padding-bottom: max(var(--kf-space-2xs), env(safe-area-inset-bottom));
+}
+
+kf-sticky-atc[data-visible] {
+  transform: none;
+  visibility: visible;
+}
+
+.kf-sticky-atc__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-sm);
+}
+
+.kf-sticky-atc__media {
+  width: 3rem;
+  flex: 0 0 auto;
+}
+
+.kf-sticky-atc__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.kf-sticky-atc__title {
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kf-sticky-atc__action {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 639px) {
+  .kf-sticky-atc__media,
+  .kf-sticky-atc__body {
+    display: none;
+  }
+
+  .kf-sticky-atc__action,
+  .kf-sticky-atc__action .kf-button {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Product meta
+   ========================================================================== */
+
+.kf-product-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-2xs) var(--kf-space-sm);
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-muted);
+}
+
+.kf-product__title {
+  font-size: var(--kf-h2);
+}
+
+.kf-share {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-share__feedback {
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-accent);
+}
+
+.kf-pickup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  font-size: var(--kf-text-sm);
+}

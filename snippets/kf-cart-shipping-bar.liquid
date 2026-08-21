@@ -1,0 +1,62 @@
+{%- comment -%}
+  Kofii Flow — Free shipping progress
+  ---------------------------------------------------------------------------
+  Shows how far a shopper is from the merchant's free shipping threshold.
+
+  Two deliberate constraints:
+
+  1. It renders nothing unless the merchant has explicitly enabled it. This
+     bar makes a promise about shipping cost, and the theme must not make that
+     promise on a store's behalf by default.
+  2. The threshold is compared against `cart.total_price`, which is the
+     discounted total — the same number checkout uses.
+
+  The threshold setting is entered in store currency (for example 75) and is
+  converted to cents here, because Shopify money values are integers.
+{%- endcomment -%}
+
+{%- liquid
+  assign threshold_amount = settings.cart_free_shipping_threshold | plus: 0
+  assign threshold = threshold_amount | times: 100
+
+  assign remaining = threshold | minus: cart.total_price
+
+  assign progress = 0
+  if threshold > 0
+    assign progress = cart.total_price | times: 100 | divided_by: threshold
+    if progress > 100
+      assign progress = 100
+    endif
+  endif
+
+  assign qualified = false
+  if remaining <= 0
+    assign qualified = true
+  endif
+
+  assign remaining_formatted = remaining | money
+-%}
+
+{%- if settings.cart_free_shipping and threshold > 0 and cart.item_count > 0 -%}
+  <div class="kf-shipping-bar{% if qualified %} kf-shipping-bar--qualified{% endif %}">
+    <p class="kf-shipping-bar__message kf-text-sm">
+      {%- if qualified -%}
+        {%- render 'kf-icon', name: 'check', size: 'sm' -%}
+        <span>{{ 'cart.shipping_qualified' | t }}</span>
+      {%- else -%}
+        <span>{{ 'cart.shipping_remaining_html' | t: amount: remaining_formatted }}</span>
+      {%- endif -%}
+    </p>
+
+    <div
+      class="kf-shipping-bar__track"
+      role="progressbar"
+      aria-valuenow="{{ progress }}"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-label="{{ 'cart.shipping_progress' | t }}"
+    >
+      <span class="kf-shipping-bar__fill" style="--kf-progress: {{ progress }}%;"></span>
+    </div>
+  </div>
+{%- endif -%}

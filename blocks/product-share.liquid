@@ -1,0 +1,53 @@
+{%- comment -%}
+  Kofii Flow — Share block
+  ---------------------------------------------------------------------------
+  Native share sheet where available, clipboard copy everywhere else.
+  See assets/kf-share.js.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+  assign share_url = target.url | prepend: shop.url
+  assign copied_text = 'products.product.share_copied' | t
+  assign error_text = 'products.product.share_failed' | t
+  assign share_label = block.settings.label
+  if share_label == blank
+    assign share_label = 'products.product.share' | t
+  endif
+-%}
+
+{%- if target != blank -%}
+  <kf-share
+    class="kf-share"
+    data-url="{{ share_url }}"
+    data-title="{{ target.title | escape }}"
+    data-copied-text="{{ copied_text | escape }}"
+    data-error-text="{{ error_text | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- render 'kf-button',
+      label: share_label,
+      style: 'plain',
+      size: 'sm',
+      icon: 'arrow-diagonal',
+      attributes: 'data-kf-share-button'
+    -%}
+    <span class="kf-share__feedback" data-kf-share-feedback role="status" hidden></span>
+  </kf-share>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Share",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave blank to use the theme default."
+    }
+  ],
+  "presets": [{ "name": "Share" }]
+}
+{% endschema %}

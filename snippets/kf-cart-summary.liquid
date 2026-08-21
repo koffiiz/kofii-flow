@@ -1,0 +1,86 @@
+{%- comment -%}
+  Kofii Flow — Cart summary
+  ---------------------------------------------------------------------------
+  Discounts, subtotal, note and checkout. Shared by the drawer and the cart
+  page so the totals can never drift between the two.
+
+  Every figure comes from Shopify. There is no arithmetic here and none in the
+  JavaScript: a cart total that the theme calculated itself would eventually
+  disagree with checkout.
+
+  Parameters:
+    compact  (boolean)  drawer layout
+    show_note (boolean) defaults to the theme setting
+    scope     (string)  id prefix, so the drawer and the cart page do not
+                        produce two elements with the same id on /cart
+{%- endcomment -%}
+
+{%- liquid
+  assign note_visible = show_note
+  if note_visible == blank
+    assign note_visible = settings.cart_show_note
+  endif
+-%}
+
+<div class="kf-cart-summary">
+  {%- if cart.cart_level_discount_applications.size > 0 -%}
+    <ul class="kf-cart-summary__discounts">
+      {%- for discount in cart.cart_level_discount_applications -%}
+        <li class="kf-cart-summary__row">
+          <span class="kf-badge kf-badge--accent">{{ discount.title }}</span>
+          <span>&minus;{{ discount.total_allocated_amount | money }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if note_visible -%}
+    <kf-cart-note class="kf-cart-note">
+      <details class="kf-cart-note__details">
+        <summary class="kf-link kf-text-sm">{{ 'cart.note' | t }}</summary>
+        <label class="kf-visually-hidden" for="CartNote-{{ scope }}">{{ 'cart.note' | t }}</label>
+        <textarea
+          class="kf-textarea kf-cart-note__field"
+          id="CartNote-{{ scope }}"
+          name="note"
+          rows="3"
+          placeholder="{{ 'cart.note_placeholder' | t }}"
+        >{{ cart.note }}</textarea>
+        <span class="kf-text-sm kf-text-accent" data-kf-note-status role="status" hidden>
+          {{ 'cart.note_saved' | t }}
+        </span>
+      </details>
+    </kf-cart-note>
+  {%- endif -%}
+
+  <div class="kf-cart-summary__totals">
+    <div class="kf-cart-summary__row kf-cart-summary__row--subtotal">
+      <span>{{ 'cart.subtotal' | t }}</span>
+      <span class="kf-cart-summary__amount">{{ cart.total_price | money_with_currency }}</span>
+    </div>
+    <p class="kf-text-sm kf-text-muted">{{ 'cart.taxes_note' | t }}</p>
+  </div>
+
+  <p class="kf-form-message kf-form-message--error" data-kf-cart-error role="alert" hidden></p>
+
+  <div class="kf-cart-summary__actions">
+    {%- comment -%}
+      No `form` attribute: this snippet is always rendered inside the cart
+      form. The drawer and the cart page each have their own, and a shared id
+      would collide when both exist on /cart.
+    {%- endcomment -%}
+    <button
+      type="submit"
+      name="checkout"
+      class="kf-button kf-button--full kf-button--lg"
+    >
+      <span class="kf-button__label">{{ 'cart.checkout' | t }}</span>
+    </button>
+
+    {%- if compact -%}
+      <a class="kf-link kf-cart-summary__view" href="{{ routes.cart_url }}">
+        {{ 'cart.view_cart' | t }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>

@@ -1,0 +1,390 @@
+{%- comment -%}
+  Kofii Flow — Product
+  ---------------------------------------------------------------------------
+  The product page. Media on one side, a fully merchant-ordered stack of theme
+  blocks on the other.
+
+  Architecture notes:
+
+  - Nothing about the product information layout is hardcoded. Title, price,
+    variant picker, quantity, buy buttons, description, accordions and the rest
+    are all theme blocks the merchant can reorder, remove or duplicate.
+  - Variant changes re-render this section server-side. Regions marked
+    `[data-kf-variant-region]` are swapped, so price, inventory, SKU, pickup
+    and the buy button state are always rendered by Liquid.
+  - `data-kf-product-root` and `data-kf-section-id` on the wrapper are what let
+    theme blocks — which cannot see the `section` object — find the section id.
+  - There is exactly one product form on the page, `KfProductForm-<id>`. The
+    quantity input and the sticky bar bind to it with the HTML `form`
+    attribute rather than duplicating it.
+{%- endcomment -%}
+
+{{ 'section-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-product-gallery.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-product-form.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-accordion.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-share.js' | asset_url }}" defer></script>
+{%- if section.settings.sticky_atc -%}
+  <script src="{{ 'kf-sticky-atc.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- liquid
+  assign s = section.settings
+  assign variant = product.selected_or_first_available_variant
+  assign form_id = 'KfProductForm-' | append: product.id
+  assign actions_id = form_id | append: '-actions'
+
+  assign layout_class = 'kf-product'
+  if s.media_position == 'right'
+    assign layout_class = layout_class | append: ' kf-product--media-right'
+  endif
+  if s.sticky_info
+    assign layout_class = layout_class | append: ' kf-product--sticky-info'
+  endif
+
+  assign gallery_class = 'kf-gallery kf-gallery--' | append: s.gallery_layout
+
+  assign media_width = '1.15fr'
+  case s.media_size
+    when 'small'
+      assign media_width = '0.9fr'
+    when 'large'
+      assign media_width = '1.45fr'
+  endcase
+
+  assign gallery_sizes = '(min-width: 990px) 55vw, 100vw'
+
+  assign media_label = 'products.product.media_gallery' | t
+
+  comment
+    Built here because render arguments accept neither filters nor expressions.
+  endcomment
+  assign root_style = '--kf-product-media-width: ' | append: media_width | append: ';'
+-%}
+
+<div
+  id="kf-product-{{ section.id }}"
+  data-kf-product-root
+  data-kf-section-id="{{ section.id }}"
+  {% render 'kf-section-attrs',
+    s: section.settings,
+    extra_class: layout_class,
+    style: root_style %}
+>
+  <div class="kf-container">
+    <div class="kf-product__layout">
+      {%- comment -%} ------------------------------------------------ Media {%- endcomment -%}
+      <div class="kf-product__media">
+        {%- if product.media.size > 0 -%}
+          <kf-product-gallery class="{{ gallery_class }}" data-zoom="{{ s.zoom }}">
+            <div
+              class="kf-gallery__viewer"
+              data-kf-gallery-viewer
+              role="group"
+              aria-label="{{ media_label | escape }}"
+            >
+              {%- for media in product.media -%}
+                <div
+                  class="kf-gallery__slide"
+                  data-kf-gallery-slide
+                  data-media-id="{{ media.id }}"
+                >
+                  {%- render 'kf-product-media',
+                    media: media,
+                    ratio: s.media_ratio,
+                    sizes: gallery_sizes,
+                    loading: 'eager',
+                    priority: forloop.first,
+                    zoom: true
+                  -%}
+                </div>
+              {%- endfor -%}
+            </div>
+
+            {%- comment -%}
+              The thumbnail list and the nav row are direct children of
+              <kf-product-gallery> on purpose: the thumbs-beside-image layout
+              places them with grid-template-areas, which only works on direct
+              grid children. Do not wrap them in a shared container.
+            {%- endcomment -%}
+            {%- if product.media.size > 1 -%}
+              {%- if s.show_thumbnails -%}
+                <ul class="kf-gallery__thumbs">
+                  {%- for media in product.media -%}
+                    <li class="kf-gallery__thumbs-item">
+                      <button
+                        type="button"
+                        class="kf-gallery__thumb"
+                        data-kf-gallery-thumb
+                        aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+                      >
+                        {%- render 'kf-media',
+                          image: media.preview_image,
+                          ratio: 'square',
+                          sizes: '72px',
+                          widths: '72,144,216',
+                          alt: media.alt
+                        -%}
+                        <span class="kf-visually-hidden">
+                          {{- 'products.product.media_item' | t: index: forloop.index -}}
+                        </span>
+                      </button>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+
+              <div class="kf-gallery__nav-row">
+                <span class="kf-gallery__counter" data-kf-gallery-counter aria-hidden="true">
+                  1 / {{ product.media.size }}
+                </span>
+                <div class="kf-gallery__nav">
+                  <button type="button" class="kf-icon-button kf-gallery__prev" data-kf-gallery-prev>
+                    {%- render 'kf-icon', name: 'arrow' -%}
+                    <span class="kf-visually-hidden">{{ 'products.product.previous_media' | t }}</span>
+                  </button>
+                  <button type="button" class="kf-icon-button kf-gallery__next" data-kf-gallery-next>
+                    {%- render 'kf-icon', name: 'arrow' -%}
+                    <span class="kf-visually-hidden">{{ 'products.product.next_media' | t }}</span>
+                  </button>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if s.zoom == 'lightbox' -%}
+              <dialog class="kf-lightbox" data-kf-gallery-lightbox>
+                <button type="button" class="kf-icon-button kf-lightbox__close" data-kf-lightbox-close>
+                  {%- render 'kf-icon', name: 'close' -%}
+                  <span class="kf-visually-hidden">{{ 'general.accessibility.close' | t }}</span>
+                </button>
+
+                <div class="kf-lightbox__track">
+                  {%- for media in product.media -%}
+                    {%- if media.media_type == 'image' -%}
+                      <div class="kf-lightbox__slide" data-kf-lightbox-slide>
+                        {%- render 'kf-media',
+                          image: media.preview_image,
+                          ratio: 'adapt',
+                          sizes: '(min-width: 990px) 60rem, 100vw',
+                          alt: media.alt
+                        -%}
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </dialog>
+            {%- endif -%}
+          </kf-product-gallery>
+        {%- else -%}
+          {%- comment -%} Theme Editor / new product: keep the layout intact. {%- endcomment -%}
+          {%- render 'kf-media',
+            ratio: s.media_ratio,
+            placeholder: 'product-apparel-2',
+            class: 'kf-product__media-placeholder'
+          -%}
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ------------------------------------------------- Info {%- endcomment -%}
+      <div class="kf-product__info">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ------------------------------------------- Sticky add to cart {%- endcomment -%}
+  {%- if section.settings.sticky_atc -%}
+    {%- liquid
+      assign sticky_scheme = s.sticky_color_scheme
+      assign sticky_attrs = 'form="' | append: form_id | append: '"'
+      assign sticky_label = 'products.product.add_to_cart' | t
+      unless variant.available
+        assign sticky_label = 'products.product.sold_out' | t
+      endunless
+
+      assign sticky_disabled = true
+      if variant.available
+        assign sticky_disabled = false
+      endif
+    -%}
+    <kf-sticky-atc
+      class="kf-scheme kf-scheme--{{ sticky_scheme.id }}"
+      data-watch="{{ actions_id }}"
+    >
+      <div class="kf-container kf-sticky-atc__inner">
+        {%- if product.featured_media -%}
+          <div class="kf-sticky-atc__media">
+            {%- render 'kf-media',
+              image: product.featured_media.preview_image,
+              ratio: 'square',
+              sizes: '48px',
+              widths: '48,96,144'
+            -%}
+          </div>
+        {%- endif -%}
+
+        <div class="kf-sticky-atc__body">
+          <span class="kf-sticky-atc__title">{{ product.title | escape }}</span>
+          <span data-kf-variant-region="sticky-price">
+            {%- render 'kf-price', product: product, variant: variant, show_from: false -%}
+          </span>
+        </div>
+
+        <div class="kf-sticky-atc__action" data-kf-variant-region="sticky-action">
+          {%- render 'kf-button',
+            label: sticky_label,
+            type: 'submit',
+            style: 'primary',
+            disabled: sticky_disabled,
+            attributes: sticky_attrs
+          -%}
+        </div>
+      </div>
+    </kf-sticky-atc>
+  {%- endif -%}
+</div>
+
+{%- render 'kf-product-structured-data', product: product -%}
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "class": "kf-product-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "label": "Gallery layout",
+      "options": [
+        { "value": "carousel", "label": "Carousel with thumbnails below" },
+        { "value": "thumbs-left", "label": "Thumbnails beside the image" },
+        { "value": "stacked", "label": "Stacked, all images visible" }
+      ],
+      "default": "thumbs-left"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show thumbnails",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media position on desktop",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "Media width on desktop",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "zoom",
+      "label": "Zoom",
+      "options": [
+        { "value": "none", "label": "Off" },
+        { "value": "hover", "label": "Magnify on hover" },
+        { "value": "lightbox", "label": "Open full screen on click" }
+      ],
+      "default": "lightbox"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_info",
+      "label": "Keep product details in view while scrolling",
+      "default": true,
+      "info": "Desktop only. Best when the gallery is taller than the details."
+    },
+    {
+      "type": "header",
+      "content": "Sticky add to cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_atc",
+      "label": "Show a sticky add to cart bar",
+      "default": true,
+      "info": "Appears once the real buy buttons scroll out of view."
+    },
+    {
+      "type": "color_scheme",
+      "id": "sticky_color_scheme",
+      "label": "Sticky bar color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ]
+}
+{% endschema %}

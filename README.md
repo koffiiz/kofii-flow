@@ -6,7 +6,7 @@ A premium, animation-rich Shopify Online Store 2.0 theme.
 
 Kofii Flow pairs Shopify's commerce platform with Webflow-grade interaction quality, built on a real design system: two-layer design tokens, one animation engine, one product card, one button, one media frame. No React, no Tailwind, no GSAP, no jQuery — Liquid, modern CSS, and vanilla Custom Elements.
 
-> **Status: Phase 1 (foundation).** The design system, motion engine, header, footer, hero, search, page and 404 are complete and production-quality. Product, collection, cart, blog and the wider marketing section library are not built yet. See [CLAUDE.md § 10](CLAUDE.md#10-current-state-and-roadmap) for the exact list.
+> **Status: Phase 3a complete.** The design system, motion engine, header, footer, hero, search, page, 404, the full product page and the cart (drawer + page) are production-quality. Collection, blog and the wider marketing section library are not built yet. See [CLAUDE.md § 10](CLAUDE.md#10-current-state-and-roadmap) for the exact list.
 
 ---
 
@@ -96,7 +96,7 @@ Stricter audit using every available Theme Check rule (`.dev/theme-check-all.yml
 npm run verify
 ```
 
-`validate` then `check`. Run this before every commit. Both currently pass with zero offenses across 50 inspected files.
+`validate` then `check`. Run this before every commit. Both currently pass with zero offenses.
 
 ---
 

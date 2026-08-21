@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {
+        "show_recommendations": true,
+        "color_scheme": "scheme-1",
+        "padding_top": 56,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

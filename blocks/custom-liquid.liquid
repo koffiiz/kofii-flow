@@ -1,0 +1,32 @@
+{%- comment -%}
+  Kofii Flow — Custom Liquid block
+  ---------------------------------------------------------------------------
+  An escape hatch for merchants and agencies: app snippets, tracking markup, a
+  one-off piece of content that does not justify a new block type.
+
+  Deliberately unwrapped and unescaped — the point is to output exactly what
+  was entered. Anything a merchant writes here runs with full Liquid access,
+  so it is their code, not the theme's.
+{%- endcomment -%}
+
+{%- if block.settings.code != blank -%}
+  <div class="kf-custom-liquid" {{ block.shopify_attributes }}>
+    {{ block.settings.code }}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Custom Liquid",
+  "tag": null,
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "code",
+      "label": "Liquid",
+      "info": "Add app snippets or custom Liquid. Anything invalid here will show as an error on the storefront."
+    }
+  ],
+  "presets": [{ "name": "Custom Liquid" }]
+}
+{% endschema %}

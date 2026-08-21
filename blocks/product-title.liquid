@@ -1,0 +1,88 @@
+{%- comment -%}
+  Kofii Flow — Product title block
+  ---------------------------------------------------------------------------
+  Uses `closest.product`, so the same block works in main-product today and in
+  a product spotlight or quick view later without changes.
+
+  The visual size and the heading level are separate settings: the product
+  title should be the page <h1> even when it is styled small.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+  assign tag = block.settings.heading_tag | default: 'h1'
+-%}
+
+{%- if target != blank -%}
+  <{{ tag }}
+    class="kf-product__title {{ block.settings.heading_size }}"
+    {% render 'kf-motion-attrs', motion: block.settings %}
+    {{ block.shopify_attributes }}
+  >
+    {{- target.title | escape -}}
+  </{{ tag }}>
+{%- else -%}
+  <p class="kf-product__title kf-h3 kf-muted" {{ block.shopify_attributes }}>
+    {{ 'products.product.placeholder_title' | t }}
+  </p>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Size",
+      "options": [
+        { "value": "kf-h4", "label": "Small" },
+        { "value": "kf-h3", "label": "Medium" },
+        { "value": "kf-h2", "label": "Large" },
+        { "value": "kf-h1", "label": "Extra large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "info": "The product title should normally be the H1 of a product page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "reveal", "label": "Editorial reveal" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [{ "name": "Product title" }]
+}
+{% endschema %}

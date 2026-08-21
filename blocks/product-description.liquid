@@ -1,0 +1,70 @@
+{%- comment -%}
+  Kofii Flow — Product description block
+  ---------------------------------------------------------------------------
+  Renders the product description from the admin. Optionally collapses long
+  descriptions behind a "Read more" toggle, built on <details> so the full text
+  is always present in the DOM for search engines and for find-in-page.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+-%}
+
+{%- if target.description != blank -%}
+  <div class="kf-product__description" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h2 class="kf-label kf-text-muted">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if block.settings.collapse -%}
+      <details class="kf-product__description-details">
+        <summary class="kf-product__description-summary">
+          <div class="kf-rte kf-product__description-preview">
+            {{ target.description | strip_html | truncatewords: 40 }}
+          </div>
+          <span class="kf-link kf-product__description-toggle">
+            {{ 'products.product.read_more' | t }}
+          </span>
+        </summary>
+        <div class="kf-rte kf-product__description-full">{{ target.description }}</div>
+      </details>
+    {%- else -%}
+      <div class="kf-rte">{{ target.description }}</div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+.kf-product__description-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  align-items: flex-start;
+}
+
+.kf-product__description-details[open] .kf-product__description-summary {
+  display: none;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse",
+      "label": "Collapse long descriptions",
+      "default": false,
+      "info": "Shows the first 40 words with a Read more toggle. The full text stays in the page for SEO."
+    }
+  ],
+  "presets": [{ "name": "Description" }]
+}
+{% endschema %}

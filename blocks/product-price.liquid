@@ -1,0 +1,79 @@
+{%- comment -%}
+  Kofii Flow — Product price block
+  ---------------------------------------------------------------------------
+  Wrapped in `[data-kf-variant-region="price"]`. When the shopper picks a
+  different variant, <kf-variant-picker> re-renders the section server-side and
+  swaps this region's contents — so price, sale badge and taxes are always
+  rendered by Liquid, never recomputed in JavaScript.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = closest.product
+  assign variant = target.selected_or_first_available_variant
+-%}
+
+<div class="kf-product__price" data-kf-variant-region="price" {{ block.shopify_attributes }}>
+  {%- if target != blank -%}
+    <div class="kf-cluster">
+      {%- render 'kf-price', product: target, variant: variant, show_from: false -%}
+
+      {%- if block.settings.show_sale_badge and variant.compare_at_price > variant.price -%}
+        {%- liquid
+          assign savings = variant.compare_at_price | minus: variant.price
+          assign savings_percent = savings | times: 100 | divided_by: variant.compare_at_price
+          assign savings_formatted = savings | money
+        -%}
+        <span class="kf-badge kf-badge--accent">
+          {%- if block.settings.sale_badge_style == 'percent' -%}
+            {{ 'products.product.save_percent' | t: percent: savings_percent }}
+          {%- elsif block.settings.sale_badge_style == 'amount' -%}
+            {{ 'products.product.save_amount' | t: amount: savings_formatted }}
+          {%- else -%}
+            {{ 'products.product.on_sale' | t }}
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+    </div>
+
+    {%- if block.settings.show_tax_note -%}
+      <p class="kf-text-sm kf-text-muted kf-product__tax-note">
+        {{ 'products.product.tax_and_shipping_html' | t: link: routes.root_url }}
+      </p>
+    {%- endif -%}
+  {%- else -%}
+    <div class="kf-price"><span class="kf-price__regular kf-muted">{{ 1999 | money }}</span></div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Price",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "label": "Show sale badge",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "sale_badge_style",
+      "label": "Sale badge shows",
+      "options": [
+        { "value": "text", "label": "Sale" },
+        { "value": "percent", "label": "Percentage saved" },
+        { "value": "amount", "label": "Amount saved" }
+      ],
+      "default": "percent"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tax_note",
+      "label": "Show tax and shipping note",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "Price" }]
+}
+{% endschema %}

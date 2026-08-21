@@ -104,8 +104,7 @@
           "on_secondary_button": "outline_button",
           "secondary_button_border": "outline_button",
           "icons": "text",
-          "links": "accent",
-          "shadow": "shadow"
+          "links": "accent"
         }
       }
     ]
@@ -548,6 +547,65 @@
       {
         "type": "paragraph",
         "content": "Motion always respects a reduced-motion preference, and content stays readable if JavaScript fails."
+      }
+    ]
+  },
+
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          { "value": "drawer", "label": "Slide-out drawer" },
+          { "value": "page", "label": "Go to the cart page" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_note",
+        "label": "Let shoppers add an order note",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Free shipping progress"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_free_shipping",
+        "label": "Show free shipping progress",
+        "default": false,
+        "info": "Only turn this on if you actually offer free shipping at a threshold. Set the real rate up in Settings > Shipping."
+      },
+      {
+        "type": "text",
+        "id": "cart_free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "default": "75",
+        "info": "The amount in your store currency, without a symbol. For example: 75"
+      },
+      {
+        "type": "header",
+        "content": "Recommendations"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_recommendations",
+        "label": "Show recommended products in the cart",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "cart_recommendations_count",
+        "label": "Number of recommendations",
+        "min": 2,
+        "max": 6,
+        "step": 1,
+        "default": 3
       }
     ]
   },

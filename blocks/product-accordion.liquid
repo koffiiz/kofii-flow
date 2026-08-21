@@ -1,0 +1,111 @@
+{%- comment -%}
+  Kofii Flow — Accordion block
+  ---------------------------------------------------------------------------
+  Collapsible rows for shipping, care, sizing and similar. Built on native
+  <details>, enhanced by <kf-accordion> for the open/close animation and the
+  optional one-at-a-time behaviour.
+
+  Not product-specific despite the file name grouping — it works anywhere
+  theme blocks are accepted.
+{%- endcomment -%}
+
+{%- if block.blocks.size > 0 -%}
+  <kf-accordion
+    class="kf-product__accordion"
+    data-single="{{ block.settings.single }}"
+    {% render 'kf-motion-attrs', motion: block.settings %}
+    {{ block.shopify_attributes }}
+  >
+    {% content_for 'blocks' %}
+  </kf-accordion>
+{%- endif -%}
+
+{% stylesheet %}
+/* Carried by the block itself, not by a section stylesheet: this is a generic
+   @theme block and can be placed in any section that accepts theme blocks. */
+kf-accordion {
+  display: block;
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-accordion__item {
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kf-space-2xs);
+  padding-block: var(--kf-space-xs);
+  font-size: var(--kf-text-md);
+  color: var(--kf-color-heading);
+}
+
+.kf-accordion__icon {
+  transition: transform var(--kf-motion-fast) var(--kf-ease-out);
+  color: var(--kf-color-muted);
+}
+
+.kf-accordion__item[open] .kf-accordion__icon {
+  transform: rotate(180deg);
+}
+
+.kf-accordion__panel {
+  overflow: hidden;
+}
+
+.kf-accordion__panel-inner {
+  padding-bottom: var(--kf-space-xs);
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Accordion",
+  "tag": null,
+  "blocks": [{ "type": "_accordion-item" }],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "single",
+      "label": "Open one row at a time",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordion",
+      "blocks": [
+        { "type": "_accordion-item" },
+        { "type": "_accordion-item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
