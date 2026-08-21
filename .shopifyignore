@@ -1,0 +1,12 @@
+# Files that live in the repo but must never be uploaded to a store.
+.dev/
+node_modules/
+.git/
+README.md
+CLAUDE.md
+package.json
+package-lock.json
+.editorconfig
+.theme-check.yml
+.gitignore
+.shopifyignore

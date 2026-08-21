@@ -1,0 +1,23 @@
+# Shopify
+.shopify/
+*.zip
+
+# Local theme config that contains store credentials / IDs
+shopify.theme.toml
+.env
+.env.*
+
+# Merchant data pulled from a live store — never commit over the reference file
+config/settings_data.json.bak
+templates/*.bak
+
+# Editors
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Node (dev tooling only — the theme itself ships no dependencies)
+node_modules/
+npm-debug.log*

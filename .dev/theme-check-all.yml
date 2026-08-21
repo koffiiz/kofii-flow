@@ -1,0 +1,4 @@
+extends: theme-check:all
+ignore:
+  - .dev/*
+  - node_modules/*

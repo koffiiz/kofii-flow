@@ -1,0 +1,162 @@
+{%- comment -%}
+  Kofii Flow — Image block
+  Renders through snippets/kf-media.liquid, so ratio handling, srcset, focal
+  point and hover behaviour match every other image in the theme.
+{%- endcomment -%}
+
+{%- liquid
+  assign wrapper_class = 'kf-block-image'
+  case block.settings.width
+    when 'narrow'
+      assign wrapper_class = wrapper_class | append: ' kf-block-image--narrow'
+    when 'medium'
+      assign wrapper_class = wrapper_class | append: ' kf-block-image--medium'
+  endcase
+
+  assign parallax_strength = block.settings.parallax | divided_by: 100.0
+
+  assign link_label = block.settings.image.alt
+  if link_label == blank
+    assign link_label = 'general.accessibility.image_link' | t
+  endif
+-%}
+
+<div
+  class="{{ wrapper_class }}"
+  {% render 'kf-motion-attrs', motion: block.settings %}
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.link != blank -%}
+    <a href="{{ block.settings.link }}" aria-label="{{ link_label | escape }}">
+  {%- endif -%}
+
+  {%- render 'kf-media',
+    image: block.settings.image,
+    ratio: block.settings.ratio,
+    sizes: '(min-width: 990px) 50vw, 100vw',
+    zoom: block.settings.hover_zoom,
+    parallax: parallax_strength,
+    placeholder: 'image',
+    flush: block.settings.flush
+  -%}
+
+  {%- if block.settings.link != blank -%}
+    </a>
+  {%- endif -%}
+
+  {%- if block.settings.caption != blank -%}
+    <p class="kf-block-image__caption kf-text-sm kf-text-muted">{{ block.settings.caption | escape }}</p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "Ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "checkbox",
+      "id": "flush",
+      "label": "Remove corner rounding",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_zoom",
+      "label": "Zoom on hover",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "zoom-in", "label": "Zoom" },
+        { "value": "blur-in", "label": "Blur" },
+        { "value": "clip-up", "label": "Clip reveal" },
+        { "value": "clip-left", "label": "Clip from right" },
+        { "value": "reveal", "label": "Editorial reveal" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "parallax",
+      "label": "Parallax strength",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 0,
+      "info": "0 turns parallax off. Ignored when Flow Mode is off or the visitor prefers reduced motion."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image"
+    }
+  ]
+}
+{% endschema %}

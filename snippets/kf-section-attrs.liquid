@@ -1,0 +1,52 @@
+{%- comment -%}
+  Kofii Flow — Section attributes
+  ---------------------------------------------------------------------------
+  Emits the `class` and `style` attributes shared by every section: the color
+  scheme, section padding, and the optional section transition.
+
+  Usage:
+    <section id="kf-{{ section.id }}"
+             {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-hero' %}>
+
+  Reads these ids from `s` (copy-paste schema in CLAUDE.md):
+    color_scheme, padding_top, padding_bottom, section_transition
+
+  Parameters:
+    s           (object, required)  the section settings
+    extra_class (string)            section-specific classes
+    style       (string)            extra inline custom properties
+    full_width  (boolean)           adds .kf-section--flush for edge-to-edge sections
+
+  Padding values are multiplied by --kf-space-scale so the global spacing
+  slider still applies to per-section overrides.
+{%- endcomment -%}
+
+{%- liquid
+  assign scheme = s.color_scheme
+  assign classes = 'kf-section kf-scheme'
+
+  if scheme.id != blank
+    assign classes = classes | append: ' kf-scheme--' | append: scheme.id
+  endif
+  if scheme.settings.background_gradient != blank
+    assign classes = classes | append: ' kf-scheme--gradient'
+  endif
+
+  assign transition = s.section_transition | default: 'none'
+  if settings.motion_section_transitions and transition != 'none'
+    assign classes = classes | append: ' kf-section--transition-' | append: transition
+  endif
+
+  if full_width
+    assign classes = classes | append: ' kf-section--full'
+  endif
+  if extra_class != blank
+    assign classes = classes | append: ' ' | append: extra_class
+  endif
+-%}
+
+class="{{ classes }}" style="
+{%- if s.padding_top != blank -%}--kf-section-padding-block-start:calc({{ s.padding_top }}px * var(--kf-space-scale));{%- endif -%}
+{%- if s.padding_bottom != blank -%}--kf-section-padding-block-end:calc({{ s.padding_bottom }}px * var(--kf-space-scale));{%- endif -%}
+{{- style -}}
+"

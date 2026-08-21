@@ -1,0 +1,90 @@
+{%- comment -%}
+  Kofii Flow — Badge block
+  A small label: an eyebrow above a heading, a "New in" pill, a trust marker.
+{%- endcomment -%}
+
+{%- if block.settings.text != blank -%}
+  <div
+    class="kf-block-badge"
+    {% render 'kf-motion-attrs', motion: block.settings %}
+    {{ block.shopify_attributes }}
+  >
+    <span class="kf-badge kf-badge--{{ block.settings.style }}">
+      {%- if block.settings.icon != 'none' -%}
+        {%- render 'kf-icon', name: block.settings.icon, size: 'sm' -%}
+      {%- endif -%}
+      {{ block.settings.text | escape }}
+    </span>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "New this season"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "muted", "label": "Muted" },
+        { "value": "outline", "label": "Outline" },
+        { "value": "solid", "label": "Solid" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "star", "label": "Star" },
+        { "value": "check", "label": "Check" },
+        { "value": "arrow", "label": "Arrow" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Badge"
+    }
+  ]
+}
+{% endschema %}

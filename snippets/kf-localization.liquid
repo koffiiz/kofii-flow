@@ -1,0 +1,96 @@
+{%- comment -%}
+  Kofii Flow — Country and language selectors
+  ---------------------------------------------------------------------------
+  Native <select> elements inside Shopify's localization form. They submit on
+  change when JavaScript is available (handled by the shared
+  [data-kf-auto-submit] behaviour in kf-core.js) and fall back to a visible
+  submit button when it is not.
+
+  Parameters:
+    id       (string, required)  unique fragment, e.g. 'Footer'
+    country  (boolean)           show the country selector (default true)
+    language (boolean)           show the language selector (default true)
+    class    (string)
+{%- endcomment -%}
+
+{%- liquid
+  assign scope = id | default: 'Localization'
+  assign show_country = country
+  if show_country == blank
+    assign show_country = true
+  endif
+  assign show_language = language
+  if show_language == blank
+    assign show_language = true
+  endif
+
+  assign has_country = false
+  if show_country and localization.available_countries.size > 1
+    assign has_country = true
+  endif
+
+  assign form_class = 'kf-localization'
+  if class != blank
+    assign form_class = form_class | append: ' ' | append: class
+  endif
+
+  assign has_language = false
+  if show_language and localization.available_languages.size > 1
+    assign has_language = true
+  endif
+-%}
+
+{%- if has_country or has_language -%}
+  {%- form 'localization', class: form_class -%}
+    {%- if has_country -%}
+      <div class="kf-field kf-localization__field">
+        <label class="kf-visually-hidden" for="{{ scope }}-country">
+          {{- 'general.localization.country_label' | t -}}
+        </label>
+        <select
+          id="{{ scope }}-country"
+          class="kf-select kf-select--compact"
+          name="country_code"
+          data-kf-auto-submit
+        >
+          {%- for country_option in localization.available_countries -%}
+            <option
+              value="{{ country_option.iso_code }}"
+              {% if country_option.iso_code == localization.country.iso_code %}selected{% endif %}
+            >
+              {{ country_option.name }} ({{ country_option.currency.iso_code }} {{ country_option.currency.symbol }})
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
+
+    {%- if has_language -%}
+      <div class="kf-field kf-localization__field">
+        <label class="kf-visually-hidden" for="{{ scope }}-language">
+          {{- 'general.localization.language_label' | t -}}
+        </label>
+        <select
+          id="{{ scope }}-language"
+          class="kf-select kf-select--compact"
+          name="locale_code"
+          data-kf-auto-submit
+        >
+          {%- for language_option in localization.available_languages -%}
+            <option
+              value="{{ language_option.iso_code }}"
+              lang="{{ language_option.iso_code }}"
+              {% if language_option.iso_code == localization.language.iso_code %}selected{% endif %}
+            >
+              {{ language_option.endonym_name | capitalize }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
+
+    <button type="submit" class="kf-button kf-button--secondary kf-button--sm kf-localization__submit">
+      <span class="kf-button__label">{{ 'general.localization.update' | t }}</span>
+    </button>
+  {%- endform -%}
+{%- endif -%}

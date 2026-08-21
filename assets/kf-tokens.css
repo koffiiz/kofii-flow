@@ -1,0 +1,243 @@
+/* ==========================================================================
+   Kofii Flow — Design tokens
+   --------------------------------------------------------------------------
+   Layer A of the two-layer token system.
+
+   This file declares every token the theme uses, with a sensible static
+   default. Layer B (`snippets/kf-css-variables.liquid`) is emitted inline in
+   <head> from Theme Settings and overrides the tokens a merchant controls.
+
+   Consequences of that split:
+     - The theme still renders correctly if a setting is missing or blank.
+     - Theme Editor changes apply live without an extra network request.
+     - Nothing in the theme should ever hardcode a color, size or duration.
+
+   Breakpoints (documented here, hardcoded in media queries because custom
+   properties cannot be used inside @media):
+     xs  480px   sm 640px   md 768px   lg 990px   xl 1200px   2xl 1440px
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------- Scales */
+  /* Multipliers driven by Theme Settings. Everything else derives from them. */
+  --kf-space-scale: 1;
+  --kf-radius-scale: 1;
+  --kf-type-body-scale: 1;
+  --kf-type-heading-scale: 1;
+  --kf-shadow-alpha: 0.06;
+
+  /* ------------------------------------------------------------- Typography */
+  --kf-font-heading: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --kf-font-heading-weight: 700;
+  --kf-font-heading-style: normal;
+  --kf-font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --kf-font-body-weight: 400;
+  --kf-font-body-style: normal;
+  --kf-font-body-weight-bold: 600;
+  --kf-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --kf-heading-spacing: -0.02em;
+  --kf-heading-leading: 1;
+  --kf-heading-transform: none;
+  --kf-body-leading: 1.6;
+  --kf-label-transform: uppercase;
+  --kf-label-spacing: 0.08em;
+
+  /* Fluid type ramp. Body steps track --kf-type-body-scale, heading steps
+     track --kf-type-heading-scale, so the two can be tuned independently. */
+  --kf-text-2xs: calc(0.6875rem * var(--kf-type-body-scale));
+  --kf-text-xs: calc(0.75rem * var(--kf-type-body-scale));
+  --kf-text-sm: calc(0.875rem * var(--kf-type-body-scale));
+  --kf-text-md: calc(1rem * var(--kf-type-body-scale));
+  --kf-text-lg: calc(clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem) * var(--kf-type-body-scale));
+  --kf-text-xl: calc(clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem) * var(--kf-type-body-scale));
+
+  --kf-h6: calc(clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem) * var(--kf-type-heading-scale));
+  --kf-h5: calc(clamp(1.0625rem, 1rem + 0.3vw, 1.25rem) * var(--kf-type-heading-scale));
+  --kf-h4: calc(clamp(1.25rem, 1.15rem + 0.5vw, 1.625rem) * var(--kf-type-heading-scale));
+  --kf-h3: calc(clamp(1.5rem, 1.3rem + 1vw, 2.25rem) * var(--kf-type-heading-scale));
+  --kf-h2: calc(clamp(1.875rem, 1.5rem + 1.9vw, 3.125rem) * var(--kf-type-heading-scale));
+  --kf-h1: calc(clamp(2.375rem, 1.8rem + 2.9vw, 4.125rem) * var(--kf-type-heading-scale));
+  --kf-display-sm: calc(clamp(2.75rem, 1.9rem + 4.2vw, 5.5rem) * var(--kf-type-heading-scale));
+  --kf-display-md: calc(clamp(3.25rem, 2rem + 6vw, 7.5rem) * var(--kf-type-heading-scale));
+  --kf-display-lg: calc(clamp(3.75rem, 2rem + 8.5vw, 10rem) * var(--kf-type-heading-scale));
+
+  /* ---------------------------------------------------------------- Spacing */
+  /* One fluid unit; every step is a multiple of it, then scaled globally. */
+  --kf-space-unit: clamp(0.875rem, 0.72rem + 0.75vw, 1.25rem);
+  --kf-space-3xs: calc(var(--kf-space-unit) * 0.25 * var(--kf-space-scale));
+  --kf-space-2xs: calc(var(--kf-space-unit) * 0.5 * var(--kf-space-scale));
+  --kf-space-xs: calc(var(--kf-space-unit) * 0.75 * var(--kf-space-scale));
+  --kf-space-sm: calc(var(--kf-space-unit) * 1 * var(--kf-space-scale));
+  --kf-space-md: calc(var(--kf-space-unit) * 1.5 * var(--kf-space-scale));
+  --kf-space-lg: calc(var(--kf-space-unit) * 2.5 * var(--kf-space-scale));
+  --kf-space-xl: calc(var(--kf-space-unit) * 4 * var(--kf-space-scale));
+  --kf-space-2xl: calc(var(--kf-space-unit) * 6 * var(--kf-space-scale));
+  --kf-space-3xl: calc(var(--kf-space-unit) * 9 * var(--kf-space-scale));
+
+  /* ----------------------------------------------------------------- Layout */
+  --kf-page-width: 1440px;
+  --kf-page-gutter: clamp(1rem, 0.6rem + 1.6vw, 1.5rem);
+  --kf-grid-gap: 1.5rem;
+  --kf-content-width: 46rem;
+  --kf-narrow-width: 34rem;
+
+  /* Vertical rhythm for sections. Sections multiply these by their own
+     top/bottom spacing settings rather than inventing new values. */
+  --kf-section-spacing: var(--kf-space-2xl);
+  --kf-section-spacing-tight: var(--kf-space-lg);
+  --kf-section-spacing-loose: var(--kf-space-3xl);
+
+  /* ---------------------------------------------------------------- Corners */
+  --kf-radius-xs: calc(4px * var(--kf-radius-scale));
+  --kf-radius-sm: calc(8px * var(--kf-radius-scale));
+  --kf-radius-md: calc(14px * var(--kf-radius-scale));
+  --kf-radius-lg: calc(22px * var(--kf-radius-scale));
+  --kf-radius-xl: calc(34px * var(--kf-radius-scale));
+  --kf-radius-2xl: calc(48px * var(--kf-radius-scale));
+  --kf-radius-pill: 999px;
+  --kf-radius-circle: 50%;
+
+  --kf-button-radius: 60px;
+  --kf-input-radius: 8px;
+  --kf-media-radius: 16px;
+
+  /* ------------------------------------------------------------ Aspect ratio */
+  --kf-ratio-square: 1 / 1;
+  --kf-ratio-portrait: 4 / 5;
+  --kf-ratio-tall: 3 / 4;
+  --kf-ratio-landscape: 4 / 3;
+  --kf-ratio-wide: 16 / 9;
+  --kf-ratio-ultrawide: 21 / 9;
+
+  /* ----------------------------------------------------------------- Borders */
+  --kf-border-width: 1px;
+  --kf-border-width-thick: 2px;
+
+  /* ------------------------------------------------------------------ Motion */
+  --kf-motion-instant: 120ms;
+  --kf-motion-fast: 240ms;
+  --kf-motion-normal: 420ms;
+  --kf-motion-slow: 700ms;
+  --kf-motion-slower: 1100ms;
+
+  --kf-ease-standard: cubic-bezier(0.32, 0.08, 0.24, 1);
+  --kf-ease-smooth: cubic-bezier(0.22, 0.61, 0.24, 1);
+  --kf-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --kf-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --kf-ease-spring: cubic-bezier(0.2, 1.3, 0.4, 1);
+
+  /* Flow Mode — a single intensity multiplier, not a second motion system.
+     Overridden per level below; consumed by kf-motion.css. */
+  --kf-flow-intensity: 1;
+  --kf-flow-duration: 1;
+
+  /* Kofii Motion per-element defaults, overridable inline by kf-motion-attrs */
+  --kf-a-duration: var(--kf-motion-slow);
+  --kf-a-delay: 0ms;
+  --kf-a-easing: var(--kf-ease-smooth);
+  --kf-a-distance: 28px;
+  --kf-a-scale: 0.94;
+  --kf-a-blur: 12px;
+  --kf-a-rotate: 4deg;
+
+  /* -------------------------------------------------------------- Elevation */
+  --kf-z-base: 1;
+  --kf-z-sticky: 100;
+  --kf-z-header: 200;
+  --kf-z-dropdown: 300;
+  --kf-z-overlay: 400;
+  --kf-z-drawer: 500;
+  --kf-z-modal: 600;
+  --kf-z-toast: 700;
+
+  /* ------------------------------------------------------------------- Misc */
+  --kf-focus-width: 2px;
+  --kf-focus-offset: 3px;
+  --kf-header-height: 72px;   /* kept in sync by kf-header.js */
+  --kf-sticky-offset: 0px;    /* space a sticky header occupies, for scroll-margin */
+}
+
+/* ==========================================================================
+   Color schemes
+   --------------------------------------------------------------------------
+   Role tokens (--kf-color-background, --kf-color-text, ...) are emitted per
+   scheme by `snippets/kf-color-schemes.liquid` onto `.kf-scheme--<id>`.
+
+   Derived tokens must be declared on the *same element* as the roles they
+   read, because a custom property is substituted where it is declared, not
+   where it is inherited. That is why they live on `.kf-scheme` rather than
+   `:root`.
+   ========================================================================== */
+
+.kf-scheme {
+  --kf-color-surface: color-mix(in oklab, var(--kf-color-text) 5%, var(--kf-color-background));
+  --kf-color-surface-strong: color-mix(in oklab, var(--kf-color-text) 10%, var(--kf-color-background));
+  --kf-color-border: color-mix(in oklab, var(--kf-color-text) 18%, transparent);
+  --kf-color-border-strong: color-mix(in oklab, var(--kf-color-text) 34%, transparent);
+  --kf-color-muted: color-mix(in oklab, var(--kf-color-text) 62%, var(--kf-color-background));
+  --kf-color-overlay: color-mix(in oklab, var(--kf-color-heading) 88%, transparent);
+  --kf-color-accent-soft: color-mix(in oklab, var(--kf-color-accent) 12%, var(--kf-color-background));
+  --kf-color-focus: var(--kf-color-accent);
+
+  --kf-shadow-sm: 0 1px 2px color-mix(in oklab, var(--kf-color-shadow) calc(var(--kf-shadow-alpha) * 100%), transparent),
+                  0 2px 6px color-mix(in oklab, var(--kf-color-shadow) calc(var(--kf-shadow-alpha) * 70%), transparent);
+  --kf-shadow-md: 0 2px 4px color-mix(in oklab, var(--kf-color-shadow) calc(var(--kf-shadow-alpha) * 80%), transparent),
+                  0 10px 24px color-mix(in oklab, var(--kf-color-shadow) calc(var(--kf-shadow-alpha) * 110%), transparent);
+  --kf-shadow-lg: 0 4px 8px color-mix(in oklab, var(--kf-color-shadow) calc(var(--kf-shadow-alpha) * 70%), transparent),
+                  0 24px 60px color-mix(in oklab, var(--kf-color-shadow) calc(var(--kf-shadow-alpha) * 150%), transparent);
+
+  color: var(--kf-color-text);
+  background-color: var(--kf-color-background);
+}
+
+/* Only paint the gradient when the merchant actually set one. */
+.kf-scheme--gradient {
+  background-image: var(--kf-color-background-gradient);
+}
+
+/* A scheme used inside another scheme (a card, a drawer) must repaint itself. */
+.kf-scheme.kf-scheme--inherit {
+  background-color: transparent;
+}
+
+/* ==========================================================================
+   Flow Mode
+   --------------------------------------------------------------------------
+   One root-level dial. Motion presets read --kf-flow-intensity (how far things
+   travel) and --kf-flow-duration (how long they take). Off removes motion at
+   the source: `kf-motion` is never added to <html>, so no element is ever
+   hidden waiting for an animation.
+   ========================================================================== */
+
+:root[data-kf-flow="subtle"] {
+  --kf-flow-intensity: 0.55;
+  --kf-flow-duration: 0.8;
+}
+
+:root[data-kf-flow="balanced"] {
+  --kf-flow-intensity: 1;
+  --kf-flow-duration: 1;
+}
+
+:root[data-kf-flow="expressive"] {
+  --kf-flow-intensity: 1.6;
+  --kf-flow-duration: 1.2;
+}
+
+:root[data-kf-flow="off"] {
+  --kf-flow-intensity: 0;
+  --kf-flow-duration: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kf-flow-intensity: 0;
+    --kf-flow-duration: 0;
+    --kf-motion-instant: 0.01ms;
+    --kf-motion-fast: 0.01ms;
+    --kf-motion-normal: 0.01ms;
+    --kf-motion-slow: 0.01ms;
+    --kf-motion-slower: 0.01ms;
+  }
+}

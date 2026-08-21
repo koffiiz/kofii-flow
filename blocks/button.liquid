@@ -1,0 +1,161 @@
+{%- comment -%}
+  Kofii Flow — Button block
+  Renders through snippets/kf-button.liquid so every button in the theme
+  shares one implementation and one set of hover microinteractions.
+
+  Supports two buttons in one block, which is the common hero pattern
+  (primary action plus a quieter secondary action).
+{%- endcomment -%}
+
+{%- liquid
+  assign has_primary = false
+  if block.settings.label != blank
+    assign has_primary = true
+  endif
+
+  assign has_secondary = false
+  if block.settings.secondary_label != blank
+    assign has_secondary = true
+  endif
+
+  assign group_class = 'kf-button-group kf-button-group--stack-mobile'
+-%}
+
+{%- if has_primary or has_secondary -%}
+  <div
+    class="{{ group_class }}"
+    {% render 'kf-motion-attrs', motion: block.settings %}
+    {{ block.shopify_attributes }}
+  >
+    {%- if has_primary -%}
+      {%- render 'kf-button',
+        label: block.settings.label,
+        href: block.settings.link,
+        style: block.settings.style,
+        size: block.settings.size,
+        new_tab: block.settings.new_tab
+      -%}
+    {%- endif -%}
+
+    {%- if has_secondary -%}
+      {%- render 'kf-button',
+        label: block.settings.secondary_label,
+        href: block.settings.secondary_link,
+        style: block.settings.secondary_style,
+        size: block.settings.size,
+        new_tab: block.settings.new_tab
+      -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Buttons",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Button label",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Solid" },
+        { "value": "secondary", "label": "Outline" },
+        { "value": "ghost", "label": "Ghost" },
+        { "value": "plain", "label": "Text link" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "Second button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "secondary_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Solid" },
+        { "value": "secondary", "label": "Outline" },
+        { "value": "ghost", "label": "Ghost" },
+        { "value": "plain", "label": "Text link" }
+      ],
+      "default": "plain"
+    },
+    {
+      "type": "header",
+      "content": "Shared"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Size",
+      "options": [
+        { "value": "sm", "label": "Small" },
+        { "value": "md", "label": "Medium" },
+        { "value": "lg", "label": "Large" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "Open in a new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buttons"
+    }
+  ]
+}
+{% endschema %}

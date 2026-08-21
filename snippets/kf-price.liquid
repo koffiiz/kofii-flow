@@ -1,0 +1,80 @@
+{%- comment -%}
+  Kofii Flow — Price
+  ---------------------------------------------------------------------------
+  Usage:
+    {% render 'kf-price', product: product %}
+    {% render 'kf-price', product: product, variant: current_variant %}
+
+  Parameters:
+    product    (product, required)
+    variant    (variant)   renders this variant instead of the product default
+    class      (string)    extra classes
+    show_from  (boolean)   prefix with "From" when the price varies (default true)
+
+  Respects the global "Show currency codes" setting and renders unit prices
+  where the merchant has set them.
+{%- endcomment -%}
+
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant | default: product
+  assign price = target.price | default: product.price
+  assign compare_at = target.compare_at_price | default: product.compare_at_price
+
+  assign money_filter = 'money'
+  if settings.currency_code_enabled
+    assign money_filter = 'money_with_currency'
+  endif
+
+  assign on_sale = false
+  if compare_at > price
+    assign on_sale = true
+  endif
+
+  assign varies = false
+  if variant == blank and product.price_varies
+    assign varies = true
+  endif
+
+  assign price_class = 'kf-price'
+  if on_sale
+    assign price_class = price_class | append: ' kf-price--on-sale'
+  endif
+  if class != blank
+    assign price_class = price_class | append: ' ' | append: class
+  endif
+-%}
+
+<div class="{{ price_class }}">
+  {%- if product.available == false -%}
+    <span class="kf-price__regular kf-muted">{{ 'products.product.sold_out' | t }}</span>
+  {%- else -%}
+    <span class="kf-price__regular">
+      {%- if varies and show_from != false -%}
+        {%- assign price_formatted = price | money -%}
+        {{- 'products.product.price_from_html' | t: price: price_formatted -}}
+      {%- elsif money_filter == 'money_with_currency' -%}
+        {{- price | money_with_currency -}}
+      {%- else -%}
+        {{- price | money -}}
+      {%- endif -%}
+    </span>
+
+    {%- if on_sale -%}
+      <span class="kf-visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+      <s class="kf-price__compare">
+        {%- if money_filter == 'money_with_currency' -%}
+          {{- compare_at | money_with_currency -}}
+        {%- else -%}
+          {{- compare_at | money -}}
+        {%- endif -%}
+      </s>
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if target.unit_price_measurement -%}
+    <span class="kf-price__unit">
+      {{- target.unit_price | money }}/{% if target.unit_price_measurement.reference_value != 1 %}{{ target.unit_price_measurement.reference_value }}{% endif %}
+      {{- target.unit_price_measurement.reference_unit -}}
+    </span>
+  {%- endif -%}
+</div>

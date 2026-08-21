@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "columns": 4,
+        "results_per_page": 24,
+        "color_scheme": "scheme-1",
+        "padding_top": 56,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

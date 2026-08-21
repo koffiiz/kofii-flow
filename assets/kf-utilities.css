@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Kofii Flow — Utilities
+   A deliberately small, curated set. This is not an atomic CSS framework:
+   utilities exist only where a Theme Editor setting needs to toggle something
+   that has no natural home in a component.
+   ========================================================================== */
+
+/* ------------------------------------------------------------- Visibility */
+
+.kf-hide { display: none !important; }
+
+@media (max-width: 767px) {
+  .kf-hide-mobile { display: none !important; }
+}
+
+@media (min-width: 768px) and (max-width: 989px) {
+  .kf-hide-tablet { display: none !important; }
+}
+
+@media (min-width: 990px) {
+  .kf-hide-desktop { display: none !important; }
+}
+
+@media (max-width: 989px) {
+  .kf-show-desktop { display: none !important; }
+}
+
+@media (min-width: 990px) {
+  .kf-show-mobile { display: none !important; }
+}
+
+/* ------------------------------------------------------------------ Width */
+
+.kf-w-narrow { max-width: var(--kf-narrow-width); }
+.kf-w-content { max-width: var(--kf-content-width); }
+.kf-w-full { max-width: none; }
+
+.kf-mx-auto { margin-inline: auto; }
+
+/* --------------------------------------------------------------- Text tone */
+
+.kf-text-heading { color: var(--kf-color-heading); }
+.kf-text-body { color: var(--kf-color-text); }
+.kf-text-muted { color: var(--kf-color-muted); }
+.kf-text-accent { color: var(--kf-color-accent); }
+
+/* -------------------------------------------------------------- Text limit */
+
+.kf-clamp-1,
+.kf-clamp-2,
+.kf-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kf-clamp-1 { -webkit-line-clamp: 1; line-clamp: 1; }
+.kf-clamp-2 { -webkit-line-clamp: 2; line-clamp: 2; }
+.kf-clamp-3 { -webkit-line-clamp: 3; line-clamp: 3; }
+
+/* --------------------------------------------------------------- Rounding */
+
+.kf-round-none { border-radius: 0; }
+.kf-round-sm { border-radius: var(--kf-radius-sm); }
+.kf-round-md { border-radius: var(--kf-radius-md); }
+.kf-round-lg { border-radius: var(--kf-radius-lg); }
+.kf-round-xl { border-radius: var(--kf-radius-xl); }
+.kf-round-full { border-radius: var(--kf-radius-pill); }
+
+/* -------------------------------------------------------------- Positioning */
+
+.kf-relative { position: relative; }
+.kf-sticky-top {
+  position: sticky;
+  top: calc(var(--kf-sticky-offset) + var(--kf-space-sm));
+}
+
+/* ------------------------------------------------------------------ Spacing */
+/* Section padding is set inline from settings; these cover the rare override. */
+
+.kf-mt-0 { margin-top: 0 !important; }
+.kf-mb-0 { margin-bottom: 0 !important; }
+.kf-pt-0 { padding-top: 0 !important; }
+.kf-pb-0 { padding-bottom: 0 !important; }
+
+/* --------------------------------------------------------- Print behaviour */
+
+@media print {
+  .kf-no-print { display: none !important; }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

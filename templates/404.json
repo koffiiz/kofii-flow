@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "show_search": true,
+        "animation": "fade-up",
+        "animation_trigger": "load",
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": ["main"]
+}

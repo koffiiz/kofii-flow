@@ -1,0 +1,25 @@
+{%- comment -%}
+  Kofii Flow — Color scheme CSS
+  ---------------------------------------------------------------------------
+  Emits one rule per merchant-defined color scheme. Only the *role* tokens are
+  written here; derived tokens (border, surface, muted, overlay, shadows) are
+  declared once on `.kf-scheme` in kf-tokens.css, because a custom property is
+  substituted where it is declared, not where it is inherited.
+
+  Rendered inside the <style> block of `kf-css-variables.liquid`.
+{%- endcomment -%}
+
+{%- for scheme in settings.color_schemes -%}
+  {%- assign s = scheme.settings -%}
+  .kf-scheme--{{ scheme.id }}{
+  --kf-color-background:{{ s.background }};
+  --kf-color-background-gradient:{% if s.background_gradient != blank %}{{ s.background_gradient }}{% else %}none{% endif %};
+  --kf-color-heading:{{ s.heading }};
+  --kf-color-text:{{ s.text }};
+  --kf-color-accent:{{ s.accent }};
+  --kf-color-button:{{ s.button }};
+  --kf-color-button-text:{{ s.button_label }};
+  --kf-color-outline:{{ s.outline_button }};
+  --kf-color-shadow:{{ s.shadow }};
+  }
+{%- endfor -%}

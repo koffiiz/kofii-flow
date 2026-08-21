@@ -1,0 +1,192 @@
+{%- comment -%}
+  Kofii Flow — Product card
+  ---------------------------------------------------------------------------
+  The single product card implementation. Any section that lists products
+  renders this snippet; product card markup must never be duplicated.
+
+  Usage:
+    {% render 'kf-product-card', product: product, sizes: '(min-width: 990px) 25vw, 50vw' %}
+
+  Parameters:
+    product      (product)   omit to render a placeholder card for the Theme Editor
+    sizes        (string)    sizes attribute for the media
+    ratio        (string)    overrides the global product card ratio
+    loading      (string)    lazy (default) | eager
+    priority     (boolean)   LCP image only
+    heading_tag  (string)    h2 | h3 (default) — keep the page heading order sane
+    show_vendor / show_swatches / show_rating / show_sale_badge (boolean)
+                             override the global defaults
+    placeholder  (string)    placeholder_svg_tag name, e.g. 'product-apparel-1'
+
+  Accessibility: exactly one link per card. The title link is stretched over
+  the whole card with ::after, so screen readers announce one target and the
+  card is fully clickable.
+{%- endcomment -%}
+
+{%- liquid
+  assign card_ratio = ratio | default: settings.product_card_ratio
+  assign vendor_visible = show_vendor | default: settings.product_card_vendor, allow_false: true
+  assign swatches_visible = show_swatches | default: settings.product_card_swatches, allow_false: true
+  assign rating_visible = show_rating | default: settings.product_card_rating, allow_false: true
+  assign sale_badge_visible = show_sale_badge | default: settings.product_card_sale_badge, allow_false: true
+
+  assign card_class = 'kf-product-card kf-card'
+  unless settings.card_style == 'plain'
+    assign card_class = card_class | append: ' kf-card--' | append: settings.card_style
+  endunless
+  if settings.card_hover == 'lift'
+    assign card_class = card_class | append: ' kf-card--hover-lift'
+  endif
+  if settings.product_card_align == 'center'
+    assign card_class = card_class | append: ' kf-product-card--center'
+  endif
+  if class != blank
+    assign card_class = card_class | append: ' ' | append: class
+  endif
+
+  assign heading = heading_tag | default: 'h3'
+  assign media_sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 768px) 33vw, 50vw'
+
+  comment
+    Filters are not allowed on `render` arguments, so anything with a fallback
+    is resolved here first.
+  endcomment
+  assign placeholder_name = placeholder | default: 'product-1'
+-%}
+
+{%- if product == blank or product.id == blank -%}
+  {%- comment -%} Empty state: keeps the Theme Editor grid legible before a
+  collection is chosen. {%- endcomment -%}
+  <div class="{{ card_class }} kf-product-card--placeholder">
+    {%- render 'kf-media',
+      ratio: card_ratio,
+      placeholder: placeholder_name,
+      class: 'kf-product-card__media'
+    -%}
+    <div class="kf-card__body">
+      <span class="kf-product-card__title">{{ 'products.product.placeholder_title' | t }}</span>
+      <div class="kf-price"><span class="kf-price__regular">{{ 1999 | money }}</span></div>
+    </div>
+  </div>
+{%- else -%}
+  {%- liquid
+    assign card_variant = product.selected_or_first_available_variant
+    assign on_sale = false
+    if product.compare_at_price > product.price
+      assign on_sale = true
+      assign savings = product.compare_at_price | minus: product.price
+      assign savings_percent = savings | times: 100 | divided_by: product.compare_at_price
+    endif
+
+    assign hover_image = blank
+    if settings.card_hover == 'swap' and product.media.size > 1
+      assign hover_image = product.media[1].preview_image
+    endif
+
+    assign rating = product.metafields.reviews.rating.value
+  -%}
+
+  <div class="{{ card_class }}">
+    <div class="kf-product-card__media-wrap">
+      {%- render 'kf-media',
+        image: product.featured_media.preview_image,
+        hover_image: hover_image,
+        ratio: card_ratio,
+        sizes: media_sizes,
+        loading: loading,
+        priority: priority,
+        zoom: true,
+        class: 'kf-product-card__media'
+      -%}
+
+      <div class="kf-product-card__badges">
+        {%- unless product.available -%}
+          <span class="kf-badge kf-badge--muted">{{ 'products.product.sold_out' | t }}</span>
+        {%- else -%}
+          {%- if on_sale and sale_badge_visible -%}
+            <span class="kf-badge kf-badge--accent">
+              {%- case settings.product_card_sale_style -%}
+                {%- when 'percent' -%}
+                  {{ 'products.product.save_percent' | t: percent: savings_percent }}
+                {%- when 'amount' -%}
+                  {%- assign savings_formatted = savings | money -%}
+                  {{ 'products.product.save_amount' | t: amount: savings_formatted }}
+                {%- else -%}
+                  {{ 'products.product.on_sale' | t }}
+              {%- endcase -%}
+            </span>
+          {%- endif -%}
+        {%- endunless -%}
+      </div>
+    </div>
+
+    <div class="kf-card__body">
+      {%- if vendor_visible and product.vendor != blank -%}
+        <span class="kf-label kf-product-card__vendor">{{ product.vendor }}</span>
+      {%- endif -%}
+
+      <{{ heading }} class="kf-product-card__title">
+        <a class="kf-card__link" href="{{ product.url }}">{{ product.title | escape }}</a>
+      </{{ heading }}>
+
+      {%- if rating_visible and rating.rating != blank -%}
+        <div class="kf-product-card__rating">
+          {%- assign rating_percent = rating.rating | times: 100.0 | divided_by: rating.scale_max -%}
+          <span class="kf-stars" aria-hidden="true" style="--kf-rating: {{ rating_percent }}%;">
+            <span class="kf-stars__row">
+              {%- for i in (1..5) -%}{%- render 'kf-icon', name: 'star', size: 'sm' -%}{%- endfor -%}
+            </span>
+            <span class="kf-stars__row kf-stars__row--fill">
+              {%- for i in (1..5) -%}{%- render 'kf-icon', name: 'star', size: 'sm' -%}{%- endfor -%}
+            </span>
+          </span>
+          <span class="kf-visually-hidden">
+            {{- 'products.product.rating_value' | t: rating: rating.rating, max: rating.scale_max -}}
+          </span>
+          {%- if product.metafields.reviews.rating_count.value > 0 -%}
+            <span class="kf-product-card__rating-count kf-muted">({{ product.metafields.reviews.rating_count.value }})</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- render 'kf-price', product: product, variant: card_variant -%}
+
+      {%- if swatches_visible -%}
+        {%- for option in product.options_with_values -%}
+          {%- assign has_swatch = false -%}
+          {%- for value in option.values -%}
+            {%- if value.swatch -%}
+              {%- assign has_swatch = true -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if has_swatch -%}
+            <div class="kf-swatches" role="list" aria-label="{{ option.name | escape }}">
+              {%- for value in option.values limit: 5 -%}
+                {%- if value.swatch -%}
+                  <span
+                    class="kf-swatch"
+                    role="listitem"
+                    title="{{ value.name | escape }}"
+                    style="
+                      {%- if value.swatch.image -%}
+                        --kf-swatch-image: url({{ value.swatch.image | image_url: width: 64 }});
+                      {%- elsif value.swatch.color -%}
+                        --kf-swatch-color: {{ value.swatch.color }};
+                      {%- endif -%}
+                    "
+                  ></span>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if option.values.size > 5 -%}
+                <span class="kf-swatches__more">+{{ option.values.size | minus: 5 }}</span>
+              {%- endif -%}
+            </div>
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

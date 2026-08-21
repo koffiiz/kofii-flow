@@ -1,0 +1,43 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "kf-footer",
+      "blocks": {
+        "brand": {
+          "type": "brand",
+          "settings": {
+            "logo_width": 140,
+            "text": "<p>Beautiful storefronts that flow.</p>",
+            "show_social": true
+          }
+        },
+        "menu": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Stay in flow",
+            "text": "<p>New arrivals, quietly. No noise.</p>"
+          }
+        }
+      },
+      "block_order": ["brand", "menu", "newsletter"],
+      "settings": {
+        "show_policy_links": true,
+        "show_localization": true,
+        "show_payment_icons": true,
+        "color_scheme": "scheme-3",
+        "padding_top": 64,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": ["footer"]
+}

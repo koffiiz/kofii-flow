@@ -1,0 +1,66 @@
+{%- comment -%}
+  Kofii Flow — Search form
+  ---------------------------------------------------------------------------
+  A real GET form pointed at the search page, so it works with JavaScript
+  disabled. When `predictive` is true it also carries the ARIA combobox
+  attributes that `kf-predictive-search.js` drives.
+
+  Parameters:
+    id          (string, required)  unique fragment for input/results ids
+    predictive  (boolean)           wire up combobox attributes
+    value       (string)            prefilled query
+    autofocus   (boolean)           focus when a drawer opens (data-kf-autofocus)
+    class       (string)
+{%- endcomment -%}
+
+{%- liquid
+  assign scope = id | default: 'Search'
+  assign input_id = scope | append: '-input'
+  assign results_id = scope | append: '-results'
+-%}
+
+<form
+  action="{{ routes.search_url }}"
+  method="get"
+  role="search"
+  class="kf-search__form {{ class }}"
+>
+  <label class="kf-visually-hidden" for="{{ input_id }}">{{ 'general.search.search' | t }}</label>
+
+  <div class="kf-search__field">
+    {%- render 'kf-icon', name: 'search', class: 'kf-search__icon' -%}
+
+    <input
+      id="{{ input_id }}"
+      class="kf-input kf-search__input"
+      type="search"
+      name="q"
+      value="{{ value | default: search.terms | escape }}"
+      placeholder="{{ 'general.search.placeholder' | t }}"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      {% if predictive %}
+        role="combobox"
+        aria-expanded="false"
+        aria-owns="{{ results_id }}"
+        aria-controls="{{ results_id }}"
+        aria-haspopup="listbox"
+        aria-autocomplete="list"
+      {% endif %}
+      data-kf-autofocus
+    >
+
+    <button type="reset" class="kf-icon-button kf-search__reset" data-kf-search-reset>
+      {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+      <span class="kf-visually-hidden">{{ 'general.search.reset' | t }}</span>
+    </button>
+  </div>
+
+  <input type="hidden" name="options[prefix]" value="last">
+
+  <button type="submit" class="kf-button kf-button--sm kf-search__submit">
+    <span class="kf-button__label">{{ 'general.search.submit' | t }}</span>
+  </button>
+</form>

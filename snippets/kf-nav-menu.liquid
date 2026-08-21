@@ -1,0 +1,40 @@
+{%- comment -%}
+  Kofii Flow — Desktop navigation
+  ---------------------------------------------------------------------------
+  Renders the primary navigation from a Shopify menu. Items with children use
+  <kf-disclosure>, which wraps a native <details> element — so the navigation
+  still opens and closes with JavaScript disabled.
+
+  Parameters:
+    menu    (linklist, required)
+    blocks  (array)   section.blocks, forwarded to the mega menu for promos
+    columns (number)  max mega menu columns
+    label   (string)  aria-label for the <nav> landmark
+    class   (string)  extra classes on the <nav>
+{%- endcomment -%}
+
+{%- if menu != blank and menu.links.size > 0 -%}
+  <nav class="kf-nav {{ class }}" aria-label="{{ label | default: 'Primary' | escape }}">
+    <ul class="kf-nav__list">
+      {%- for link in menu.links -%}
+        <li class="kf-nav__item">
+          {%- if link.links.size > 0 -%}
+            <kf-disclosure data-hover="true" data-close-siblings="true">
+              <details>
+                <summary class="kf-nav__link kf-nav__link--parent"{% if link.current or link.child_current %} aria-current="true"{% endif %}>
+                  <span>{{ link.title | escape }}</span>
+                  {%- render 'kf-icon', name: 'chevron', class: 'kf-nav__chevron', size: 'sm' -%}
+                </summary>
+                {%- render 'kf-mega-menu', link: link, blocks: blocks, columns: columns -%}
+              </details>
+            </kf-disclosure>
+          {%- else -%}
+            <a class="kf-nav__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
+              {{- link.title | escape -}}
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endif -%}

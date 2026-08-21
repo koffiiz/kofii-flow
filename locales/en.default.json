@@ -1,0 +1,97 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content",
+      "close": "Close",
+      "opens_new_window": "Opens in a new window",
+      "image_link": "Open link"
+    },
+    "meta": {
+      "tagged_html": "Tagged {{ tags }}",
+      "page": "Page {{ page }}"
+    },
+    "navigation": {
+      "menu": "Menu",
+      "primary": "Primary",
+      "view_all": "All {{ title }}"
+    },
+    "search": {
+      "search": "Search",
+      "placeholder": "Search products, collections and pages",
+      "submit": "Search",
+      "reset": "Clear search",
+      "results": "Search results",
+      "results_for": "Results for {{ terms }}",
+      "results_count": {
+        "one": "{{ count }} result",
+        "other": "{{ count }} results"
+      },
+      "no_results": "No results for {{ terms }}",
+      "no_results_hint": "Check the spelling, or try a shorter, more general term.",
+      "suggestions": "Suggestions",
+      "products": "Products",
+      "collections": "Collections",
+      "pages": "Pages and articles",
+      "page": "Page",
+      "article": "Article",
+      "view_all": "See all results for {{ terms }}"
+    },
+    "cart": {
+      "title": "Cart",
+      "item_count": {
+        "zero": "0 items in cart",
+        "one": "1 item in cart",
+        "other": "{{ count }} items in cart"
+      }
+    },
+    "localization": {
+      "country_label": "Country or region",
+      "language_label": "Language",
+      "update": "Update"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page"
+    }
+  },
+
+  "customer": {
+    "account": "Account",
+    "log_in": "Log in"
+  },
+
+  "products": {
+    "product": {
+      "sold_out": "Sold out",
+      "on_sale": "Sale",
+      "save_percent": "Save {{ percent }}%",
+      "save_amount": "Save {{ amount }}",
+      "price_from_html": "From {{ price }}",
+      "regular_price": "Regular price",
+      "placeholder_title": "Example product",
+      "rating_value": "{{ rating }} out of {{ max }} stars"
+    }
+  },
+
+  "newsletter": {
+    "label": "Email",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "success": "Thanks for subscribing."
+  },
+
+  "sections": {
+    "footer": {
+      "rights": "All rights reserved.",
+      "menu_empty": "Choose a menu for this column."
+    },
+    "404": {
+      "code": "Error 404",
+      "title": "This page has moved on",
+      "text": "The page you were looking for is not here. Search for it, or head back to the homepage.",
+      "back_home": "Back to home"
+    }
+  }
+}

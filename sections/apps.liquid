@@ -1,0 +1,60 @@
+{%- comment -%}
+  Kofii Flow — Apps
+  ---------------------------------------------------------------------------
+  A neutral container for Theme App Extension blocks. Merchants drop app
+  blocks in here on any template without an app needing to modify theme files.
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-apps' %}>
+    <div class="kf-container">
+      {%- for block in section.blocks -%}
+        <div class="kf-apps__block" {{ block.shopify_attributes }}>
+          {%- render block -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Apps",
+  "tag": "section",
+  "class": "kf-apps-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [{ "type": "@app" }],
+  "presets": [
+    {
+      "name": "Apps"
+    }
+  ]
+}
+{% endschema %}

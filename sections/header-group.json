@@ -1,0 +1,52 @@
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "announcement": {
+      "type": "kf-announcement-bar",
+      "blocks": {
+        "message-1": {
+          "type": "message",
+          "settings": {
+            "text": "Complimentary shipping on orders over $75"
+          }
+        },
+        "message-2": {
+          "type": "message",
+          "settings": {
+            "text": "30 day returns, no questions"
+          }
+        }
+      },
+      "block_order": ["message-1", "message-2"],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "speed": 30,
+        "pause_on_hover": true,
+        "edge_fade": true
+      }
+    },
+    "header": {
+      "type": "kf-header",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "logo_width": 130,
+        "logo_width_mobile": 100,
+        "menu": "main-menu",
+        "layout": "logo-left",
+        "mega_columns": 4,
+        "sticky": "reveal",
+        "transparent": false,
+        "show_search": true,
+        "show_account": true,
+        "show_cart": true,
+        "show_localization": false,
+        "color_scheme": "scheme-1",
+        "padding_top": 14,
+        "padding_bottom": 14
+      }
+    }
+  },
+  "order": ["announcement", "header"]
+}

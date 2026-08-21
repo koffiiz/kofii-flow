@@ -1,0 +1,46 @@
+{%- comment -%}
+  Kofii Flow — Social links
+  ---------------------------------------------------------------------------
+  Renders only the accounts a merchant has actually filled in, so the row
+  never shows placeholder icons.
+
+  Parameters:
+    class (string)  extra classes on the list
+    size  (string)  icon size passed through to kf-icon
+{%- endcomment -%}
+
+{%- liquid
+  assign networks = 'instagram,tiktok,youtube,facebook,twitter,pinterest,linkedin' | split: ','
+  assign has_any = false
+  for network in networks
+    assign key = 'social_' | append: network | append: '_link'
+    if settings[key] != blank
+      assign has_any = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if has_any -%}
+  <ul class="kf-social {{ class }}">
+    {%- for network in networks -%}
+      {%- assign key = 'social_' | append: network | append: '_link' -%}
+      {%- assign url = settings[key] -%}
+      {%- if url != blank -%}
+        <li>
+          <a
+            class="kf-social__link kf-icon-button"
+            href="{{ url }}"
+            target="_blank"
+            rel="noopener"
+          >
+            {%- render 'kf-icon', name: network, size: size -%}
+            <span class="kf-visually-hidden">
+              {{- network | capitalize }} — {{ 'general.accessibility.opens_new_window' | t -}}
+            </span>
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

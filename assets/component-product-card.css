@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Kofii Flow — Product card
+   Loaded by any section that renders `snippets/kf-product-card.liquid`.
+   ========================================================================== */
+
+.kf-product-card {
+  position: relative;
+  gap: var(--kf-space-xs);
+}
+
+.kf-product-card--center {
+  text-align: center;
+  align-items: center;
+}
+
+.kf-product-card--center .kf-card__body,
+.kf-product-card--center .kf-price,
+.kf-product-card--center .kf-swatches {
+  align-items: center;
+  justify-content: center;
+}
+
+.kf-product-card__media-wrap {
+  position: relative;
+}
+
+.kf-product-card__media {
+  width: 100%;
+}
+
+/* Media zoom is driven by the card, not by an anchor, because the card has a
+   single stretched link rather than a link around the image. */
+@media (hover: hover) {
+  .kf-motion-hover .kf-product-card:hover .kf-media--zoom .kf-media__img {
+    transform: scale(1.045);
+  }
+
+  .kf-motion-hover .kf-product-card:hover .kf-media__img--alt {
+    opacity: 1;
+    transform: scale(1.045);
+  }
+}
+
+.kf-product-card__badges {
+  position: absolute;
+  inset-block-start: var(--kf-space-2xs);
+  inset-inline-start: var(--kf-space-2xs);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.kf-product-card__vendor {
+  color: var(--kf-color-muted);
+}
+
+.kf-product-card__title {
+  font-family: var(--kf-font-body);
+  font-size: var(--kf-text-sm);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--kf-color-heading);
+}
+
+.kf-product-card__title a {
+  transition: color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+@media (hover: hover) {
+  .kf-motion-hover .kf-product-card:hover .kf-product-card__title a {
+    color: var(--kf-color-accent);
+  }
+}
+
+/* Keyboard focus must be visible even though the link itself is stretched. */
+.kf-product-card__title a:focus-visible {
+  outline: none;
+}
+
+.kf-product-card:has(.kf-card__link:focus-visible) {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: var(--kf-focus-offset);
+  border-radius: var(--kf-radius-md);
+}
+
+.kf-product-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--kf-text-xs);
+}
+
+.kf-product-card__placeholder .kf-product-card__title {
+  color: var(--kf-color-muted);
+}
+
+/* Rating stars ----------------------------------------------------------- */
+
+.kf-stars {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.kf-stars__row {
+  display: inline-flex;
+  gap: 1px;
+  color: var(--kf-color-border-strong);
+}
+
+.kf-stars__row--fill {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: var(--kf-rating, 0%);
+  overflow: hidden;
+  color: var(--kf-color-accent);
+}

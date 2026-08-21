@@ -1,0 +1,411 @@
+{%- comment -%}
+  Kofii Flow — Header
+  ---------------------------------------------------------------------------
+  Responsive header with desktop navigation, mega menus driven by the Shopify
+  menu structure, a mobile navigation drawer, predictive search, account, cart
+  and localization.
+
+  Behaviour lives in `assets/kf-header.js` (<kf-header>), the drawers in
+  `assets/kf-drawer.js`, and the dropdowns in `assets/kf-disclosure.js`.
+  Nothing here duplicates those.
+
+  Progressive enhancement: with JavaScript disabled the logo, every navigation
+  link, the search page link, account and cart all still work; only the drawers
+  and hover dropdowns are lost, and the navigation falls back to native
+  <details> disclosure.
+{%- endcomment -%}
+
+{{ 'section-header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-header.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-drawer.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-disclosure.js' | asset_url }}" defer></script>
+{%- if settings.predictive_search_enabled -%}
+  <script src="{{ 'kf-predictive-search.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- liquid
+  assign menu = section.settings.menu
+  assign header_class = 'kf-header'
+  assign header_class = header_class | append: ' kf-header--' | append: section.settings.layout
+
+  if section.settings.transparent
+    assign header_class = header_class | append: ' kf-header--transparent'
+  endif
+
+  assign nav_label = 'general.navigation.primary' | t
+  assign menu_drawer_id = 'kf-MenuDrawer-' | append: section.id
+  assign search_drawer_id = 'kf-SearchDrawer-' | append: section.id
+-%}
+
+{%- comment -%}
+  The header is not a `.kf-section`: it has its own padding model and must not
+  inherit section vertical rhythm.
+{%- endcomment -%}
+<kf-header
+  id="kf-header-{{ section.id }}"
+  class="kf-scheme kf-scheme--{{ section.settings.color_scheme.id }}{% if section.settings.color_scheme.settings.background_gradient != blank %} kf-scheme--gradient{% endif %} {{ header_class }}"
+  style="--kf-header-pad-y: calc({{ section.settings.padding_top }}px * var(--kf-space-scale)); --kf-header-pad-y-end: calc({{ section.settings.padding_bottom }}px * var(--kf-space-scale));"
+  data-sticky="{{ section.settings.sticky }}"
+  {% if section.settings.transparent %}data-transparent="true"{% endif %}
+>
+  <div class="kf-header__inner kf-container">
+    {%- comment -%} Left: mobile menu trigger + desktop navigation {%- endcomment -%}
+    <div class="kf-header__start">
+      {%- if menu != blank and menu.links.size > 0 -%}
+        <button
+          type="button"
+          class="kf-icon-button kf-header__burger kf-hide-desktop"
+          data-kf-drawer-open="{{ menu_drawer_id }}"
+          aria-expanded="false"
+          aria-controls="{{ menu_drawer_id }}"
+        >
+          {%- render 'kf-icon', name: 'menu' -%}
+          <span class="kf-visually-hidden">{{ 'general.navigation.menu' | t }}</span>
+        </button>
+      {%- endif -%}
+
+      {%- unless section.settings.layout == 'logo-center' -%}
+        {%- render 'kf-header-logo', s: section.settings -%}
+      {%- endunless -%}
+
+      {%- if section.settings.layout != 'logo-center' -%}
+        <div class="kf-header__nav kf-hide-mobile kf-hide-tablet">
+          {%- render 'kf-nav-menu',
+            menu: menu,
+            blocks: section.blocks,
+            columns: section.settings.mega_columns,
+            label: nav_label
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Center: logo (centered layout) or navigation {%- endcomment -%}
+    {%- if section.settings.layout == 'logo-center' -%}
+      <div class="kf-header__center">
+        {%- render 'kf-header-logo', s: section.settings -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Right: actions {%- endcomment -%}
+    <div class="kf-header__end">
+      {%- if section.settings.show_localization -%}
+        <div class="kf-header__localization kf-hide-mobile kf-hide-tablet">
+          {%- render 'kf-localization', id: 'Header' -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_search -%}
+        <button
+          type="button"
+          class="kf-icon-button"
+          data-kf-drawer-open="{{ search_drawer_id }}"
+          aria-expanded="false"
+          aria-controls="{{ search_drawer_id }}"
+        >
+          {%- render 'kf-icon', name: 'search' -%}
+          <span class="kf-visually-hidden">{{ 'general.search.search' | t }}</span>
+        </button>
+      {%- endif -%}
+
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a class="kf-icon-button kf-hide-mobile" href="{{ routes.account_url }}">
+          {%- render 'kf-icon', name: 'account' -%}
+          <span class="kf-visually-hidden">
+            {%- if customer -%}{{ 'customer.account' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+          </span>
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_cart -%}
+        <a class="kf-icon-button kf-icon-button--counted" href="{{ routes.cart_url }}">
+          {%- render 'kf-icon', name: 'cart' -%}
+          <span class="kf-visually-hidden">{{ 'general.cart.title' | t }}</span>
+          <span class="kf-icon-button__count" data-kf-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+            {{- cart.item_count -}}
+          </span>
+          <span class="kf-visually-hidden" data-kf-cart-count-label>
+            {{- 'general.cart.item_count' | t: count: cart.item_count -}}
+          </span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%}
+    Centered layout puts the navigation on its own row beneath the logo, which
+    is the only way a wide menu stays readable without crowding the actions.
+  {%- endcomment -%}
+  {%- if section.settings.layout == 'logo-center' -%}
+    <div class="kf-header__nav-row kf-container kf-hide-mobile kf-hide-tablet">
+      {%- render 'kf-nav-menu',
+        menu: menu,
+        blocks: section.blocks,
+        columns: section.settings.mega_columns,
+        label: nav_label,
+        class: 'kf-nav--center'
+      -%}
+    </div>
+  {%- endif -%}
+</kf-header>
+
+{%- comment -%} ------------------------------------------------ Mobile menu {%- endcomment -%}
+{%- if menu != blank and menu.links.size > 0 -%}
+  <kf-drawer id="{{ menu_drawer_id }}">
+    <div class="kf-overlay" data-kf-overlay></div>
+    <div
+      class="kf-drawer kf-drawer--left kf-scheme kf-scheme--{{ section.settings.color_scheme.id }}"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="{{ menu_drawer_id }}-title"
+      tabindex="-1"
+    >
+      <div class="kf-drawer__header">
+        <h2 class="kf-h6" id="{{ menu_drawer_id }}-title">{{ 'general.navigation.menu' | t }}</h2>
+        <button type="button" class="kf-icon-button" data-kf-close>
+          {%- render 'kf-icon', name: 'close' -%}
+          <span class="kf-visually-hidden">{{ 'general.accessibility.close' | t }}</span>
+        </button>
+      </div>
+
+      <div class="kf-drawer__body">
+        {%- render 'kf-nav-mobile', menu: menu, label: nav_label -%}
+      </div>
+
+      <div class="kf-drawer__footer kf-stack">
+        {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+          <a class="kf-link" href="{{ routes.account_url }}">
+            {%- if customer -%}{{ 'customer.account' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.show_localization -%}
+          {%- render 'kf-localization', id: 'MenuDrawer' -%}
+        {%- endif -%}
+        {%- render 'kf-social-icons' -%}
+      </div>
+    </div>
+  </kf-drawer>
+{%- endif -%}
+
+{%- comment -%} ---------------------------------------------------- Search {%- endcomment -%}
+{%- if section.settings.show_search -%}
+  <kf-drawer id="{{ search_drawer_id }}">
+    <div class="kf-overlay" data-kf-overlay></div>
+    <div
+      class="kf-drawer kf-drawer--top kf-search-drawer kf-scheme kf-scheme--{{ section.settings.color_scheme.id }}"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="{{ search_drawer_id }}-title"
+      tabindex="-1"
+    >
+      <div class="kf-container kf-search-drawer__inner">
+        <div class="kf-search-drawer__top">
+          <h2 class="kf-visually-hidden" id="{{ search_drawer_id }}-title">{{ 'general.search.search' | t }}</h2>
+
+          {%- if settings.predictive_search_enabled -%}
+            {%- liquid
+              assign types = ''
+              if settings.predictive_search_products
+                assign types = types | append: 'product,'
+              endif
+              if settings.predictive_search_collections
+                assign types = types | append: 'collection,'
+              endif
+              if settings.predictive_search_pages
+                assign types = types | append: 'page,article,'
+              endif
+              if settings.predictive_search_queries
+                assign types = types | append: 'query,'
+              endif
+              assign types = types | split: ',' | join: ','
+            -%}
+
+            <kf-predictive-search
+              class="kf-search"
+              data-section-id="predictive-search"
+              data-types="{{ types }}"
+              data-limit="5"
+            >
+              {%- render 'kf-search-form', id: search_drawer_id, predictive: true -%}
+              <div
+                class="kf-search__results"
+                id="{{ search_drawer_id }}-results"
+                data-kf-results
+                hidden
+              ></div>
+              <span class="kf-visually-hidden" role="status" data-kf-search-status></span>
+            </kf-predictive-search>
+          {%- else -%}
+            <div class="kf-search">
+              {%- render 'kf-search-form', id: search_drawer_id, predictive: false -%}
+            </div>
+          {%- endif -%}
+
+          <button type="button" class="kf-icon-button kf-search-drawer__close" data-kf-close>
+            {%- render 'kf-icon', name: 'close' -%}
+            <span class="kf-visually-hidden">{{ 'general.accessibility.close' | t }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </kf-drawer>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "header",
+  "class": "kf-header-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width on mobile",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu",
+      "info": "Menu items with sub-items become dropdowns. Items with three levels become mega menus."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "logo-left", "label": "Logo left, menu beside it" },
+        { "value": "logo-center", "label": "Logo centered, menu below" }
+      ],
+      "default": "logo-left"
+    },
+    {
+      "type": "range",
+      "id": "mega_columns",
+      "label": "Mega menu columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Behaviour"
+    },
+    {
+      "type": "select",
+      "id": "sticky",
+      "label": "Sticky header",
+      "options": [
+        { "value": "none", "label": "Off" },
+        { "value": "always", "label": "Always visible" },
+        { "value": "reveal", "label": "Hide on scroll down, show on scroll up" }
+      ],
+      "default": "reveal"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent",
+      "label": "Transparent over the first section",
+      "default": false,
+      "info": "Best with a full-height hero. The header becomes solid as soon as the page scrolls."
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "Show account", "default": true },
+    { "type": "checkbox", "id": "show_cart", "label": "Show cart", "default": true },
+    {
+      "type": "checkbox",
+      "id": "show_localization",
+      "label": "Show country and language selectors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_promo",
+      "name": "Mega menu promo",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Adds a promotional card to one mega menu."
+        },
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "Menu item",
+          "info": "Type the exact top-level menu item title this promo belongs to."
+        },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ]
+}
+{% endschema %}

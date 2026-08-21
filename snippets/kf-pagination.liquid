@@ -1,0 +1,42 @@
+{%- comment -%}
+  Kofii Flow — Pagination
+  ---------------------------------------------------------------------------
+  Usage (inside a {% paginate %} block):
+    {% render 'kf-pagination', paginate: paginate %}
+
+  Parameters:
+    paginate  (object, required)
+    anchor    (string)  fragment appended to each link, e.g. '#ProductGrid'
+{%- endcomment -%}
+
+{%- if paginate.pages > 1 -%}
+  <nav class="kf-pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+    {%- if paginate.previous -%}
+      <a class="kf-pagination__item" href="{{ paginate.previous.url }}{{ anchor }}" rel="prev">
+        {%- render 'kf-icon', name: 'chevron-right', class: 'kf-pagination__prev', size: 'sm' -%}
+        <span class="kf-visually-hidden">{{ 'general.pagination.previous' | t }}</span>
+      </a>
+    {%- endif -%}
+
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <a class="kf-pagination__item" href="{{ part.url }}{{ anchor }}">
+          <span class="kf-visually-hidden">{{ 'general.pagination.page' | t }} </span>{{ part.title }}
+        </a>
+      {%- elsif part.title == '&hellip;' or part.title == '…' -%}
+        <span class="kf-pagination__item kf-muted">{{ part.title }}</span>
+      {%- else -%}
+        <span class="kf-pagination__item" aria-current="page">
+          <span class="kf-visually-hidden">{{ 'general.pagination.page' | t }} </span>{{ part.title }}
+        </span>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if paginate.next -%}
+      <a class="kf-pagination__item" href="{{ paginate.next.url }}{{ anchor }}" rel="next">
+        {%- render 'kf-icon', name: 'chevron-right', size: 'sm' -%}
+        <span class="kf-visually-hidden">{{ 'general.pagination.next' | t }}</span>
+      </a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

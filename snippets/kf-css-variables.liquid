@@ -1,0 +1,69 @@
+{%- comment -%}
+  Kofii Flow — Layer B design tokens
+  ---------------------------------------------------------------------------
+  Overrides the static defaults in `kf-tokens.css` with the merchant's Theme
+  Settings. Emitted inline in <head> so there is no extra request and Theme
+  Editor changes repaint immediately.
+
+  Rule of thumb: only tokens a merchant can actually control belong here.
+  Everything else stays in kf-tokens.css.
+{%- endcomment -%}
+
+{%- liquid
+  assign heading_font = settings.type_heading_font
+  assign heading_weighted = heading_font | font_modify: 'weight', settings.type_heading_weight
+  if heading_weighted
+    assign heading_font = heading_weighted
+  endif
+
+  assign body_font = settings.type_body_font
+  assign body_bold = body_font | font_modify: 'weight', 'bolder'
+
+  assign heading_spacing = settings.type_heading_spacing | divided_by: 100.0
+  assign heading_leading = settings.type_heading_leading | divided_by: 100.0
+  assign body_leading = settings.type_body_leading | divided_by: 100.0
+  assign label_spacing = settings.type_accent_spacing | divided_by: 100.0
+
+  assign space_scale = settings.space_scale | divided_by: 100.0
+  assign radius_scale = settings.radius_scale | divided_by: 100.0
+  assign heading_scale = settings.type_heading_scale | divided_by: 100.0
+  assign body_scale = settings.type_body_scale | divided_by: 100.0
+  assign shadow_alpha = settings.shadow_intensity | divided_by: 1000.0
+-%}
+
+<style>
+  :root{
+  --kf-font-heading:{{ heading_font.family }}, {{ heading_font.fallback_families }};
+  --kf-font-heading-weight:{{ heading_font.weight }};
+  --kf-font-heading-style:{{ heading_font.style }};
+  --kf-font-body:{{ body_font.family }}, {{ body_font.fallback_families }};
+  --kf-font-body-weight:{{ body_font.weight }};
+  --kf-font-body-style:{{ body_font.style }};
+  --kf-font-body-weight-bold:{{ body_bold.weight | default: 600 }};
+
+  --kf-heading-spacing:{{ heading_spacing }}em;
+  --kf-heading-leading:{{ heading_leading }};
+  --kf-heading-transform:{{ settings.type_heading_transform }};
+  --kf-body-leading:{{ body_leading }};
+  --kf-label-transform:{{ settings.type_accent_transform }};
+  --kf-label-spacing:{{ label_spacing }}em;
+
+  --kf-type-heading-scale:{{ heading_scale }};
+  --kf-type-body-scale:{{ body_scale }};
+  --kf-space-scale:{{ space_scale }};
+  --kf-radius-scale:{{ radius_scale }};
+  --kf-shadow-alpha:{{ shadow_alpha }};
+
+  --kf-page-width:{{ settings.page_width }}px;
+  {%- comment -%} The setting is the desktop maximum; small screens stay fluid. {%- endcomment -%}
+  --kf-page-gutter:clamp({{ settings.page_gutter | times: 0.6 | round }}px, 2.2vw, {{ settings.page_gutter }}px);
+  --kf-grid-gap:{{ settings.grid_gap }}px;
+
+  --kf-button-radius:{{ settings.button_radius }}px;
+  --kf-button-transform:{{ settings.button_transform }};
+  --kf-input-radius:{{ settings.input_radius }}px;
+  --kf-media-radius:{{ settings.media_radius }}px;
+  }
+
+  {%- render 'kf-color-schemes' -%}
+</style>

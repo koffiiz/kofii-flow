@@ -1,0 +1,178 @@
+{%- comment -%}
+  Kofii Flow — Search results
+  ---------------------------------------------------------------------------
+  The full search page. Products render through the shared product card, so
+  search results look exactly like collection results — there is only one card
+  implementation in the theme.
+
+  Non-product results (pages and articles) render as compact result rows.
+{%- endcomment -%}
+
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-search-page' %}>
+  <div class="kf-container">
+    <header class="kf-section-header">
+      <h1 class="kf-h2">
+        {%- if search.performed -%}
+          {{ 'general.search.results_for' | t: terms: search.terms }}
+        {%- else -%}
+          {{ 'general.search.search' | t }}
+        {%- endif -%}
+      </h1>
+
+      {%- if search.performed -%}
+        <p class="kf-section-header__text">
+          {{ 'general.search.results_count' | t: count: search.results_count }}
+        </p>
+      {%- endif -%}
+    </header>
+
+    <div class="kf-search-page__form">
+      {%- render 'kf-search-form', id: 'SearchPage', predictive: false, value: search.terms -%}
+    </div>
+
+    {%- if search.performed -%}
+      {%- if search.results_count == 0 -%}
+        <div class="kf-empty">
+          <p class="kf-text-lg">{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+          <p>{{ 'general.search.no_results_hint' | t }}</p>
+        </div>
+      {%- else -%}
+        {%- paginate search.results by section.settings.results_per_page -%}
+          <div class="kf-grid kf-search-page__grid" style="--kf-grid-cols: {{ section.settings.columns }}; --kf-grid-cols-tablet: 3; --kf-grid-cols-mobile: 2;">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                {%- render 'kf-product-card',
+                  product: item,
+                  heading_tag: 'h2',
+                  sizes: '(min-width: 990px) 25vw, (min-width: 768px) 33vw, 50vw'
+                -%}
+              {%- else -%}
+                <article class="kf-result">
+                  {%- if item.image != blank -%}
+                    {%- render 'kf-media',
+                      image: item.image,
+                      ratio: 'landscape',
+                      sizes: '(min-width: 990px) 25vw, 50vw',
+                      class: 'kf-result__media'
+                    -%}
+                  {%- endif -%}
+                  <div class="kf-result__body">
+                    <span class="kf-label kf-text-muted">
+                      {%- if item.object_type == 'article' -%}
+                        {{ 'general.search.article' | t }}
+                      {%- else -%}
+                        {{ 'general.search.page' | t }}
+                      {%- endif -%}
+                    </span>
+                    <h2 class="kf-result__title">
+                      <a class="kf-card__link" href="{{ item.url }}">{{ item.title | escape }}</a>
+                    </h2>
+                    {%- liquid
+                      assign summary = item.excerpt
+                      if summary == blank
+                        assign summary = item.content
+                      endif
+                    -%}
+                    {%- if summary != blank -%}
+                      <p class="kf-text-sm kf-text-muted kf-clamp-3">{{ summary | strip_html | truncatewords: 30 }}</p>
+                    {%- endif -%}
+                  </div>
+                </article>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
+          {%- render 'kf-pagination', paginate: paginate, anchor: '#MainContent' -%}
+        {%- endpaginate -%}
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.kf-search-page__form {
+  max-width: 34rem;
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-result {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-result__title {
+  font-family: var(--kf-font-body);
+  font-size: var(--kf-text-md);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.35;
+}
+
+.kf-result:has(.kf-card__link:focus-visible) {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: var(--kf-focus-offset);
+  border-radius: var(--kf-radius-md);
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Search results",
+  "tag": "section",
+  "class": "kf-search-page-section",
+  "enabled_on": {
+    "templates": ["search"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Results per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

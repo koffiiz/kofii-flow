@@ -1,0 +1,291 @@
+{%- comment -%}
+  Kofii Flow — Footer
+  ---------------------------------------------------------------------------
+  Column blocks on top, a utility bar underneath. Every column type is a
+  section block, so merchants add, remove and reorder columns without touching
+  Liquid.
+
+  No JavaScript of its own: the newsletter is a native Shopify customer form
+  and the localization selectors use the shared auto-submit behaviour.
+{%- endcomment -%}
+
+{{ 'section-footer.css' | asset_url | stylesheet_tag }}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-footer' %}>
+  <div class="kf-container">
+    {%- if section.blocks.size > 0 -%}
+      <div class="kf-footer__columns" style="--kf-footer-columns: {{ section.blocks.size }};">
+        {%- for block in section.blocks -%}
+          <div class="kf-footer__column kf-footer__column--{{ block.type }}" {{ block.shopify_attributes }}>
+            {%- case block.type -%}
+
+              {%- when 'brand' -%}
+                {%- if block.settings.logo != blank -%}
+                  <div class="kf-footer__logo" style="--kf-footer-logo-width: {{ block.settings.logo_width }}px;">
+                    {{
+                      block.settings.logo
+                      | image_url: width: 400
+                      | image_tag:
+                        class: 'kf-footer__logo-image',
+                        loading: 'lazy',
+                        widths: '100,160,200,260,320,400',
+                        sizes: '200px',
+                        alt: shop.name
+                    }}
+                  </div>
+                {%- else -%}
+                  <p class="kf-footer__brand-name">{{ shop.name }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <div class="kf-rte kf-text-sm">{{ block.settings.text }}</div>
+                {%- endif -%}
+
+                {%- if block.settings.show_social -%}
+                  {%- render 'kf-social-icons', class: 'kf-footer__social' -%}
+                {%- endif -%}
+
+              {%- when 'menu' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="kf-label kf-footer__heading">{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.menu != blank -%}
+                  <ul class="kf-footer__list">
+                    {%- for link in block.settings.menu.links -%}
+                      <li>
+                        <a class="kf-footer__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
+                          {{- link.title | escape -}}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- else -%}
+                  <p class="kf-muted kf-text-sm">{{ 'sections.footer.menu_empty' | t }}</p>
+                {%- endif -%}
+
+              {%- when 'text' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="kf-label kf-footer__heading">{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="kf-rte kf-text-sm">{{ block.settings.text }}</div>
+                {%- endif -%}
+
+              {%- when 'newsletter' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="kf-label kf-footer__heading">{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="kf-rte kf-text-sm">{{ block.settings.text }}</div>
+                {%- endif -%}
+                {%- render 'kf-newsletter-form', id: 'FooterNewsletter' -%}
+
+              {%- when 'image' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="kf-label kf-footer__heading">{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
+                {%- render 'kf-media',
+                  image: block.settings.image,
+                  ratio: 'adapt',
+                  sizes: '(min-width: 990px) 20vw, 60vw',
+                  placeholder: 'image'
+                -%}
+                {%- if block.settings.link != blank -%}</a>{%- endif -%}
+
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="kf-footer__bar">
+      <div class="kf-footer__bar-start">
+        <p class="kf-footer__copy kf-text-sm">
+          &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.
+          {{ 'sections.footer.rights' | t }}
+        </p>
+
+        {%- if section.settings.show_policy_links -%}
+          {%- if shop.policies.size > 0 -%}
+            <ul class="kf-footer__policies">
+              {%- for policy in shop.policies -%}
+                {%- if policy != blank -%}
+                  <li><a class="kf-footer__link" href="{{ policy.url }}">{{ policy.title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      <div class="kf-footer__bar-end">
+        {%- if section.settings.show_localization -%}
+          {%- render 'kf-localization', id: 'Footer' -%}
+        {%- endif -%}
+
+        {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+          <ul class="kf-footer__payments" role="list">
+            {%- for type in shop.enabled_payment_types -%}
+              <li>
+                {{ type | payment_type_svg_tag: class: 'kf-footer__payment-icon' }}
+                <span class="kf-visually-hidden">{{ type }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "footer",
+  "class": "kf-footer-section",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Utility bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policy_links",
+      "label": "Show store policy links",
+      "default": true,
+      "info": "Shows the policies you have written in Settings > Policies."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_localization",
+      "label": "Show country and language selectors",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "logo", "label": "Logo" },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "label": "Logo width",
+          "min": 60,
+          "max": 260,
+          "step": 10,
+          "unit": "px",
+          "default": 140
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Beautiful storefronts that flow.</p>"
+        },
+        { "type": "checkbox", "id": "show_social", "label": "Show social links", "default": true }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "About" },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Tell people who you are in two short sentences.</p>"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Stay in flow" },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>New arrivals, quietly. No noise.</p>"
+        },
+        {
+          "type": "paragraph",
+          "content": "Subscribers are saved to Customers with the newsletter tag."
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "brand" },
+        { "type": "menu" },
+        { "type": "newsletter" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,101 @@
+{
+  "sections": {
+    "hero": {
+      "type": "kf-hero",
+      "blocks": {
+        "badge": {
+          "type": "badge",
+          "settings": {
+            "text": "New season",
+            "style": "outline",
+            "animation": "fade-up",
+            "animation_delay": 0
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Beautiful storefronts that flow",
+            "heading_size": "kf-display-sm",
+            "heading_tag": "h1",
+            "animation": "fade-up",
+            "animation_delay": 0
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Open with the one promise that makes someone want to keep scrolling.</p>",
+            "text_size": "lg",
+            "text_width": "narrow",
+            "text_muted": false,
+            "animation": "fade-up",
+            "animation_delay": 0
+          }
+        },
+        "buttons": {
+          "type": "button",
+          "settings": {
+            "label": "Shop the collection",
+            "style": "primary",
+            "secondary_label": "Our story",
+            "secondary_style": "plain",
+            "size": "md",
+            "animation": "fade-up",
+            "animation_delay": 0
+          }
+        },
+        "trust": {
+          "type": "trust-row",
+          "blocks": {
+            "item-1": {
+              "type": "_trust-item",
+              "settings": { "text": "Free shipping over $75", "icon": "check" }
+            },
+            "item-2": {
+              "type": "_trust-item",
+              "settings": { "text": "30 day returns", "icon": "check" }
+            },
+            "item-3": {
+              "type": "_trust-item",
+              "settings": { "text": "Ships worldwide", "icon": "globe" }
+            }
+          },
+          "block_order": ["item-1", "item-2", "item-3"],
+          "settings": {
+            "animation": "fade-up",
+            "animation_delay": 0
+          }
+        }
+      },
+      "block_order": ["badge", "heading", "text", "buttons", "trust"],
+      "settings": {
+        "layout": "media-background",
+        "height_desktop": "lg",
+        "height_mobile": "md",
+        "full_width": true,
+        "content_width": "medium",
+        "content_alignment": "start",
+        "content_position": "bottom",
+        "media_ratio": "portrait",
+        "show_media_placeholder": true,
+        "overlay_opacity": 35,
+        "overlay_style": "gradient",
+        "overlay_color": "#000000",
+        "animation": "none",
+        "animation_stagger": true,
+        "animation_stagger_delay": 90,
+        "animation_duration": "theme",
+        "animation_easing": "theme",
+        "animation_trigger": "load",
+        "animation_intensity": 100,
+        "media_parallax": 0,
+        "color_scheme": "scheme-3",
+        "section_transition": "none",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": ["hero"]
+}

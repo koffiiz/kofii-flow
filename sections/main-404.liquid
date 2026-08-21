@@ -1,0 +1,120 @@
+{%- comment -%}
+  Kofii Flow — 404
+  ---------------------------------------------------------------------------
+  A dead end should still offer a way forward: search, and a route home.
+{%- endcomment -%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-404' %}>
+  <div class="kf-container kf-container--narrow kf-404__inner">
+    <p class="kf-label kf-text-accent">{{ 'sections.404.code' | t }}</p>
+
+    <h1 class="kf-display-sm" {% render 'kf-motion-attrs', motion: section.settings %}>
+      {{- 'sections.404.title' | t -}}
+    </h1>
+
+    <p class="kf-text-lg kf-text-muted">{{ 'sections.404.text' | t }}</p>
+
+    {%- if section.settings.show_search -%}
+      <div class="kf-404__search">
+        {%- render 'kf-search-form', id: 'Error404', predictive: false -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%}
+      Filters are not allowed on `render` arguments, so translation happens
+      first and the result is passed in.
+    {%- endcomment -%}
+    {%- assign back_home_label = 'sections.404.back_home' | t -%}
+
+    <div class="kf-button-group">
+      {%- render 'kf-button',
+        label: back_home_label,
+        href: routes.root_url,
+        style: 'primary',
+        icon: 'arrow'
+      -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+.kf-404__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kf-space-sm);
+  text-align: center;
+}
+
+.kf-404__search {
+  width: 100%;
+  max-width: 26rem;
+  margin-block: var(--kf-space-2xs);
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "404 page",
+  "tag": "section",
+  "class": "kf-404-section",
+  "enabled_on": {
+    "templates": ["404"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search box",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "reveal", "label": "Editorial reveal" }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "load", "label": "On load" },
+        { "value": "scroll", "label": "On scroll" }
+      ],
+      "default": "load"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ]
+}
+{% endschema %}

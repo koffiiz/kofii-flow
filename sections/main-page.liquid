@@ -1,0 +1,153 @@
+{%- comment -%}
+  Kofii Flow — Page content
+  ---------------------------------------------------------------------------
+  Renders a Shopify page. The page title is the single <h1> for this template.
+  App blocks are supported so review widgets, forms and similar can be placed
+  inside the page body.
+{%- endcomment -%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-page' %}>
+  <div class="kf-container{% if section.settings.width == 'narrow' %} kf-container--narrow{% endif %}">
+    {%- if section.settings.show_title -%}
+      <header class="kf-page__header kf-section-header{% if section.settings.alignment == 'center' %} kf-section-header--center{% endif %}">
+        <h1 class="{{ section.settings.title_size }}" {% render 'kf-motion-attrs', motion: section.settings %}>
+          {{- page.title | escape -}}
+        </h1>
+      </header>
+    {%- endif -%}
+
+    {%- if page.content != blank -%}
+      <div class="kf-page__content kf-rte">
+        {{ page.content }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="kf-page__blocks">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }}>{%- render block -%}</div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.kf-page__content {
+  margin-top: var(--kf-space-md);
+}
+
+.kf-page__blocks {
+  margin-top: var(--kf-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-md);
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "class": "kf-page-section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" },
+        { "value": "kf-display-sm", "label": "Display" }
+      ],
+      "default": "kf-h1"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Content width",
+      "options": [
+        { "value": "narrow", "label": "Narrow — best for reading" },
+        { "value": "full", "label": "Full page width" }
+      ],
+      "default": "narrow"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Title alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Title animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "reveal", "label": "Editorial reveal" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "load", "label": "On load" },
+        { "value": "scroll", "label": "On scroll" }
+      ],
+      "default": "load"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [{ "type": "@app" }]
+}
+{% endschema %}

@@ -1,0 +1,143 @@
+/* ==========================================================================
+   Kofii Flow — Footer
+   Loaded by sections/kf-footer.liquid.
+   ========================================================================== */
+
+.kf-footer__columns {
+  display: grid;
+  gap: var(--kf-space-lg) var(--kf-space-md);
+  grid-template-columns: minmax(0, 1fr);
+  padding-bottom: var(--kf-space-lg);
+}
+
+@media (min-width: 640px) {
+  .kf-footer__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 990px) {
+  .kf-footer__columns {
+    /* Never more than four columns, however many blocks a merchant adds —
+       beyond that the columns get too narrow to read. */
+    grid-template-columns: repeat(min(var(--kf-footer-columns, 3), 4), minmax(0, 1fr));
+  }
+
+  /* Give the brand and newsletter columns more room than link lists. */
+  .kf-footer__column--brand,
+  .kf-footer__column--newsletter {
+    grid-column: span 1;
+  }
+}
+
+.kf-footer__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+}
+
+.kf-footer__heading {
+  color: var(--kf-color-muted);
+  margin-bottom: var(--kf-space-3xs);
+}
+
+.kf-footer__brand-name {
+  font-family: var(--kf-font-heading);
+  font-weight: var(--kf-font-heading-weight);
+  font-size: var(--kf-h5);
+  letter-spacing: var(--kf-heading-spacing);
+  color: var(--kf-color-heading);
+}
+
+.kf-footer__logo-image {
+  width: var(--kf-footer-logo-width, 140px);
+  height: auto;
+}
+
+.kf-footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  list-style: none;
+}
+
+.kf-footer__link {
+  display: inline-block;
+  padding-block: 0.15rem;
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-text);
+  transition: color var(--kf-motion-fast) var(--kf-ease-standard),
+              transform var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+@media (hover: hover) {
+  .kf-footer__link:hover {
+    color: var(--kf-color-accent);
+  }
+
+  .kf-motion-hover .kf-footer__list .kf-footer__link:hover {
+    transform: translateX(3px);
+  }
+}
+
+.kf-footer__social {
+  margin-top: var(--kf-space-3xs);
+  margin-inline-start: -0.5rem;
+}
+
+/* Newsletter inside the footer stacks on narrow columns. */
+.kf-footer__column--newsletter .kf-newsletter {
+  margin-top: var(--kf-space-3xs);
+}
+
+/* Utility bar ------------------------------------------------------------- */
+
+.kf-footer__bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  padding-top: var(--kf-space-md);
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+@media (min-width: 990px) {
+  .kf-footer__bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.kf-footer__bar-start,
+.kf-footer__bar-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kf-space-2xs) var(--kf-space-sm);
+}
+
+.kf-footer__copy {
+  color: var(--kf-color-muted);
+}
+
+.kf-footer__policies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-2xs) var(--kf-space-sm);
+  list-style: none;
+}
+
+.kf-footer__payments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  list-style: none;
+}
+
+.kf-footer__payment-icon {
+  width: 2.25rem;
+  height: auto;
+  border-radius: var(--kf-radius-xs);
+}

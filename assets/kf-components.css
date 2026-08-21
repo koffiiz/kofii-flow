@@ -1,0 +1,891 @@
+/* ==========================================================================
+   Kofii Flow — Components
+   Buttons, links, badges, media frames, cards, forms.
+   Every component reads role tokens from the nearest color scheme, so the
+   same markup works on a light section, a dark section or inside a drawer.
+   ========================================================================== */
+
+/* ==========================================================================
+   Button
+   Variants: --primary (solid) | --secondary (outline) | --ghost | --plain
+   Sizes:    --sm | --md | --lg
+   Hover:    driven by the global setting via .kf-motion-hover on <html> and
+             data-kf-btn-hover on <body>.
+   ========================================================================== */
+
+.kf-button {
+  --kf-btn-bg: var(--kf-color-button);
+  --kf-btn-fg: var(--kf-color-button-text);
+  --kf-btn-border: var(--kf-color-button);
+  --kf-btn-pad-x: 1.5em;
+  --kf-btn-pad-y: 0.85em;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  isolation: isolate;
+  overflow: hidden;
+
+  padding: var(--kf-btn-pad-y) var(--kf-btn-pad-x);
+  border: var(--kf-border-width) solid var(--kf-btn-border);
+  border-radius: var(--kf-button-radius);
+
+  font-family: inherit;
+  font-size: var(--kf-text-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-transform: var(--kf-button-transform, none);
+  text-align: center;
+  white-space: nowrap;
+
+  color: var(--kf-btn-fg);
+  background-color: var(--kf-btn-bg);
+  cursor: pointer;
+  transition:
+    transform var(--kf-motion-fast) var(--kf-ease-out),
+    color var(--kf-motion-fast) var(--kf-ease-standard),
+    background-color var(--kf-motion-fast) var(--kf-ease-standard),
+    border-color var(--kf-motion-fast) var(--kf-ease-standard),
+    box-shadow var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-button--sm {
+  --kf-btn-pad-x: 1.1em;
+  --kf-btn-pad-y: 0.6em;
+  font-size: var(--kf-text-xs);
+}
+
+.kf-button--lg {
+  --kf-btn-pad-x: 2em;
+  --kf-btn-pad-y: 1.05em;
+  font-size: var(--kf-text-md);
+}
+
+.kf-button--secondary {
+  --kf-btn-bg: transparent;
+  --kf-btn-fg: var(--kf-color-outline);
+  --kf-btn-border: var(--kf-color-outline);
+}
+
+.kf-button--ghost {
+  --kf-btn-bg: transparent;
+  --kf-btn-fg: var(--kf-color-heading);
+  --kf-btn-border: transparent;
+}
+
+.kf-button--plain {
+  --kf-btn-bg: transparent;
+  --kf-btn-fg: var(--kf-color-heading);
+  --kf-btn-border: transparent;
+  --kf-btn-pad-x: 0;
+  --kf-btn-pad-y: 0.2em;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.kf-button--full {
+  display: flex;
+  width: 100%;
+}
+
+.kf-button[disabled],
+.kf-button[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.kf-button__label {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+}
+
+.kf-button__icon {
+  position: relative;
+  z-index: 2;
+  width: 1em;
+  height: 1em;
+  transition: transform var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+/* Color sweep: a pseudo-element wipes up behind the label. */
+.kf-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: var(--kf-color-accent);
+  transform: translateY(101%);
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out);
+  pointer-events: none;
+}
+
+.kf-button--plain::after {
+  display: none;
+}
+
+@media (hover: hover) {
+  .kf-motion-hover [data-kf-btn-hover="sweep"] .kf-button:hover::after {
+    transform: translateY(0);
+  }
+
+  .kf-motion-hover [data-kf-btn-hover="sweep"] .kf-button:hover {
+    color: var(--kf-color-background);
+    border-color: var(--kf-color-accent);
+  }
+
+  .kf-motion-hover [data-kf-btn-hover="lift"] .kf-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--kf-shadow-md);
+  }
+
+  .kf-motion-hover [data-kf-btn-hover="arrow"] .kf-button:hover .kf-button__icon {
+    transform: translateX(0.35em);
+  }
+
+  /* Fallback for every hover mode: a subtle tone shift so the control always
+     acknowledges the pointer. */
+  .kf-button:hover {
+    border-color: var(--kf-color-accent);
+  }
+
+  .kf-button--secondary:hover,
+  .kf-button--ghost:hover {
+    background-color: var(--kf-color-accent-soft);
+  }
+}
+
+.kf-button:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+/* Underline-on-hover for the plain variant. */
+.kf-button--plain .kf-button__label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.15em;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform-origin: right;
+  transform: scaleX(1);
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out);
+}
+
+@media (hover: hover) {
+  .kf-motion-hover .kf-button--plain:hover .kf-button__label::after {
+    transform: scaleX(0);
+  }
+}
+
+/* Button group ----------------------------------------------------------- */
+
+.kf-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-button-group--center { justify-content: center; }
+.kf-button-group--end { justify-content: flex-end; }
+
+@media (max-width: 479px) {
+  .kf-button-group--stack-mobile {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .kf-button-group--stack-mobile .kf-button {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Badge
+   ========================================================================== */
+
+.kf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4em 0.75em;
+  border-radius: var(--kf-radius-pill);
+  font-size: var(--kf-text-2xs);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--kf-label-spacing);
+  text-transform: var(--kf-label-transform);
+  background-color: var(--kf-color-surface-strong);
+  color: var(--kf-color-heading);
+  white-space: nowrap;
+}
+
+.kf-badge--accent {
+  background-color: var(--kf-color-accent);
+  color: var(--kf-color-background);
+}
+
+.kf-badge--outline {
+  background-color: transparent;
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+}
+
+.kf-badge--solid {
+  background-color: var(--kf-color-heading);
+  color: var(--kf-color-background);
+}
+
+.kf-badge--muted {
+  background-color: var(--kf-color-surface);
+  color: var(--kf-color-muted);
+}
+
+/* ==========================================================================
+   Media
+   One frame handles every image and video in the theme: ratio, rounding,
+   object-fit, focal point and the hover zoom microinteraction.
+   ========================================================================== */
+
+.kf-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--kf-media-radius);
+  background-color: var(--kf-color-surface);
+}
+
+.kf-media--ratio {
+  aspect-ratio: var(--kf-media-ratio, var(--kf-ratio-landscape));
+}
+
+.kf-media--square { --kf-media-ratio: var(--kf-ratio-square); }
+.kf-media--portrait { --kf-media-ratio: var(--kf-ratio-portrait); }
+.kf-media--tall { --kf-media-ratio: var(--kf-ratio-tall); }
+.kf-media--landscape { --kf-media-ratio: var(--kf-ratio-landscape); }
+.kf-media--wide { --kf-media-ratio: var(--kf-ratio-wide); }
+.kf-media--ultrawide { --kf-media-ratio: var(--kf-ratio-ultrawide); }
+
+.kf-media--flush {
+  border-radius: 0;
+}
+
+.kf-media__img,
+.kf-media__video {
+  width: 100%;
+  height: 100%;
+  object-fit: var(--kf-media-fit, cover);
+  object-position: var(--kf-media-position, center);
+  transition: transform var(--kf-motion-slow) var(--kf-ease-out);
+}
+
+.kf-media--ratio .kf-media__img,
+.kf-media--ratio .kf-media__video {
+  position: absolute;
+  inset: 0;
+}
+
+.kf-media--contain {
+  --kf-media-fit: contain;
+}
+
+/* Secondary image for the hover swap on product cards. */
+.kf-media__img--alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--kf-motion-normal) var(--kf-ease-standard),
+              transform var(--kf-motion-slow) var(--kf-ease-out);
+}
+
+@media (hover: hover) {
+  .kf-motion-hover .kf-media--zoom:hover .kf-media__img,
+  .kf-motion-hover a:hover .kf-media--zoom .kf-media__img {
+    transform: scale(1.05);
+  }
+
+  .kf-motion-hover .kf-media--swap:hover .kf-media__img--alt {
+    opacity: 1;
+  }
+}
+
+/* Overlay used by heroes, lookbooks and any media with text on top. */
+.kf-media__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: color-mix(in oklab, var(--kf-overlay-color, #000) calc(var(--kf-overlay-opacity, 0) * 100%), transparent);
+}
+
+.kf-media__overlay--gradient {
+  background-image: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--kf-overlay-color, #000) calc(var(--kf-overlay-opacity, 0) * 130%), transparent) 0%,
+    transparent 65%
+  );
+  background-color: transparent;
+}
+
+/* Placeholder shown in the Theme Editor before media is chosen. */
+.kf-placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--kf-color-surface-strong);
+  color: var(--kf-color-muted);
+}
+
+.kf-placeholder svg {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  opacity: 0.35;
+  fill: currentColor;
+}
+
+.kf-media--ratio .kf-placeholder {
+  position: absolute;
+  inset: 0;
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.kf-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-xs);
+  border-radius: var(--kf-radius-md);
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out),
+              box-shadow var(--kf-motion-normal) var(--kf-ease-out),
+              border-color var(--kf-motion-normal) var(--kf-ease-standard);
+}
+
+.kf-card--bordered {
+  border: var(--kf-border-width) solid var(--kf-color-border);
+  padding: var(--kf-space-sm);
+}
+
+.kf-card--surface {
+  background-color: var(--kf-color-surface);
+  padding: var(--kf-space-sm);
+}
+
+.kf-card--elevated {
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-sm);
+  padding: var(--kf-space-sm);
+}
+
+@media (hover: hover) {
+  .kf-motion-hover .kf-card--hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .kf-motion-hover .kf-card--elevated.kf-card--hover-lift:hover {
+    box-shadow: var(--kf-shadow-lg);
+  }
+
+  .kf-motion-hover .kf-card--bordered:hover {
+    border-color: var(--kf-color-border-strong);
+  }
+}
+
+/* Makes the whole card clickable while keeping one real link for a11y. */
+.kf-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.kf-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.kf-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+}
+
+.kf-field__label {
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-muted);
+}
+
+.kf-input,
+.kf-select,
+.kf-textarea {
+  width: 100%;
+  padding: 0.85em 1em;
+  border: var(--kf-border-width) solid var(--kf-color-border);
+  border-radius: var(--kf-input-radius);
+  background-color: transparent;
+  color: var(--kf-color-heading);
+  font-size: var(--kf-text-sm);
+  line-height: 1.4;
+  transition: border-color var(--kf-motion-fast) var(--kf-ease-standard),
+              box-shadow var(--kf-motion-fast) var(--kf-ease-standard),
+              background-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.kf-input::placeholder,
+.kf-textarea::placeholder {
+  color: var(--kf-color-muted);
+  opacity: 1;
+}
+
+.kf-input:hover,
+.kf-select:hover,
+.kf-textarea:hover {
+  border-color: var(--kf-color-border-strong);
+}
+
+.kf-input:focus,
+.kf-select:focus,
+.kf-textarea:focus {
+  outline: none;
+  border-color: var(--kf-color-accent);
+  box-shadow: 0 0 0 var(--kf-focus-width) var(--kf-color-accent-soft);
+}
+
+.kf-input[aria-invalid="true"],
+.kf-textarea[aria-invalid="true"] {
+  border-color: #D64545;
+}
+
+.kf-select {
+  appearance: none;
+  padding-inline-end: 2.5em;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 1.25em) center, calc(100% - 1em) center;
+  background-size: 0.32em 0.32em, 0.32em 0.32em;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+/* Inline form: input + submit sharing one rounded shell. */
+.kf-form-inline {
+  display: flex;
+  gap: var(--kf-space-3xs);
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.kf-form-inline .kf-field {
+  flex: 1 1 14rem;
+}
+
+.kf-form-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--kf-text-sm);
+  margin-top: var(--kf-space-2xs);
+}
+
+.kf-form-message--success {
+  color: var(--kf-color-accent);
+}
+
+.kf-form-message--error {
+  color: #D64545;
+}
+
+/* ==========================================================================
+   Price
+   ========================================================================== */
+
+.kf-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+  color: var(--kf-color-heading);
+}
+
+.kf-price__regular {
+  font-weight: 500;
+}
+
+.kf-price__compare {
+  color: var(--kf-color-muted);
+  text-decoration: line-through;
+  font-size: 0.9em;
+}
+
+.kf-price--on-sale .kf-price__regular {
+  color: var(--kf-color-accent);
+}
+
+.kf-price__unit {
+  width: 100%;
+  font-size: var(--kf-text-xs);
+  color: var(--kf-color-muted);
+}
+
+/* ==========================================================================
+   Swatch
+   ========================================================================== */
+
+.kf-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.kf-swatch {
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: var(--kf-radius-circle);
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+  background-color: var(--kf-swatch-color, var(--kf-color-surface));
+  background-image: var(--kf-swatch-image, none);
+  background-size: cover;
+  background-position: center;
+}
+
+.kf-swatches__more {
+  font-size: var(--kf-text-2xs);
+  color: var(--kf-color-muted);
+}
+
+/* ==========================================================================
+   Icon
+   ========================================================================== */
+
+.kf-icon {
+  width: var(--kf-icon-size, 1.25rem);
+  height: var(--kf-icon-size, 1.25rem);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kf-icon--filled {
+  fill: currentColor;
+  stroke: none;
+}
+
+.kf-icon--sm { --kf-icon-size: 1rem; }
+.kf-icon--lg { --kf-icon-size: 1.5rem; }
+
+/* Icon-only control with a comfortable hit area. */
+.kf-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem;
+  border-radius: var(--kf-radius-circle);
+  color: inherit;
+  transition: background-color var(--kf-motion-fast) var(--kf-ease-standard),
+              color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+@media (hover: hover) {
+  .kf-icon-button:hover {
+    background-color: var(--kf-color-surface-strong);
+  }
+}
+
+.kf-icon-button__count {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding-inline: 0.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--kf-radius-pill);
+  background-color: var(--kf-color-accent);
+  color: var(--kf-color-background);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.kf-icon-button--counted {
+  position: relative;
+}
+
+/* ==========================================================================
+   Overlay + drawer shell (shared by search, navigation and, later, cart)
+   ========================================================================== */
+
+.kf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--kf-z-overlay);
+  background-color: color-mix(in oklab, #000 45%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--kf-motion-normal) var(--kf-ease-standard),
+              visibility var(--kf-motion-normal) linear;
+}
+
+[aria-hidden="false"] > .kf-overlay,
+.kf-overlay[data-kf-open] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.kf-drawer {
+  position: fixed;
+  z-index: var(--kf-z-drawer);
+  display: flex;
+  flex-direction: column;
+  max-height: 100svh;
+  background-color: var(--kf-color-background);
+  color: var(--kf-color-text);
+  box-shadow: var(--kf-shadow-lg);
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out),
+              visibility var(--kf-motion-normal) linear;
+  visibility: hidden;
+}
+
+.kf-drawer--right {
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: min(28rem, 100vw);
+  transform: translateX(100%);
+}
+
+.kf-drawer--left {
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: min(24rem, 88vw);
+  transform: translateX(-100%);
+}
+
+.kf-drawer--top {
+  inset-inline: 0;
+  inset-block-start: 0;
+  transform: translateY(-100%);
+}
+
+.kf-drawer[data-kf-open] {
+  transform: none;
+  visibility: visible;
+}
+
+.kf-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kf-space-sm);
+  padding: var(--kf-space-sm) var(--kf-space-md);
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--kf-space-md);
+  -webkit-overflow-scrolling: touch;
+}
+
+.kf-drawer__footer {
+  padding: var(--kf-space-md);
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+/* ==========================================================================
+   Empty state
+   ========================================================================== */
+
+.kf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kf-space-xs);
+  padding-block: var(--kf-space-xl);
+  text-align: center;
+  color: var(--kf-color-muted);
+}
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+
+.kf-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--kf-space-3xs);
+  margin-top: var(--kf-space-lg);
+}
+
+.kf-pagination__item {
+  display: grid;
+  place-items: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding-inline: 0.5rem;
+  border-radius: var(--kf-radius-sm);
+  font-size: var(--kf-text-sm);
+  transition: background-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-pagination__item[aria-current="page"] {
+  background-color: var(--kf-color-heading);
+  color: var(--kf-color-background);
+}
+
+.kf-pagination__prev {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .kf-pagination__item:not([aria-current="page"]):hover {
+    background-color: var(--kf-color-surface-strong);
+  }
+}
+
+/* ==========================================================================
+   Localization selectors
+   ========================================================================== */
+
+.kf-localization {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-localization__field {
+  min-width: 9rem;
+}
+
+.kf-select--compact {
+  padding: 0.5em 2.25em 0.5em 0.75em;
+  font-size: var(--kf-text-xs);
+  background-position: calc(100% - 1em) center, calc(100% - 0.75em) center;
+}
+
+/* The submit button only exists for visitors without JavaScript. */
+.kf-js .kf-localization__submit {
+  display: none;
+}
+
+/* ==========================================================================
+   Social links
+   ========================================================================== */
+
+.kf-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  list-style: none;
+}
+
+.kf-social__link {
+  color: var(--kf-color-text);
+}
+
+@media (hover: hover) {
+  .kf-social__link:hover {
+    color: var(--kf-color-accent);
+  }
+}
+
+/* ==========================================================================
+   Theme blocks
+   Styles for the shared content primitives in /blocks.
+   ========================================================================== */
+
+.kf-block-spacer {
+  height: var(--kf-spacer-height-mobile, 1.5rem);
+}
+
+@media (min-width: 768px) {
+  .kf-block-spacer {
+    height: var(--kf-spacer-height, 2.5rem);
+  }
+}
+
+.kf-block-divider {
+  width: 100%;
+  height: var(--kf-divider-thickness, 1px);
+  background-color: var(--kf-color-border);
+}
+
+.kf-block-divider--narrow {
+  max-width: 4rem;
+}
+
+.kf-block-divider--accent {
+  background-color: var(--kf-color-accent);
+}
+
+.kf-block-image--narrow { max-width: 18rem; }
+.kf-block-image--medium { max-width: 32rem; }
+
+.kf-block-image__caption {
+  margin-top: var(--kf-space-3xs);
+}
+
+.kf-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-2xs) var(--kf-space-sm);
+  list-style: none;
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-muted);
+}
+
+.kf-trust__item {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.kf-trust__icon {
+  color: var(--kf-color-accent);
+}
+
+/* ==========================================================================
+   Custom element defaults
+   Keeps upgrade-time layout identical to post-upgrade layout.
+   ========================================================================== */
+
+kf-drawer {
+  display: contents;
+}
+
+kf-disclosure {
+  display: block;
+}
+
+kf-predictive-search {
+  display: block;
+  position: relative;
+}

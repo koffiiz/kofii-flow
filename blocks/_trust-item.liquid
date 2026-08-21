@@ -1,0 +1,44 @@
+{%- comment -%}
+  Kofii Flow — Trust item
+  ---------------------------------------------------------------------------
+  A private theme block (leading underscore): it only appears inside blocks
+  that explicitly allow it, so it never clutters the general block picker.
+  Used by blocks/trust-row.liquid.
+{%- endcomment -%}
+
+{%- if block.settings.text != blank -%}
+  <li class="kf-trust__item" {{ block.shopify_attributes }}>
+    {%- if block.settings.icon != 'none' -%}
+      {%- render 'kf-icon', name: block.settings.icon, class: 'kf-trust__icon', size: 'sm' -%}
+    {%- endif -%}
+    <span>{{ block.settings.text | escape }}</span>
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Trust item",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Free returns within 30 days"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "star", "label": "Star" },
+        { "value": "globe", "label": "Globe" },
+        { "value": "arrow", "label": "Arrow" }
+      ],
+      "default": "check"
+    }
+  ]
+}
+{% endschema %}

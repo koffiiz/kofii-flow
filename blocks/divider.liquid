@@ -1,0 +1,92 @@
+{%- comment -%}
+  Kofii Flow — Divider block
+  A hairline rule. Decorative, so it is hidden from assistive technology.
+{%- endcomment -%}
+
+{%- liquid
+  assign classes = 'kf-block-divider'
+  if block.settings.width == 'narrow'
+    assign classes = classes | append: ' kf-block-divider--narrow'
+  endif
+  if block.settings.style == 'accent'
+    assign classes = classes | append: ' kf-block-divider--accent'
+  endif
+-%}
+
+<div
+  class="{{ classes }}"
+  style="--kf-divider-thickness: {{ block.settings.thickness }}px;"
+  role="presentation"
+  {% render 'kf-motion-attrs', motion: block.settings %}
+  {{ block.shopify_attributes }}
+></div>
+
+{% schema %}
+{
+  "name": "Divider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "thickness",
+      "label": "Thickness",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Color",
+      "options": [
+        { "value": "border", "label": "Border" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "border"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "clip-right", "label": "Draw from left" },
+        { "value": "clip-left", "label": "Draw from right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Divider"
+    }
+  ]
+}
+{% endschema %}

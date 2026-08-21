@@ -1,0 +1,20 @@
+{
+  "name": "kofii-flow",
+  "version": "0.1.0",
+  "description": "Kofii Flow — a premium, animation-rich Shopify Online Store 2.0 theme. Beautiful storefronts that flow.",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "shopify theme dev",
+    "check": "shopify theme check",
+    "push": "shopify theme push",
+    "push:unpublished": "shopify theme push --unpublished",
+    "pull": "shopify theme pull",
+    "validate": "node .dev/validate.mjs",
+    "verify": "npm run validate && npm run check",
+    "check:all": "shopify theme check -C .dev/theme-check-all.yml"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

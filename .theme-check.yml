@@ -1,0 +1,44 @@
+# Kofii Flow — Theme Check configuration
+# Run with: shopify theme check
+#
+# A stricter audit pass is available at .dev/theme-check-all.yml:
+#   shopify theme check -C .dev/theme-check-all.yml
+
+extends: theme-check:recommended
+
+ignore:
+  - .dev/*
+  - node_modules/*
+
+# Asset size budgets
+# ------------------
+# Kofii Flow ships component CSS and JS per section rather than one bundle, so
+# these thresholds are per file, not per page.
+#
+# Theme Check measures raw bytes when it runs without a store to fetch from.
+# Measured for the always-loaded runtime (the only JS on every page):
+#   kf-core.js    10,763 B raw / 3,418 B gzip
+#   kf-motion.js  11,265 B raw / 3,487 B gzip
+#   total          22,028 B raw / 6,416 B gzip
+#
+# 16 KB raw per file is the budget we hold ourselves to. If a component needs
+# more than that, split it or load it on interaction — do not raise this number.
+AssetSizeJavaScript:
+  enabled: true
+  threshold_in_bytes: 16000
+
+AssetSizeCSS:
+  enabled: true
+  threshold_in_bytes: 40000
+
+UndefinedObject:
+  enabled: true
+
+DeprecatedFilter:
+  enabled: true
+
+ImgLazyLoading:
+  enabled: true
+
+RequiredLayoutThemeObject:
+  enabled: true

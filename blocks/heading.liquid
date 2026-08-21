@@ -1,0 +1,115 @@
+{%- comment -%}
+  Kofii Flow — Heading block
+  ---------------------------------------------------------------------------
+  A theme block, available to any section that declares {"type": "@theme"}.
+
+  The heading level and the visual size are separate settings on purpose:
+  a section can look like a display heading while staying an <h2>, so the
+  document outline remains correct. There should be one <h1> per page.
+{%- endcomment -%}
+
+{%- liquid
+  assign tag = block.settings.heading_tag | default: 'h2'
+  assign size_class = block.settings.heading_size | default: 'kf-h2'
+  assign classes = 'kf-block-heading ' | append: size_class
+  if block.settings.heading_accent
+    assign classes = classes | append: ' kf-text-accent'
+  endif
+-%}
+
+{%- if block.settings.heading != blank -%}
+  <{{ tag }}
+    class="{{ classes }}"
+    {% render 'kf-motion-attrs', motion: block.settings %}
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.heading -}}
+  </{{ tag }}>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A heading that carries the page"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Size",
+      "options": [
+        { "value": "kf-h4", "label": "Small" },
+        { "value": "kf-h3", "label": "Medium" },
+        { "value": "kf-h2", "label": "Large" },
+        { "value": "kf-h1", "label": "Extra large" },
+        { "value": "kf-display-sm", "label": "Display" },
+        { "value": "kf-display-md", "label": "Display large" },
+        { "value": "kf-display-lg", "label": "Display extra large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "info": "Affects SEO and screen readers, not the visual size. Use H1 only once per page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "p", "label": "Paragraph (no heading level)" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_accent",
+      "label": "Use accent color",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "fade-down", "label": "Fade down" },
+        { "value": "fade-left", "label": "Fade left" },
+        { "value": "fade-right", "label": "Fade right" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "blur-in", "label": "Blur" },
+        { "value": "clip-up", "label": "Clip reveal" },
+        { "value": "reveal", "label": "Editorial reveal" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Heading"
+    }
+  ]
+}
+{% endschema %}

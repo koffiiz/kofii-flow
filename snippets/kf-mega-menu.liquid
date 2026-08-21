@@ -1,0 +1,117 @@
+{%- comment -%}
+  Kofii Flow — Mega menu panel
+  ---------------------------------------------------------------------------
+  Renders the dropdown contents for one top-level navigation item.
+
+  The Shopify navigation menu is the source of truth: a top-level item with
+  grandchildren becomes a multi-column mega menu, and one with only children
+  becomes a single-column dropdown. Merchants never edit Liquid to change
+  their navigation.
+
+  Optional promotional cards come from `menu_promo` blocks on the header
+  section, matched to a top-level item by title.
+
+  Parameters:
+    link           (link, required)  the top-level menu link
+    blocks         (array)           section.blocks, for promo cards
+    columns        (number)          max columns before wrapping (default 4)
+{%- endcomment -%}
+
+{%- liquid
+  assign is_mega = false
+  for child in link.links
+    if child.links.size > 0
+      assign is_mega = true
+      break
+    endif
+  endfor
+
+  assign max_columns = columns | default: 4
+
+  comment
+    Count the promos for this menu item before rendering anything, so the
+    wrapper element opens and closes in the same branch. Emitting a <div> from
+    inside a loop condition produces unbalanced markup that neither Theme Check
+    nor a human can follow.
+  endcomment
+  assign current_title = link.title | downcase | strip
+  assign promo_count = 0
+  for block in blocks
+    if block.type == 'menu_promo'
+      assign target = block.settings.menu_item | downcase | strip
+      if target == current_title
+        assign promo_count = promo_count | plus: 1
+      endif
+    endif
+  endfor
+-%}
+
+{%- if is_mega -%}
+  <div class="kf-nav__panel kf-disclosure__panel kf-nav__panel--mega">
+    <div class="kf-container kf-mega">
+      <div class="kf-mega__columns" style="--kf-mega-columns: {{ max_columns }};">
+        {%- for child in link.links -%}
+          <div class="kf-mega__column">
+            <a class="kf-mega__heading kf-label" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>
+              {{- child.title | escape -}}
+            </a>
+            {%- if child.links.size > 0 -%}
+              <ul class="kf-mega__list">
+                {%- for grandchild in child.links -%}
+                  <li>
+                    <a class="kf-mega__link" href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>
+                      {{- grandchild.title | escape -}}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if promo_count > 0 -%}
+        <div class="kf-mega__promos">
+          {%- for block in blocks -%}
+            {%- if block.type == 'menu_promo' -%}
+              {%- assign target = block.settings.menu_item | downcase | strip -%}
+              {%- if target == current_title -%}
+                {%- assign promo_url = block.settings.link | default: link.url -%}
+
+                <a class="kf-mega__promo" href="{{ promo_url }}" {{ block.shopify_attributes }}>
+                  {%- render 'kf-media',
+                    image: block.settings.image,
+                    ratio: 'landscape',
+                    sizes: '(min-width: 990px) 22vw, 60vw',
+                    zoom: true,
+                    placeholder: 'lifestyle-1'
+                  -%}
+                  <span class="kf-mega__promo-body">
+                    {%- if block.settings.heading != blank -%}
+                      <span class="kf-mega__promo-heading">{{ block.settings.heading | escape }}</span>
+                    {%- endif -%}
+                    {%- if block.settings.text != blank -%}
+                      <span class="kf-mega__promo-text kf-muted">{{ block.settings.text | escape }}</span>
+                    {%- endif -%}
+                  </span>
+                </a>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- else -%}
+  <div class="kf-nav__panel kf-disclosure__panel kf-nav__panel--dropdown">
+    <ul class="kf-nav__dropdown">
+      {%- for child in link.links -%}
+        <li>
+          <a class="kf-nav__dropdown-link" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>
+            {{- child.title | escape -}}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

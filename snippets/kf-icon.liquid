@@ -1,0 +1,101 @@
+{%- comment -%}
+  Kofii Flow — Icon set
+  ---------------------------------------------------------------------------
+  Usage:
+    {% render 'kf-icon', name: 'search' %}
+    {% render 'kf-icon', name: 'arrow', class: 'kf-button__icon' %}
+
+  Parameters:
+    name    (string, required)  icon key, see the case statement below
+    class   (string)            extra classes; defaults to `kf-icon`
+    size    (string)            'sm' | 'lg' to use a preset size
+
+  Icons are decorative by default (aria-hidden). Label the control that
+  contains them, never the icon itself.
+{%- endcomment -%}
+
+{%- liquid
+  assign icon_class = 'kf-icon'
+  if size == 'sm'
+    assign icon_class = icon_class | append: ' kf-icon--sm'
+  elsif size == 'lg'
+    assign icon_class = icon_class | append: ' kf-icon--lg'
+  endif
+  if class != blank
+    assign icon_class = icon_class | append: ' ' | append: class
+  endif
+-%}
+
+{%- case name -%}
+  {%- when 'menu' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+
+  {%- when 'close' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+
+  {%- when 'search' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+
+  {%- when 'cart' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16l-1.2 12.1a2 2 0 0 1-2 1.9H7.2a2 2 0 0 1-2-1.9L4 7Z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></svg>
+
+  {%- when 'account' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+
+  {%- when 'chevron' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg>
+
+  {%- when 'chevron-right' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.5 6l6 6-6 6"/></svg>
+
+  {%- when 'arrow' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+
+  {%- when 'arrow-diagonal' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17L17 7"/><path d="M8.5 7H17v8.5"/></svg>
+
+  {%- when 'plus' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+
+  {%- when 'minus' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/></svg>
+
+  {%- when 'check' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 12.5l5 5 10-11"/></svg>
+
+  {%- when 'star' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5Z"/></svg>
+
+  {%- when 'play' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>
+
+  {%- when 'globe' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.2 2.4 3.4 5.4 3.4 8.5s-1.2 6.1-3.4 8.5c-2.2-2.4-3.4-5.4-3.4-8.5S9.8 5.9 12 3.5Z"/></svg>
+
+  {%- when 'spinner' -%}
+    <svg class="{{ icon_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" opacity="0.25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg>
+
+  {%- when 'instagram' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 1.8.25 2.2.42.6.22 1 .48 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2Zm0 3.2A6.6 6.6 0 1 0 18.6 12 6.6 6.6 0 0 0 12 5.4Zm0 10.9A4.3 4.3 0 1 1 16.3 12 4.3 4.3 0 0 1 12 16.3Zm6.9-11.1a1.55 1.55 0 1 1-1.55-1.55A1.55 1.55 0 0 1 18.9 5.2Z"/></svg>
+
+  {%- when 'tiktok' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.6 2.2h-3.1v13.2a2.6 2.6 0 1 1-2.6-2.6c.2 0 .5 0 .7.1v-3.2a5.9 5.9 0 0 0-.7 0 5.8 5.8 0 1 0 5.8 5.8V9.3a7 7 0 0 0 4.1 1.3V7.4a3.9 3.9 0 0 1-4.2-3.9v-1.3Z"/></svg>
+
+  {%- when 'youtube' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22.5 7.2a2.7 2.7 0 0 0-1.9-1.9C18.9 4.8 12 4.8 12 4.8s-6.9 0-8.6.5A2.7 2.7 0 0 0 1.5 7.2 28.3 28.3 0 0 0 1 12a28.3 28.3 0 0 0 .5 4.8 2.7 2.7 0 0 0 1.9 1.9c1.7.5 8.6.5 8.6.5s6.9 0 8.6-.5a2.7 2.7 0 0 0 1.9-1.9A28.3 28.3 0 0 0 23 12a28.3 28.3 0 0 0-.5-4.8ZM9.8 15.3V8.7l5.7 3.3Z"/></svg>
+
+  {%- when 'facebook' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12Z"/></svg>
+
+  {%- when 'twitter' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.5 3h3.2l-7 8 8.2 10h-6.4l-5-6.1-5.7 6.1H1.6l7.5-8.6L1.2 3h6.6l4.5 5.6ZM16.4 19.2h1.8L7.7 4.7H5.8Z"/></svg>
+
+  {%- when 'pinterest' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.2a9.8 9.8 0 0 0-3.6 18.9 9.4 9.4 0 0 1 .1-2.8l1.1-4.8a3.5 3.5 0 0 1-.3-1.4c0-1.4.8-2.4 1.8-2.4a1.2 1.2 0 0 1 1.2 1.4 19.4 19.4 0 0 1-.8 3.2 1.4 1.4 0 0 0 1.4 1.7c1.7 0 3-1.8 3-4.4a3.8 3.8 0 0 0-4-3.9 4.1 4.1 0 0 0-4.3 4.1 3.7 3.7 0 0 0 .7 2.2.3.3 0 0 1 .1.3l-.3 1.1c0 .2-.1.2-.3.1-1.2-.5-1.9-2.2-1.9-3.6 0-2.9 2.1-5.6 6.1-5.6a5.4 5.4 0 0 1 5.7 5.3c0 3.2-2 5.7-4.8 5.7a2.5 2.5 0 0 1-2.1-1.1l-.6 2.2a10.4 10.4 0 0 1-1.2 2.5A9.8 9.8 0 1 0 12 2.2Z"/></svg>
+
+  {%- when 'linkedin' -%}
+    <svg class="{{ icon_class }} kf-icon--filled" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.9 21.5H3.1V9.2h3.8ZM5 7.5A2.2 2.2 0 1 1 7.2 5.3 2.2 2.2 0 0 1 5 7.5Zm16.5 14h-3.8v-6c0-1.4 0-3.2-2-3.2s-2.3 1.6-2.3 3.1v6.1H9.6V9.2h3.6v1.7a4 4 0 0 1 3.6-2c3.8 0 4.5 2.5 4.5 5.8Z"/></svg>
+
+  {%- else -%}
+    {%- comment -%} Unknown icon names render nothing rather than a broken box. {%- endcomment -%}
+{%- endcase -%}

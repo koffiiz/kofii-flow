@@ -1,0 +1,638 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Kofii Flow",
+    "theme_version": "0.1.0",
+    "theme_author": "Kofii",
+    "theme_documentation_url": "https://github.com/kofii/kofii-flow#readme",
+    "theme_support_url": "https://github.com/kofii/kofii-flow/issues"
+  },
+
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Kofii Flow uses color schemes. Every section picks a scheme instead of defining its own colors, so a change here updates the whole storefront."
+      },
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "header",
+            "content": "Surface"
+          },
+          {
+            "type": "color",
+            "id": "background",
+            "label": "Background",
+            "default": "#FBFAF8"
+          },
+          {
+            "type": "color_background",
+            "id": "background_gradient",
+            "label": "Background gradient",
+            "info": "Replaces the background color where supported."
+          },
+          {
+            "type": "header",
+            "content": "Type"
+          },
+          {
+            "type": "color",
+            "id": "heading",
+            "label": "Headings",
+            "default": "#101112"
+          },
+          {
+            "type": "color",
+            "id": "text",
+            "label": "Body text",
+            "default": "#54534F"
+          },
+          {
+            "type": "color",
+            "id": "accent",
+            "label": "Accent",
+            "default": "#4536F0",
+            "info": "Links, eyebrows, focus rings and highlights."
+          },
+          {
+            "type": "header",
+            "content": "Buttons"
+          },
+          {
+            "type": "color",
+            "id": "button",
+            "label": "Solid button",
+            "default": "#101112"
+          },
+          {
+            "type": "color",
+            "id": "button_label",
+            "label": "Solid button label",
+            "default": "#FBFAF8"
+          },
+          {
+            "type": "color",
+            "id": "outline_button",
+            "label": "Outline button",
+            "default": "#101112"
+          },
+          {
+            "type": "header",
+            "content": "Depth"
+          },
+          {
+            "type": "color",
+            "id": "shadow",
+            "label": "Shadow",
+            "default": "#101112"
+          }
+        ],
+        "role": {
+          "background": {
+            "solid": "background",
+            "gradient": "background_gradient"
+          },
+          "text": "text",
+          "primary_button": "button",
+          "on_primary_button": "button_label",
+          "primary_button_border": "button",
+          "secondary_button": "background",
+          "on_secondary_button": "outline_button",
+          "secondary_button_border": "outline_button",
+          "icons": "text",
+          "links": "accent",
+          "shadow": "shadow"
+        }
+      }
+    ]
+  },
+
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Headings"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_heading_font",
+        "label": "Heading font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "select",
+        "id": "type_heading_weight",
+        "label": "Heading weight",
+        "options": [
+          { "value": "400", "label": "Regular" },
+          { "value": "500", "label": "Medium" },
+          { "value": "600", "label": "Semibold" },
+          { "value": "700", "label": "Bold" },
+          { "value": "800", "label": "Extra bold" }
+        ],
+        "default": "700"
+      },
+      {
+        "type": "range",
+        "id": "type_heading_scale",
+        "label": "Heading size",
+        "min": 80,
+        "max": 140,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "type_heading_spacing",
+        "label": "Heading letter spacing",
+        "min": -5,
+        "max": 5,
+        "step": 1,
+        "unit": "%",
+        "default": -2
+      },
+      {
+        "type": "range",
+        "id": "type_heading_leading",
+        "label": "Heading line height",
+        "min": 85,
+        "max": 130,
+        "step": 1,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "select",
+        "id": "type_heading_transform",
+        "label": "Heading case",
+        "options": [
+          { "value": "none", "label": "As typed" },
+          { "value": "uppercase", "label": "Uppercase" }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "header",
+        "content": "Body"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "type_body_scale",
+        "label": "Body size",
+        "min": 90,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "type_body_leading",
+        "label": "Body line height",
+        "min": 120,
+        "max": 190,
+        "step": 5,
+        "unit": "%",
+        "default": 160
+      },
+      {
+        "type": "header",
+        "content": "Labels"
+      },
+      {
+        "type": "paragraph",
+        "content": "Eyebrows, badges and small labels share one style so the storefront stays consistent."
+      },
+      {
+        "type": "select",
+        "id": "type_accent_transform",
+        "label": "Label case",
+        "options": [
+          { "value": "uppercase", "label": "Uppercase" },
+          { "value": "none", "label": "As typed" }
+        ],
+        "default": "uppercase"
+      },
+      {
+        "type": "range",
+        "id": "type_accent_spacing",
+        "label": "Label letter spacing",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "unit": "%",
+        "default": 8
+      }
+    ]
+  },
+
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Page width",
+        "min": 1100,
+        "max": 1800,
+        "step": 20,
+        "unit": "px",
+        "default": 1440
+      },
+      {
+        "type": "range",
+        "id": "page_gutter",
+        "label": "Side padding",
+        "min": 12,
+        "max": 48,
+        "step": 2,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "space_scale",
+        "label": "Spacing scale",
+        "min": 70,
+        "max": 140,
+        "step": 5,
+        "unit": "%",
+        "default": 100,
+        "info": "Scales every spacing token at once, including section padding."
+      },
+      {
+        "type": "range",
+        "id": "grid_gap",
+        "label": "Grid gap",
+        "min": 8,
+        "max": 48,
+        "step": 2,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "header",
+        "content": "Corners and depth"
+      },
+      {
+        "type": "range",
+        "id": "radius_scale",
+        "label": "Corner rounding",
+        "min": 0,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "default": 100,
+        "info": "0% gives fully square corners across the theme."
+      },
+      {
+        "type": "range",
+        "id": "shadow_intensity",
+        "label": "Shadow strength",
+        "min": 0,
+        "max": 150,
+        "step": 10,
+        "unit": "%",
+        "default": 60
+      }
+    ]
+  },
+
+  {
+    "name": "Buttons",
+    "settings": [
+      {
+        "type": "range",
+        "id": "button_radius",
+        "label": "Button corner radius",
+        "min": 0,
+        "max": 60,
+        "step": 2,
+        "unit": "px",
+        "default": 60
+      },
+      {
+        "type": "select",
+        "id": "button_size",
+        "label": "Button size",
+        "options": [
+          { "value": "sm", "label": "Small" },
+          { "value": "md", "label": "Medium" },
+          { "value": "lg", "label": "Large" }
+        ],
+        "default": "md"
+      },
+      {
+        "type": "select",
+        "id": "button_transform",
+        "label": "Button case",
+        "options": [
+          { "value": "none", "label": "As typed" },
+          { "value": "uppercase", "label": "Uppercase" }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "select",
+        "id": "button_hover",
+        "label": "Hover effect",
+        "options": [
+          { "value": "none", "label": "None" },
+          { "value": "lift", "label": "Lift" },
+          { "value": "sweep", "label": "Color sweep" },
+          { "value": "arrow", "label": "Arrow slide" }
+        ],
+        "default": "sweep"
+      },
+      {
+        "type": "header",
+        "content": "Inputs"
+      },
+      {
+        "type": "range",
+        "id": "input_radius",
+        "label": "Input corner radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "default": 8
+      }
+    ]
+  },
+
+  {
+    "name": "Media and cards",
+    "settings": [
+      {
+        "type": "range",
+        "id": "media_radius",
+        "label": "Media corner radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "select",
+        "id": "card_style",
+        "label": "Card style",
+        "options": [
+          { "value": "plain", "label": "Plain" },
+          { "value": "bordered", "label": "Bordered" },
+          { "value": "surface", "label": "Surface" },
+          { "value": "elevated", "label": "Elevated" }
+        ],
+        "default": "plain"
+      },
+      {
+        "type": "select",
+        "id": "card_hover",
+        "label": "Card hover effect",
+        "options": [
+          { "value": "none", "label": "None" },
+          { "value": "zoom", "label": "Media zoom" },
+          { "value": "lift", "label": "Lift" },
+          { "value": "swap", "label": "Swap to second image" }
+        ],
+        "default": "swap"
+      },
+      {
+        "type": "header",
+        "content": "Product cards"
+      },
+      {
+        "type": "select",
+        "id": "product_card_ratio",
+        "label": "Image ratio",
+        "options": [
+          { "value": "adapt", "label": "Adapt to image" },
+          { "value": "square", "label": "Square (1:1)" },
+          { "value": "portrait", "label": "Portrait (4:5)" },
+          { "value": "tall", "label": "Tall (3:4)" },
+          { "value": "landscape", "label": "Landscape (4:3)" }
+        ],
+        "default": "portrait"
+      },
+      {
+        "type": "select",
+        "id": "product_card_align",
+        "label": "Text alignment",
+        "options": [
+          { "value": "start", "label": "Left" },
+          { "value": "center", "label": "Center" }
+        ],
+        "default": "start"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_card_vendor",
+        "label": "Show vendor",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "product_card_swatches",
+        "label": "Show color swatches",
+        "default": true,
+        "info": "Uses the swatches configured on your product options."
+      },
+      {
+        "type": "checkbox",
+        "id": "product_card_rating",
+        "label": "Show rating",
+        "default": false,
+        "info": "Requires a review app that writes to the standard reviews metafields."
+      },
+      {
+        "type": "checkbox",
+        "id": "product_card_sale_badge",
+        "label": "Show sale badge",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "product_card_sale_style",
+        "label": "Sale badge shows",
+        "options": [
+          { "value": "text", "label": "Sale" },
+          { "value": "percent", "label": "Percentage saved" },
+          { "value": "amount", "label": "Amount saved" }
+        ],
+        "default": "percent"
+      }
+    ]
+  },
+
+  {
+    "name": "Motion",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Flow Mode sets how expressive the whole storefront feels. Individual sections can still override their own animation."
+      },
+      {
+        "type": "select",
+        "id": "flow_mode",
+        "label": "Flow Mode",
+        "options": [
+          { "value": "off", "label": "Off" },
+          { "value": "subtle", "label": "Subtle" },
+          { "value": "balanced", "label": "Balanced" },
+          { "value": "expressive", "label": "Expressive" }
+        ],
+        "default": "balanced"
+      },
+      {
+        "type": "header",
+        "content": "Defaults"
+      },
+      {
+        "type": "range",
+        "id": "motion_duration",
+        "label": "Default duration",
+        "min": 200,
+        "max": 1400,
+        "step": 50,
+        "unit": "ms",
+        "default": 700
+      },
+      {
+        "type": "select",
+        "id": "motion_easing",
+        "label": "Default easing",
+        "options": [
+          { "value": "standard", "label": "Standard" },
+          { "value": "smooth", "label": "Smooth" },
+          { "value": "out", "label": "Ease out" },
+          { "value": "spring", "label": "Spring-like" }
+        ],
+        "default": "smooth"
+      },
+      {
+        "type": "header",
+        "content": "Effects"
+      },
+      {
+        "type": "checkbox",
+        "id": "motion_parallax",
+        "label": "Enable parallax media",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "motion_hover",
+        "label": "Enable hover microinteractions",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "motion_section_transitions",
+        "label": "Enable section transitions",
+        "default": false,
+        "info": "Lets a section round and overlap into the section below it."
+      },
+      {
+        "type": "paragraph",
+        "content": "Motion always respects a reduced-motion preference, and content stays readable if JavaScript fails."
+      }
+    ]
+  },
+
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "predictive_search_enabled",
+        "label": "Enable predictive search",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "predictive_search_products",
+        "label": "Show product suggestions",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "predictive_search_collections",
+        "label": "Show collection suggestions",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "predictive_search_pages",
+        "label": "Show page and article suggestions",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "predictive_search_queries",
+        "label": "Show suggested search terms",
+        "default": true
+      }
+    ]
+  },
+
+  {
+    "name": "Brand and social",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Will be scaled down to 32 x 32px."
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Social sharing image",
+        "info": "Used when a page has no image of its own. 1200 x 630px recommended."
+      },
+      {
+        "type": "text",
+        "id": "brand_twitter_handle",
+        "label": "X (Twitter) handle",
+        "info": "Without the @ symbol. Used for social sharing cards."
+      },
+      {
+        "type": "header",
+        "content": "Social accounts"
+      },
+      { "type": "text", "id": "social_instagram_link", "label": "Instagram" },
+      { "type": "text", "id": "social_tiktok_link", "label": "TikTok" },
+      { "type": "text", "id": "social_youtube_link", "label": "YouTube" },
+      { "type": "text", "id": "social_facebook_link", "label": "Facebook" },
+      { "type": "text", "id": "social_twitter_link", "label": "X (Twitter)" },
+      { "type": "text", "id": "social_pinterest_link", "label": "Pinterest" },
+      { "type": "text", "id": "social_linkedin_link", "label": "LinkedIn" }
+    ]
+  },
+
+  {
+    "name": "Currency and localization",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "currency_code_enabled",
+        "label": "Show currency codes",
+        "default": true,
+        "info": "Displays $10.00 USD instead of $10.00."
+      }
+    ]
+  }
+]

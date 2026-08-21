@@ -1,0 +1,97 @@
+{%- comment -%}
+  Kofii Flow — Kofii Motion attributes
+  ---------------------------------------------------------------------------
+  Turns the shared animation settings into the data attributes and custom
+  properties that `kf-motion.js` and `kf-motion.css` understand.
+
+  This snippet is the ONLY place a section should touch the motion system.
+  Never write animation JavaScript or keyframes inside a section.
+
+  Usage (emits attributes, so call it inside a tag):
+    <div class="kf-hero__content" {% render 'kf-motion-attrs', motion: section.settings %}>
+
+  With extra inline custom properties:
+    <div {% render 'kf-motion-attrs', motion: block.settings, style: '--kf-x: 1;' %}>
+
+  Direct overrides (win over `motion`):
+    {% render 'kf-motion-attrs', animation: 'fade-up', delay: 120 %}
+
+  Reads these ids from `motion` (copy-paste schema in CLAUDE.md):
+    animation, animation_duration, animation_duration_custom, animation_delay,
+    animation_easing, animation_trigger, animation_replay, animation_stagger,
+    animation_stagger_delay, animation_intensity
+
+  Note: the parameter is called `motion`, not `settings`, so the global
+  `settings` object stays reachable for the theme-wide motion defaults.
+{%- endcomment -%}
+
+{%- liquid
+  assign preset = animation | default: motion.animation | default: 'none'
+  assign speed = duration | default: motion.animation_duration | default: 'theme'
+  assign easing_key = easing | default: motion.animation_easing | default: 'theme'
+  assign start_delay = delay | default: motion.animation_delay | default: 0
+  assign trigger_mode = trigger | default: motion.animation_trigger | default: 'scroll'
+  assign replay_mode = replay | default: motion.animation_replay | default: 'once'
+  assign intensity = motion.animation_intensity | default: 100
+
+  assign has_animation = false
+  if preset != blank and preset != 'none'
+    assign has_animation = true
+  endif
+
+  case speed
+    when 'fast'
+      assign duration_ms = 380
+    when 'normal'
+      assign duration_ms = 700
+    when 'slow'
+      assign duration_ms = 1100
+    when 'custom'
+      assign duration_ms = motion.animation_duration_custom | default: 700
+    else
+      assign duration_ms = settings.motion_duration | default: 700
+  endcase
+
+  case easing_key
+    when 'standard'
+      assign easing_value = 'var(--kf-ease-standard)'
+    when 'smooth'
+      assign easing_value = 'var(--kf-ease-smooth)'
+    when 'out'
+      assign easing_value = 'var(--kf-ease-out)'
+    when 'spring'
+      assign easing_value = 'var(--kf-ease-spring)'
+    else
+      assign easing_value = 'var(--kf-ease-' | append: settings.motion_easing | append: ')'
+  endcase
+
+  assign distance = 28 | times: intensity | divided_by: 100
+
+  assign use_stagger = false
+  if stagger
+    assign use_stagger = true
+  elsif motion.animation_stagger
+    assign use_stagger = true
+  endif
+  assign stagger_step = stagger_delay | default: motion.animation_stagger_delay | default: 80
+
+  assign needs_style = false
+  if has_animation
+    assign needs_style = true
+  elsif style != blank
+    assign needs_style = true
+  endif
+-%}
+{%- if has_animation -%}
+data-kf-animate="{{ preset }}"
+{%- endif -%}
+{%- comment -%}
+  Trigger and replay apply to a stagger container too, even when the container
+  itself has no animation — it still decides when its children play.
+{%- endcomment -%}
+{%- if has_animation or use_stagger -%}
+  {%- if trigger_mode == 'load' %} data-kf-trigger="load"{% endif -%}
+  {%- if replay_mode == 'always' %} data-kf-replay="always"{% endif -%}
+{%- endif -%}
+{%- if use_stagger %} data-kf-stagger="{{ stagger_step }}" data-kf-delay="{{ start_delay }}"{% endif -%}
+{%- if needs_style %} style="{% if has_animation %}--kf-a-duration:{{ duration_ms }}ms;--kf-a-delay:{{ start_delay }}ms;--kf-a-easing:{{ easing_value }};--kf-a-distance:{{ distance }}px;{% endif %}{{ style }}"{% endif -%}

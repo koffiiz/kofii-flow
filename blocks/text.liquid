@@ -1,0 +1,112 @@
+{%- comment -%}
+  Kofii Flow — Text block
+  Rich text with a curated size scale. Uses .kf-rte so links, lists and
+  blockquotes inherit the theme typography.
+{%- endcomment -%}
+
+{%- liquid
+  assign classes = 'kf-block-text kf-rte'
+  case block.settings.text_size
+    when 'sm'
+      assign classes = classes | append: ' kf-text-sm'
+    when 'lg'
+      assign classes = classes | append: ' kf-text-lg'
+    when 'xl'
+      assign classes = classes | append: ' kf-text-xl'
+  endcase
+  if block.settings.text_muted
+    assign classes = classes | append: ' kf-text-muted'
+  endif
+  if block.settings.text_width == 'narrow'
+    assign classes = classes | append: ' kf-w-narrow'
+  endif
+-%}
+
+{%- if block.settings.text != blank -%}
+  <div
+    class="{{ classes }}"
+    {% render 'kf-motion-attrs', motion: block.settings %}
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.text }}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Say the one thing a visitor needs to know before they scroll.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Size",
+      "options": [
+        { "value": "sm", "label": "Small" },
+        { "value": "md", "label": "Medium" },
+        { "value": "lg", "label": "Large" },
+        { "value": "xl", "label": "Extra large" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "select",
+      "id": "text_width",
+      "label": "Width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_muted",
+      "label": "Muted color",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "fade-down", "label": "Fade down" },
+        { "value": "fade-left", "label": "Fade left" },
+        { "value": "fade-right", "label": "Fade right" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "blur-in", "label": "Blur" },
+        { "value": "clip-up", "label": "Clip reveal" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text"
+    }
+  ]
+}
+{% endschema %}

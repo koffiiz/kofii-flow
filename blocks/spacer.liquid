@@ -1,0 +1,46 @@
+{%- comment -%}
+  Kofii Flow — Spacer block
+  Merchant-controlled vertical space. Values are multiplied by the global
+  spacing scale so the whole storefront still tightens or loosens together.
+{%- endcomment -%}
+
+<div
+  class="kf-block-spacer"
+  style="--kf-spacer-height: calc({{ block.settings.height }}px * var(--kf-space-scale)); --kf-spacer-height-mobile: calc({{ block.settings.height_mobile }}px * var(--kf-space-scale));"
+  aria-hidden="true"
+  {{ block.shopify_attributes }}
+></div>
+
+{% schema %}
+{
+  "name": "Spacer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Height on mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spacer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,111 @@
+<!doctype html>
+<html
+  class="no-js"
+  lang="{{ request.locale.iso_code }}"
+  data-kf-flow="{{ settings.flow_mode }}"
+  {% if settings.motion_parallax == false %}data-kf-parallax="off"{% endif %}
+>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    {%- comment -%} Browser UI color follows the first color scheme. {%- endcomment -%}
+    {%- for scheme in settings.color_schemes limit: 1 -%}
+      <meta name="theme-color" content="{{ scheme.settings.background }}">
+    {%- endfor -%}
+
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+    {%- endif -%}
+
+    <title>
+      {{- page_title -}}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tagged_html' | t: tags: current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- render 'kf-meta-tags' -%}
+    {%- render 'kf-fonts' -%}
+
+    {{ 'kf-tokens.css' | asset_url | stylesheet_tag }}
+    {{ 'kf-base.css' | asset_url | stylesheet_tag }}
+    {{ 'kf-components.css' | asset_url | stylesheet_tag }}
+    {{ 'kf-motion.css' | asset_url | stylesheet_tag }}
+    {{ 'kf-utilities.css' | asset_url | stylesheet_tag }}
+
+    {%- render 'kf-css-variables' -%}
+
+    {%- comment -%}
+      Boot script. Runs before first paint so animated elements never flash in
+      their final state and then jump back.
+
+      Critically, `.kf-motion` — the class that hides elements waiting to
+      animate — is only added when motion is genuinely allowed, and a failsafe
+      removes it if the motion engine has not booted in 2.5 seconds. If
+      JavaScript is blocked or fails to load, all content stays visible.
+    {%- endcomment -%}
+    <script>
+      (function () {
+        var root = document.documentElement;
+        root.classList.remove('no-js');
+        root.classList.add('kf-js');
+
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var flow = root.getAttribute('data-kf-flow');
+
+        {%- if settings.motion_hover -%}
+          if (!reduced) root.classList.add('kf-motion-hover');
+        {%- endif -%}
+
+        if (!reduced && flow !== 'off') {
+          root.classList.add('kf-motion');
+          window.setTimeout(function () {
+            if (!root.classList.contains('kf-motion-ready')) {
+              root.classList.remove('kf-motion');
+            }
+          }, 2500);
+        }
+      })();
+    </script>
+
+    <script>
+      window.routes = {
+        root_url: {{ routes.root_url | json }},
+        cart_url: {{ routes.cart_url | json }},
+        cart_add_url: {{ routes.cart_add_url | json }},
+        cart_change_url: {{ routes.cart_change_url | json }},
+        cart_update_url: {{ routes.cart_update_url | json }},
+        predictive_search_url: {{ routes.predictive_search_url | json }},
+        search_url: {{ routes.search_url | json }}
+      };
+    </script>
+
+    <script src="{{ 'kf-core.js' | asset_url }}" defer></script>
+    <script src="{{ 'kf-motion.js' | asset_url }}" defer></script>
+
+    {%- if request.page_type == 'index' -%}
+      {%- render 'kf-structured-data' -%}
+    {%- endif -%}
+
+    {{ content_for_header }}
+  </head>
+
+  <body
+    class="kf-body kf-scheme kf-scheme--scheme-1 template-{{ request.page_type | handle }}"
+    data-kf-btn-hover="{{ settings.button_hover }}"
+  >
+    <a class="kf-skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="kf-main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+  </body>
+</html>

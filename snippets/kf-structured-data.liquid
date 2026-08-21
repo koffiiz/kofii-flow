@@ -1,0 +1,60 @@
+{%- comment -%}
+  Kofii Flow — Structured data
+  ---------------------------------------------------------------------------
+  Site-level JSON-LD only: Organization plus WebSite with a SearchAction.
+  Page-level graphs (Product, Article, BreadcrumbList) are emitted by the
+  section that owns that content, so nothing is ever declared twice.
+
+  Rendered once, on the homepage, from `layout/theme.liquid`.
+{%- endcomment -%}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": {{ shop.url | append: '#organization' | json }},
+        "name": {{ shop.name | json }},
+        "url": {{ shop.url | json }}
+        {%- if settings.share_image -%}
+          ,"logo": {
+            "@type": "ImageObject",
+            "url": {{ settings.share_image | image_url: width: 512 | prepend: 'https:' | json }}
+          }
+        {%- endif -%}
+        {%- assign social_links = '' -%}
+        {%- if settings.social_instagram_link != blank -%}{%- assign social_links = social_links | append: settings.social_instagram_link | append: '|' -%}{%- endif -%}
+        {%- if settings.social_tiktok_link != blank -%}{%- assign social_links = social_links | append: settings.social_tiktok_link | append: '|' -%}{%- endif -%}
+        {%- if settings.social_youtube_link != blank -%}{%- assign social_links = social_links | append: settings.social_youtube_link | append: '|' -%}{%- endif -%}
+        {%- if settings.social_facebook_link != blank -%}{%- assign social_links = social_links | append: settings.social_facebook_link | append: '|' -%}{%- endif -%}
+        {%- if settings.social_twitter_link != blank -%}{%- assign social_links = social_links | append: settings.social_twitter_link | append: '|' -%}{%- endif -%}
+        {%- if settings.social_pinterest_link != blank -%}{%- assign social_links = social_links | append: settings.social_pinterest_link | append: '|' -%}{%- endif -%}
+        {%- if settings.social_linkedin_link != blank -%}{%- assign social_links = social_links | append: settings.social_linkedin_link | append: '|' -%}{%- endif -%}
+        {%- assign social_list = social_links | split: '|' -%}
+        {%- if social_list.size > 0 -%}
+          ,"sameAs": [
+            {%- for link in social_list -%}
+              {{ link | json }}{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          ]
+        {%- endif -%}
+      },
+      {
+        "@type": "WebSite",
+        "@id": {{ shop.url | append: '#website' | json }},
+        "url": {{ shop.url | json }},
+        "name": {{ shop.name | json }},
+        "publisher": { "@id": {{ shop.url | append: '#organization' | json }} },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": {{ shop.url | append: '/search?q={search_term_string}' | json }}
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+</script>

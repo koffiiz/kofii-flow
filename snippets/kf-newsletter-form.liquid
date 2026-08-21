@@ -1,0 +1,72 @@
+{%- comment -%}
+  Kofii Flow — Newsletter form
+  ---------------------------------------------------------------------------
+  Uses Shopify's native customer form, so subscribers land in Customers with
+  the `newsletter` tag and no app is required.
+
+  Parameters:
+    id           (string, required)  unique id fragment for label/input pairing
+    button_label (string)            defaults to the locale string
+    placeholder  (string)
+    class        (string)
+{%- endcomment -%}
+
+{%- liquid
+  assign form_id = id | default: 'Newsletter'
+  assign input_id = form_id | append: '-email'
+
+  assign placeholder_text = placeholder
+  if placeholder_text == blank
+    assign placeholder_text = 'newsletter.placeholder' | t
+  endif
+
+  assign submit_label = button_label
+  if submit_label == blank
+    assign submit_label = 'newsletter.button' | t
+  endif
+-%}
+
+{%- form 'customer', id: form_id, class: 'kf-newsletter kf-form-inline' -%}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+
+  <div class="kf-field">
+    <label class="kf-visually-hidden" for="{{ input_id }}">
+      {{- 'newsletter.label' | t -}}
+    </label>
+    <input
+      id="{{ input_id }}"
+      class="kf-input"
+      type="email"
+      name="contact[email]"
+      value="{{ form.email }}"
+      autocomplete="email"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
+      required
+      placeholder="{{ placeholder_text }}"
+      {% if form.errors %}
+        aria-invalid="true"
+        aria-describedby="{{ form_id }}-error"
+      {% endif %}
+    >
+  </div>
+
+  {%- render 'kf-button',
+    label: submit_label,
+    type: 'submit',
+    style: 'primary'
+  -%}
+
+  {%- if form.errors -%}
+    <p class="kf-form-message kf-form-message--error" id="{{ form_id }}-error" role="alert">
+      {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+      {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+    </p>
+  {%- elsif form.posted_successfully? -%}
+    <p class="kf-form-message kf-form-message--success" role="status">
+      {%- render 'kf-icon', name: 'check', size: 'sm' -%}
+      {{ 'newsletter.success' | t }}
+    </p>
+  {%- endif -%}
+{%- endform -%}

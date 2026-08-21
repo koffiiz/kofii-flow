@@ -1,0 +1,120 @@
+{%- comment -%}
+  Kofii Flow — Predictive search results
+  ---------------------------------------------------------------------------
+  Rendered on its own by Shopify when `kf-predictive-search.js` requests
+  /search/suggest?section_id=predictive-search. The element with
+  [data-kf-results] is the part that gets swapped into the live page, so its
+  contents must be self-contained.
+
+  Every result is a role="option" with a stable id, which is what the combobox
+  keyboard navigation targets.
+{%- endcomment -%}
+
+<div class="kf-search__results-inner" data-kf-results>
+  {%- if predictive_search.performed -%}
+    {%- liquid
+      assign products = predictive_search.resources.products
+      assign collections = predictive_search.resources.collections
+      assign pages = predictive_search.resources.pages
+      assign articles = predictive_search.resources.articles
+      assign queries = predictive_search.resources.queries
+      assign option_index = 0
+    -%}
+
+    {%- if products.size == 0 and collections.size == 0 and pages.size == 0 and articles.size == 0 and queries.size == 0 -%}
+      <p class="kf-search__empty kf-muted">
+        {{ 'general.search.no_results' | t: terms: predictive_search.terms }}
+      </p>
+    {%- else -%}
+      <div class="kf-search__groups" role="listbox" aria-label="{{ 'general.search.results' | t }}">
+        {%- if queries.size > 0 -%}
+          <div class="kf-search__group kf-search__group--queries">
+            <h3 class="kf-label kf-search__group-title">{{ 'general.search.suggestions' | t }}</h3>
+            <ul class="kf-search__list">
+              {%- for query in queries -%}
+                {%- assign option_index = option_index | plus: 1 -%}
+                <li id="kf-ps-option-{{ option_index }}" role="option" aria-selected="false" class="kf-search__option">
+                  <a class="kf-search__query" href="{{ query.url }}">
+                    {%- render 'kf-icon', name: 'search', size: 'sm' -%}
+                    <span>{{ query.styled_text }}</span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- if products.size > 0 -%}
+          <div class="kf-search__group kf-search__group--products">
+            <h3 class="kf-label kf-search__group-title">{{ 'general.search.products' | t }}</h3>
+            <ul class="kf-search__list kf-search__list--products">
+              {%- for product in products -%}
+                {%- assign option_index = option_index | plus: 1 -%}
+                <li id="kf-ps-option-{{ option_index }}" role="option" aria-selected="false" class="kf-search__option">
+                  <a class="kf-search__product" href="{{ product.url }}">
+                    {%- render 'kf-media',
+                      image: product.featured_media.preview_image,
+                      ratio: 'square',
+                      sizes: '72px',
+                      widths: '72,144,216',
+                      class: 'kf-search__product-media',
+                      placeholder: 'product-1'
+                    -%}
+                    <span class="kf-search__product-body">
+                      <span class="kf-search__product-title">{{ product.title | escape }}</span>
+                      {%- render 'kf-price', product: product, show_from: false -%}
+                    </span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- if collections.size > 0 -%}
+          <div class="kf-search__group">
+            <h3 class="kf-label kf-search__group-title">{{ 'general.search.collections' | t }}</h3>
+            <ul class="kf-search__list">
+              {%- for collection in collections -%}
+                {%- assign option_index = option_index | plus: 1 -%}
+                <li id="kf-ps-option-{{ option_index }}" role="option" aria-selected="false" class="kf-search__option">
+                  <a class="kf-search__link" href="{{ collection.url }}">{{ collection.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- if pages.size > 0 or articles.size > 0 -%}
+          <div class="kf-search__group">
+            <h3 class="kf-label kf-search__group-title">{{ 'general.search.pages' | t }}</h3>
+            <ul class="kf-search__list">
+              {%- for page in pages -%}
+                {%- assign option_index = option_index | plus: 1 -%}
+                <li id="kf-ps-option-{{ option_index }}" role="option" aria-selected="false" class="kf-search__option">
+                  <a class="kf-search__link" href="{{ page.url }}">{{ page.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+              {%- for article in articles -%}
+                {%- assign option_index = option_index | plus: 1 -%}
+                <li id="kf-ps-option-{{ option_index }}" role="option" aria-selected="false" class="kf-search__option">
+                  <a class="kf-search__link" href="{{ article.url }}">{{ article.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <a class="kf-search__all kf-link" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&options%5Bprefix%5D=last">
+        {{ 'general.search.view_all' | t: terms: predictive_search.terms }}
+      </a>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{%- comment -%}
+  This section deliberately has no schema block: it is only ever rendered
+  through /search/suggest, and a schema would put it in the Theme Editor
+  section picker where it makes no sense.
+{%- endcomment -%}

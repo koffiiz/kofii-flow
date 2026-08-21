@@ -1,0 +1,523 @@
+{%- comment -%}
+  Kofii Flow — Hero
+  ---------------------------------------------------------------------------
+  The flagship section. One section, seven layouts, all content supplied by
+  theme blocks so the same hero can open a fashion store, a supplement brand
+  or a furniture catalogue without new code.
+
+  Layouts
+    media-background  content over full-bleed media (supports full height)
+    split             content left, media right
+    split-reverse     media left, content right
+    stacked           content above media
+    centered          centered content, optional media behind
+    editorial         asymmetric: oversized heading with offset media
+    minimal           type only, generous space
+
+  Motion: the content column is a Kofii Motion stagger container. Each block
+  carries its own animation setting, and the hero sequences whichever blocks
+  opt in. No animation code lives in this file.
+
+  Performance: the hero image is the LCP element on most homepages, so it is
+  loaded eagerly with fetchpriority="high" and never lazy-loaded.
+{%- endcomment -%}
+
+{{ 'section-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign layout = s.layout
+
+  assign has_image = false
+  if s.image != blank
+    assign has_image = true
+  endif
+
+  assign has_video = false
+  if s.video != blank
+    assign has_video = true
+  endif
+
+  assign has_media = false
+  if has_image or has_video
+    assign has_media = true
+  endif
+
+  assign is_background = false
+  if layout == 'media-background'
+    assign is_background = true
+  endif
+  if layout == 'centered' and has_media
+    assign is_background = true
+  endif
+
+  assign hero_class = 'kf-hero kf-hero--' | append: layout
+  assign hero_class = hero_class | append: ' kf-hero--h-' | append: s.height_desktop
+  assign hero_class = hero_class | append: ' kf-hero--hm-' | append: s.height_mobile
+  assign hero_class = hero_class | append: ' kf-hero--align-' | append: s.content_alignment
+  assign hero_class = hero_class | append: ' kf-hero--pos-' | append: s.content_position
+  assign hero_class = hero_class | append: ' kf-hero--w-' | append: s.content_width
+
+  if is_background
+    assign hero_class = hero_class | append: ' kf-hero--overlaid'
+  endif
+  if s.full_width
+    assign hero_class = hero_class | append: ' kf-hero--full-width'
+  endif
+
+  assign parallax_strength = s.media_parallax | divided_by: 100.0
+
+  comment
+    A background hero paints its own media, so the section keeps the scheme
+    tokens for the text but must not paint the scheme background over it.
+  endcomment
+  assign extra_style = ''
+  if is_background
+    assign extra_style = 'background-color: transparent;'
+  endif
+-%}
+
+<div
+  id="kf-hero-{{ section.id }}"
+  {% render 'kf-section-attrs',
+    s: section.settings,
+    extra_class: hero_class,
+    style: extra_style,
+    full_width: s.full_width %}
+>
+  {%- if is_background and has_media -%}
+    <div class="kf-hero__backdrop">
+      {%- if has_video -%}
+        {{
+          s.video
+          | video_tag:
+            class: 'kf-hero__video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            image_size: '1920x'
+        }}
+      {%- else -%}
+        {%- render 'kf-media',
+          image: s.image,
+          ratio: 'wide',
+          sizes: '100vw',
+          loading: 'eager',
+          priority: true,
+          parallax: parallax_strength,
+          flush: true,
+          class: 'kf-hero__media kf-hero__media--fill'
+        -%}
+      {%- endif -%}
+
+      {%- if s.overlay_opacity > 0 -%}
+        <div
+          class="kf-hero__overlay{% if s.overlay_style == 'gradient' %} kf-hero__overlay--gradient{% endif %}"
+          style="--kf-overlay-opacity: {{ s.overlay_opacity | divided_by: 100.0 }};{% if s.overlay_color != blank %}--kf-overlay-color: {{ s.overlay_color }};{% endif %}"
+        ></div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="kf-container kf-hero__inner">
+    <div
+      class="kf-hero__content"
+      {% render 'kf-motion-attrs', motion: section.settings %}
+    >
+      {% content_for 'blocks' %}
+    </div>
+
+    {%- comment -%}
+      Side-by-side and stacked layouts render the media as a real column so it
+      participates in the grid instead of sitting behind the text.
+    {%- endcomment -%}
+    {%- unless is_background -%}
+      {%- if has_media or s.show_media_placeholder -%}
+        <div class="kf-hero__media-col">
+          {%- if has_video -%}
+            {{
+              s.video
+              | video_tag:
+                class: 'kf-hero__video',
+                autoplay: true,
+                loop: true,
+                muted: true,
+                controls: false,
+                playsinline: true,
+                image_size: '1200x'
+            }}
+          {%- else -%}
+            {%- render 'kf-media',
+              image: s.image,
+              ratio: s.media_ratio,
+              sizes: '(min-width: 990px) 50vw, 100vw',
+              loading: 'eager',
+              priority: true,
+              parallax: parallax_strength,
+              placeholder: 'lifestyle-2',
+              class: 'kf-hero__media'
+            -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endunless -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "kf-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "media-background", "label": "Media background" },
+        { "value": "split", "label": "Split — content left" },
+        { "value": "split-reverse", "label": "Split — content right" },
+        { "value": "stacked", "label": "Stacked" },
+        { "value": "centered", "label": "Centered" },
+        { "value": "editorial", "label": "Editorial" },
+        { "value": "minimal", "label": "Minimal" }
+      ],
+      "default": "media-background"
+    },
+    {
+      "type": "select",
+      "id": "height_desktop",
+      "label": "Height on desktop",
+      "options": [
+        { "value": "auto", "label": "Fit content" },
+        { "value": "sm", "label": "Small" },
+        { "value": "md", "label": "Medium" },
+        { "value": "lg", "label": "Large" },
+        { "value": "full", "label": "Full screen" }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "select",
+      "id": "height_mobile",
+      "label": "Height on mobile",
+      "options": [
+        { "value": "auto", "label": "Fit content" },
+        { "value": "sm", "label": "Small" },
+        { "value": "md", "label": "Medium" },
+        { "value": "lg", "label": "Large" },
+        { "value": "full", "label": "Full screen" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "wide", "label": "Wide" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "end", "label": "Right" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Vertical position",
+      "info": "Applies when the hero is taller than its content.",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Set the focal point on the image so it crops well on every screen size."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "Plays muted and looping, and replaces the image. Shopify-hosted videos only."
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Media ratio",
+      "info": "Used by the split, stacked and editorial layouts.",
+      "options": [
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_media_placeholder",
+      "label": "Show a placeholder while no media is set",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "options": [
+        { "value": "solid", "label": "Even" },
+        { "value": "gradient", "label": "Gradient from the bottom" }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each block has its own animation. The hero plays them in sequence."
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animate the content column",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "Stagger blocks",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 90
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "Duration",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "fast", "label": "Fast" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "slow", "label": "Slow" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration_custom",
+      "label": "Custom duration",
+      "min": 200,
+      "max": 2000,
+      "step": 50,
+      "unit": "ms",
+      "default": 700
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Easing",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "smooth", "label": "Smooth" },
+        { "value": "out", "label": "Ease out" },
+        { "value": "spring", "label": "Spring-like" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "load", "label": "On load" },
+        { "value": "scroll", "label": "On scroll" }
+      ],
+      "default": "load",
+      "info": "Heroes are usually above the fold, so On load is the right default."
+    },
+    {
+      "type": "range",
+      "id": "animation_intensity",
+      "label": "Intensity",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "media_parallax",
+      "label": "Media parallax",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "blocks": [
+        {
+          "type": "badge",
+          "settings": {
+            "text": "New season",
+            "style": "outline",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "heading",
+          "settings": {
+            "heading": "Beautiful storefronts that flow",
+            "heading_size": "kf-display-sm",
+            "heading_tag": "h1",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p>Open with the one promise that makes someone want to keep scrolling.</p>",
+            "text_size": "lg",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "label": "Shop the collection",
+            "style": "primary",
+            "secondary_label": "Our story",
+            "secondary_style": "plain",
+            "animation": "fade-up"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

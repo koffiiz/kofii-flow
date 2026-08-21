@@ -1,0 +1,36 @@
+{%- comment -%}
+  Kofii Flow — Header logo
+  ---------------------------------------------------------------------------
+  Renders the shop logo, or the shop name as text when no logo is set, so the
+  header is never empty in the Theme Editor.
+
+  The logo is the LCP element on many storefronts, so it is loaded eagerly and
+  given explicit dimensions.
+
+  Deliberately NOT a heading: the page content owns the single <h1>, which the
+  homepage hero supplies. That keeps the outline correct on every template.
+
+  Parameters:
+    s (object, required)  section.settings — reads logo, logo_width, logo_width_mobile
+{%- endcomment -%}
+
+<div class="kf-header__logo" style="--kf-logo-width: {{ s.logo_width }}px; --kf-logo-width-mobile: {{ s.logo_width_mobile }}px;">
+  <a class="kf-header__logo-link" href="{{ routes.root_url }}">
+    {%- if s.logo != blank -%}
+      {{
+        s.logo
+        | image_url: width: 600
+        | image_tag:
+          class: 'kf-header__logo-image',
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '100,160,200,260,320,400,520,600',
+          sizes: '(min-width: 990px) 200px, 140px',
+          alt: shop.name
+      }}
+    {%- else -%}
+      <span class="kf-header__logo-text">{{ shop.name }}</span>
+    {%- endif -%}
+  </a>
+
+</div>

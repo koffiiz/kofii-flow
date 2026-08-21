@@ -1,0 +1,226 @@
+/* ==========================================================================
+   Kofii Flow — Hero
+   Loaded by sections/kf-hero.liquid.
+
+   Heights use svh so mobile browser chrome does not push content off screen.
+   Every layout is a grid variation on the same two children: content column
+   and media column.
+   ========================================================================== */
+
+.kf-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: clip;
+}
+
+/* Heights ----------------------------------------------------------------- */
+
+.kf-hero--hm-sm { min-height: 42svh; }
+.kf-hero--hm-md { min-height: 58svh; }
+.kf-hero--hm-lg { min-height: 74svh; }
+.kf-hero--hm-full { min-height: 100svh; }
+
+@media (min-width: 990px) {
+  .kf-hero--h-auto { min-height: 0; }
+  .kf-hero--h-sm { min-height: 48svh; }
+  .kf-hero--h-md { min-height: 64svh; }
+  .kf-hero--h-lg { min-height: 82svh; }
+  .kf-hero--h-full { min-height: 100svh; }
+}
+
+/* Backdrop ---------------------------------------------------------------- */
+
+.kf-hero__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.kf-hero__media--fill,
+.kf-hero__backdrop .kf-media {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+.kf-hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kf-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: color-mix(in oklab, var(--kf-overlay-color, #000) calc(var(--kf-overlay-opacity, 0) * 100%), transparent);
+  pointer-events: none;
+}
+
+.kf-hero__overlay--gradient {
+  background-color: transparent;
+  background-image: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--kf-overlay-color, #000) calc(var(--kf-overlay-opacity, 0) * 145%), transparent) 0%,
+    color-mix(in oklab, var(--kf-overlay-color, #000) calc(var(--kf-overlay-opacity, 0) * 55%), transparent) 45%,
+    transparent 88%
+  );
+}
+
+/* Inner grid -------------------------------------------------------------- */
+
+.kf-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--kf-space-lg);
+  width: 100%;
+  align-content: center;
+}
+
+.kf-hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  min-width: 0;
+}
+
+/* Content width ----------------------------------------------------------- */
+
+.kf-hero--w-narrow .kf-hero__content { max-width: 30rem; }
+.kf-hero--w-medium .kf-hero__content { max-width: 42rem; }
+.kf-hero--w-wide .kf-hero__content { max-width: 58rem; }
+
+/* Text alignment ---------------------------------------------------------- */
+
+.kf-hero--align-center .kf-hero__content {
+  align-items: center;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.kf-hero--align-end .kf-hero__content {
+  align-items: flex-end;
+  text-align: right;
+  margin-inline-start: auto;
+}
+
+.kf-hero--align-center .kf-button-group { justify-content: center; }
+.kf-hero--align-end .kf-button-group { justify-content: flex-end; }
+
+/* Vertical position (only meaningful when the hero is taller than content) */
+
+.kf-hero--pos-top .kf-hero__inner { align-content: start; }
+.kf-hero--pos-middle .kf-hero__inner { align-content: center; }
+.kf-hero--pos-bottom .kf-hero__inner { align-content: end; }
+
+/* Overlaid heroes need breathing room from the header and the viewport edge */
+
+.kf-hero--overlaid {
+  --kf-section-padding-block-start: max(var(--kf-space-xl), calc(var(--kf-header-height, 72px) + var(--kf-space-lg)));
+}
+
+.kf-hero--overlaid .kf-hero__content {
+  text-shadow: 0 1px 24px color-mix(in oklab, #000 22%, transparent);
+}
+
+/* ==========================================================================
+   Layout variants
+   ========================================================================== */
+
+/* Split ------------------------------------------------------------------- */
+
+@media (min-width: 990px) {
+  .kf-hero--split .kf-hero__inner,
+  .kf-hero--split-reverse .kf-hero__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kf-space-xl);
+  }
+
+  .kf-hero--split-reverse .kf-hero__content {
+    order: 2;
+  }
+}
+
+/* Stacked ----------------------------------------------------------------- */
+
+.kf-hero--stacked .kf-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.kf-hero--stacked .kf-hero__media-col {
+  margin-top: var(--kf-space-xs);
+}
+
+/* Editorial ----------------------------------------------------------------
+   Asymmetric on purpose: the type block is wider than the media and the media
+   drops below the baseline of the heading. */
+
+@media (min-width: 990px) {
+  .kf-hero--editorial .kf-hero__inner {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+    align-items: end;
+    gap: var(--kf-space-xl);
+  }
+
+  .kf-hero--editorial .kf-hero__media-col {
+    transform: translateY(var(--kf-space-md));
+  }
+
+  .kf-hero--editorial .kf-hero__content {
+    max-width: none;
+    padding-bottom: var(--kf-space-lg);
+  }
+}
+
+/* Minimal ----------------------------------------------------------------- */
+
+.kf-hero--minimal .kf-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.kf-hero--minimal .kf-hero__content {
+  gap: var(--kf-space-md);
+}
+
+/* Centered ---------------------------------------------------------------- */
+
+.kf-hero--centered .kf-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.kf-hero--centered .kf-hero__content {
+  align-items: center;
+  text-align: center;
+}
+
+/* Media column ------------------------------------------------------------ */
+
+.kf-hero__media-col {
+  position: relative;
+  min-width: 0;
+}
+
+.kf-hero__media-col .kf-media {
+  width: 100%;
+}
+
+/* Small screens: split layouts always stack, media first for visual impact. */
+@media (max-width: 989px) {
+  .kf-hero--split .kf-hero__inner,
+  .kf-hero--split-reverse .kf-hero__inner,
+  .kf-hero--editorial .kf-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kf-space-md);
+  }
+
+  .kf-hero--split .kf-hero__media-col,
+  .kf-hero--split-reverse .kf-hero__media-col,
+  .kf-hero--editorial .kf-hero__media-col {
+    order: -1;
+  }
+}

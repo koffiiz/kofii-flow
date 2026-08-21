@@ -1,0 +1,227 @@
+/* ==========================================================================
+   Kofii Motion — presets
+   --------------------------------------------------------------------------
+   The animation system is CSS-first. Liquid emits the intent:
+
+     <div data-kf-animate="fade-up" data-kf-delay="150" data-kf-duration="700">
+
+   `kf-motion.js` does exactly one thing: it adds `data-kf-inview` when the
+   element should play. Every keyframe, easing and initial state lives here.
+
+   Safety model
+     - Initial (hidden) states are scoped to `.kf-motion` on <html>, which is
+       set by a tiny inline script only when motion is allowed. With no JS,
+       failed JS, reduced motion or Flow Mode off, nothing is ever hidden.
+     - Direction names describe the direction of travel: `fade-up` rises,
+       `fade-left` moves left (so it starts to the right).
+     - Only transform, opacity, filter and clip-path are animated.
+   ========================================================================== */
+
+.kf-motion [data-kf-animate] {
+  transition-property: opacity, transform, filter, clip-path;
+  transition-duration: calc(var(--kf-a-duration) * var(--kf-flow-duration));
+  transition-delay: var(--kf-a-delay);
+  transition-timing-function: var(--kf-a-easing);
+}
+
+/* Resolved travel distance for the current Flow Mode. */
+.kf-motion [data-kf-animate] {
+  --kf-a-shift: calc(var(--kf-a-distance) * var(--kf-flow-intensity));
+}
+
+/* --------------------------------------------------------- Initial states */
+
+.kf-motion [data-kf-animate]:not([data-kf-inview]) {
+  opacity: 0;
+}
+
+.kf-motion [data-kf-animate="fade-up"]:not([data-kf-inview]) {
+  transform: translate3d(0, var(--kf-a-shift), 0);
+}
+
+.kf-motion [data-kf-animate="fade-down"]:not([data-kf-inview]) {
+  transform: translate3d(0, calc(var(--kf-a-shift) * -1), 0);
+}
+
+.kf-motion [data-kf-animate="fade-left"]:not([data-kf-inview]) {
+  transform: translate3d(var(--kf-a-shift), 0, 0);
+}
+
+.kf-motion [data-kf-animate="fade-right"]:not([data-kf-inview]) {
+  transform: translate3d(calc(var(--kf-a-shift) * -1), 0, 0);
+}
+
+.kf-motion [data-kf-animate="scale-up"]:not([data-kf-inview]) {
+  transform: scale(calc(1 - (1 - var(--kf-a-scale)) * var(--kf-flow-intensity)));
+}
+
+.kf-motion [data-kf-animate="scale-down"]:not([data-kf-inview]) {
+  transform: scale(calc(1 + (1 - var(--kf-a-scale)) * var(--kf-flow-intensity)));
+}
+
+.kf-motion [data-kf-animate="zoom-in"]:not([data-kf-inview]) {
+  transform: scale(calc(1 + 0.14 * var(--kf-flow-intensity)));
+}
+
+.kf-motion [data-kf-animate="blur-in"]:not([data-kf-inview]) {
+  filter: blur(calc(var(--kf-a-blur) * var(--kf-flow-intensity)));
+  transform: scale(calc(1 + 0.02 * var(--kf-flow-intensity)));
+}
+
+.kf-motion [data-kf-animate="rotate-in"]:not([data-kf-inview]) {
+  transform: rotate(calc(var(--kf-a-rotate) * var(--kf-flow-intensity)))
+             translate3d(0, var(--kf-a-shift), 0);
+  transform-origin: 50% 100%;
+}
+
+/* Slide and clip presets keep full opacity — they reveal by geometry. */
+.kf-motion [data-kf-animate="slide-up"]:not([data-kf-inview]) {
+  opacity: 1;
+  transform: translate3d(0, calc(var(--kf-a-shift) * 2), 0);
+}
+
+.kf-motion [data-kf-animate="clip-up"]:not([data-kf-inview]) {
+  opacity: 1;
+  clip-path: inset(100% 0 0 0);
+}
+
+.kf-motion [data-kf-animate="clip-left"]:not([data-kf-inview]) {
+  opacity: 1;
+  clip-path: inset(0 0 0 100%);
+}
+
+.kf-motion [data-kf-animate="clip-right"]:not([data-kf-inview]) {
+  opacity: 1;
+  clip-path: inset(0 100% 0 0);
+}
+
+/* Editorial reveal: the content wipes up while lifting slightly. */
+.kf-motion [data-kf-animate="reveal"]:not([data-kf-inview]) {
+  opacity: 1;
+  clip-path: inset(0 0 105% 0);
+  transform: translate3d(0, calc(var(--kf-a-shift) * 0.5), 0);
+}
+
+/* ------------------------------------------------------------ Played state */
+
+.kf-motion [data-kf-animate][data-kf-inview] {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  clip-path: inset(0 0 0 0);
+}
+
+/* clip-path: none once settled so overflowing children (shadows, focus rings)
+   are not clipped after the animation finishes. */
+.kf-motion [data-kf-animate][data-kf-inview][data-kf-settled] {
+  clip-path: none;
+}
+
+/* ==========================================================================
+   Continuous effects
+   ========================================================================== */
+
+/* Parallax — JS writes --kf-parallax-y from a single rAF loop. */
+.kf-motion [data-kf-parallax] {
+  will-change: transform;
+  transform: translate3d(0, var(--kf-parallax-y, 0px), 0);
+}
+
+/* A parallax layer must overflow its frame or it will show edges. */
+.kf-parallax-frame {
+  overflow: hidden;
+}
+
+.kf-parallax-frame > [data-kf-parallax] {
+  height: calc(100% + var(--kf-parallax-range, 12%) * 2);
+  top: calc(var(--kf-parallax-range, 12%) * -1);
+  position: absolute;
+  inset-inline: 0;
+}
+
+/* Floating — a slow idle drift for decorative media. */
+.kf-motion [data-kf-float] {
+  animation: kf-float calc(6s / max(var(--kf-flow-duration), 0.4)) var(--kf-ease-smooth) infinite alternate;
+}
+
+@keyframes kf-float {
+  from { transform: translate3d(0, calc(-6px * var(--kf-flow-intensity)), 0); }
+  to { transform: translate3d(0, calc(6px * var(--kf-flow-intensity)), 0); }
+}
+
+/* Marquee — consumed by <kf-marquee>; the track is duplicated in markup so
+   the loop is seamless without measuring in JS. */
+.kf-marquee {
+  display: flex;
+  overflow: hidden;
+  gap: 0;
+  --kf-marquee-duration: 30s;
+}
+
+.kf-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-marquee-gap, var(--kf-space-md));
+  padding-inline-end: var(--kf-marquee-gap, var(--kf-space-md));
+  flex: 0 0 auto;
+  min-width: 100%;
+  animation: kf-marquee var(--kf-marquee-duration) linear infinite;
+  animation-direction: var(--kf-marquee-direction, normal);
+}
+
+.kf-marquee--paused .kf-marquee__track,
+.kf-marquee[data-paused] .kf-marquee__track {
+  animation-play-state: paused;
+}
+
+.kf-marquee--fade {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+@keyframes kf-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-100%, 0, 0); }
+}
+
+/* ==========================================================================
+   Reduced motion and no-JS
+   --------------------------------------------------------------------------
+   `.kf-motion` is never added when a visitor prefers reduced motion, so the
+   rules below are a second line of defence for anything that animates from
+   CSS alone.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-kf-animate],
+  [data-kf-parallax],
+  [data-kf-float] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    animation: none !important;
+  }
+
+  .kf-marquee__track {
+    animation: none !important;
+  }
+}
+
+/* Failsafe: if the motion engine never boots, the inline head script removes
+   `.kf-motion` and every hidden element falls back to its final state. */
+html:not(.kf-motion) [data-kf-animate] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: none;
+}

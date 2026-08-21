@@ -1,0 +1,70 @@
+{%- comment -%}
+  Kofii Flow — Trust row
+  ---------------------------------------------------------------------------
+  A short row of reassurances under a hero or a buy button. Accepts nested
+  `_trust-item` blocks so a merchant can add, remove and reorder them.
+{%- endcomment -%}
+
+{%- if block.blocks.size > 0 -%}
+  <ul
+    class="kf-trust"
+    {% render 'kf-motion-attrs', motion: block.settings %}
+    {{ block.shopify_attributes }}
+  >
+    {% content_for 'blocks' %}
+  </ul>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Trust row",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_trust-item"
+    }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add short reassurances: shipping, returns, guarantees. Three is usually the right number."
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust row",
+      "blocks": [
+        { "type": "_trust-item" },
+        { "type": "_trust-item" },
+        { "type": "_trust-item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

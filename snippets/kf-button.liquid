@@ -1,0 +1,87 @@
+{%- comment -%}
+  Kofii Flow — Button
+  ---------------------------------------------------------------------------
+  The single button implementation for the theme. Never hand-roll `.kf-button`
+  markup in a section; render this instead.
+
+  Usage:
+    {% render 'kf-button', label: block.settings.label, href: block.settings.link %}
+    {% render 'kf-button', label: 'Add to cart', style: 'primary', type: 'submit', full: true %}
+
+  Parameters:
+    label       (string, required) visible text
+    href        (url)              renders an <a>; omit to render a <button>
+    style       (string)           primary (default) | secondary | ghost | plain
+    size        (string)           sm | md | lg — defaults to the theme setting
+    icon        (string)           icon name from kf-icon, rendered after the label
+    full        (boolean)          full width
+    type        (string)           button type when rendering a <button>
+    name/value  (string)           form attributes for a <button>
+    disabled    (boolean)
+    aria_label  (string)           when the visible label is not descriptive enough
+    new_tab     (boolean)
+    id          (string)
+    extra_class (string)
+    attributes  (string)           raw attributes, e.g. data-kf-drawer-open="X"
+{%- endcomment -%}
+
+{%- liquid
+  assign button_style = style | default: 'primary'
+  assign button_size = size | default: settings.button_size
+
+  assign classes = 'kf-button'
+  unless button_style == 'primary'
+    assign classes = classes | append: ' kf-button--' | append: button_style
+  endunless
+  unless button_size == 'md'
+    assign classes = classes | append: ' kf-button--' | append: button_size
+  endunless
+  if full
+    assign classes = classes | append: ' kf-button--full'
+  endif
+  if extra_class != blank
+    assign classes = classes | append: ' ' | append: extra_class
+  endif
+
+  assign icon_name = icon
+  if icon_name == blank and settings.button_hover == 'arrow' and button_style != 'plain'
+    assign icon_name = 'arrow'
+  endif
+-%}
+
+{%- if label == blank -%}
+  {%- comment -%} A button with no label is never rendered. {%- endcomment -%}
+{%- elsif href != blank -%}
+  <a
+    class="{{ classes }}"
+    href="{{ href }}"
+    {% if id != blank %}id="{{ id }}"{% endif %}
+    {% if aria_label != blank %}aria-label="{{ aria_label | escape }}"{% endif %}
+    {% if new_tab %}target="_blank" rel="noopener"{% endif %}
+    {{ attributes }}
+  >
+    <span class="kf-button__label">{{ label | escape }}</span>
+    {%- if icon_name != blank -%}
+      {%- render 'kf-icon', name: icon_name, class: 'kf-button__icon' -%}
+    {%- endif -%}
+    {%- if new_tab -%}
+      <span class="kf-visually-hidden">{{ 'general.accessibility.opens_new_window' | t }}</span>
+    {%- endif -%}
+  </a>
+{%- else -%}
+  <button
+    class="{{ classes }}"
+    type="{{ type | default: 'button' }}"
+    {% if id != blank %}id="{{ id }}"{% endif %}
+    {% if name != blank %}name="{{ name }}"{% endif %}
+    {% if value != blank %}value="{{ value }}"{% endif %}
+    {% if aria_label != blank %}aria-label="{{ aria_label | escape }}"{% endif %}
+    {% if disabled %}disabled{% endif %}
+    {{ attributes }}
+  >
+    <span class="kf-button__label">{{ label | escape }}</span>
+    {%- if icon_name != blank -%}
+      {%- render 'kf-icon', name: icon_name, class: 'kf-button__icon' -%}
+    {%- endif -%}
+  </button>
+{%- endif -%}

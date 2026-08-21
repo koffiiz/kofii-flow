@@ -1,0 +1,31 @@
+{%- comment -%}
+  Kofii Flow — Font faces
+  ---------------------------------------------------------------------------
+  Emits @font-face declarations for the Shopify font picker selections.
+  Only the faces the theme actually uses are requested:
+    body regular, body bold, body italic, body bold italic, heading (weighted).
+
+  Duplicate faces are harmless — Shopify deduplicates identical font_face
+  output — but keeping the list short keeps the critical path short.
+{%- endcomment -%}
+
+{%- liquid
+  assign body_font = settings.type_body_font
+  assign body_bold = body_font | font_modify: 'weight', 'bolder'
+  assign body_italic = body_font | font_modify: 'style', 'italic'
+  assign body_bold_italic = body_bold | font_modify: 'style', 'italic'
+
+  assign heading_font = settings.type_heading_font
+  assign heading_weighted = heading_font | font_modify: 'weight', settings.type_heading_weight
+  if heading_weighted
+    assign heading_font = heading_weighted
+  endif
+-%}
+
+<style>
+  {{ body_font | font_face: font_display: 'swap' }}
+  {{ body_bold | font_face: font_display: 'swap' }}
+  {{ body_italic | font_face: font_display: 'swap' }}
+  {{ body_bold_italic | font_face: font_display: 'swap' }}
+  {{ heading_font | font_face: font_display: 'swap' }}
+</style>

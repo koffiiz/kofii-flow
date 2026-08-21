@@ -1,0 +1,75 @@
+{%- comment -%}
+  Kofii Flow — Mobile navigation
+  ---------------------------------------------------------------------------
+  Nested native <details> accordions inside the menu drawer. Deliberately not
+  a re-skin of the desktop menu: on small screens a merchant's three-level
+  navigation reads far better as progressive disclosure than as columns.
+
+  Works without JavaScript beyond opening the drawer itself.
+
+  Parameters:
+    menu   (linklist, required)
+    label  (string)  aria-label for the <nav> landmark
+{%- endcomment -%}
+
+{%- if menu != blank and menu.links.size > 0 -%}
+  <nav class="kf-nav-mobile" aria-label="{{ label | default: 'Primary' | escape }}">
+    <ul class="kf-nav-mobile__list">
+      {%- for link in menu.links -%}
+        <li class="kf-nav-mobile__item">
+          {%- if link.links.size > 0 -%}
+            <details class="kf-nav-mobile__details">
+              <summary class="kf-nav-mobile__link kf-nav-mobile__link--parent">
+                <span>{{ link.title | escape }}</span>
+                {%- render 'kf-icon', name: 'chevron', class: 'kf-nav-mobile__chevron' -%}
+              </summary>
+
+              <ul class="kf-nav-mobile__sublist">
+                <li>
+                  <a class="kf-nav-mobile__sublink kf-nav-mobile__sublink--all" href="{{ link.url }}">
+                    {{- 'general.navigation.view_all' | t: title: link.title -}}
+                  </a>
+                </li>
+
+                {%- for child in link.links -%}
+                  <li>
+                    {%- if child.links.size > 0 -%}
+                      <details class="kf-nav-mobile__details kf-nav-mobile__details--nested">
+                        <summary class="kf-nav-mobile__sublink kf-nav-mobile__link--parent">
+                          <span>{{ child.title | escape }}</span>
+                          {%- render 'kf-icon', name: 'chevron', class: 'kf-nav-mobile__chevron', size: 'sm' -%}
+                        </summary>
+                        <ul class="kf-nav-mobile__sublist">
+                          <li>
+                            <a class="kf-nav-mobile__sublink kf-nav-mobile__sublink--all" href="{{ child.url }}">
+                              {{- 'general.navigation.view_all' | t: title: child.title -}}
+                            </a>
+                          </li>
+                          {%- for grandchild in child.links -%}
+                            <li>
+                              <a class="kf-nav-mobile__sublink" href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>
+                                {{- grandchild.title | escape -}}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </details>
+                    {%- else -%}
+                      <a class="kf-nav-mobile__sublink" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>
+                        {{- child.title | escape -}}
+                      </a>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- else -%}
+            <a class="kf-nav-mobile__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
+              {{- link.title | escape -}}
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endif -%}

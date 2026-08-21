@@ -1,0 +1,155 @@
+{%- comment -%}
+  Kofii Flow — Announcement bar
+  ---------------------------------------------------------------------------
+  One message renders statically and centered. Two or more scroll as a
+  marquee, using the shared keyframes in kf-motion.css — the track is
+  duplicated in markup so the loop is seamless with no JavaScript at all.
+
+  The duplicate track is aria-hidden, so the messages are announced once.
+{%- endcomment -%}
+
+{%- liquid
+  assign messages = section.blocks | where: 'type', 'message'
+  assign is_marquee = false
+  if messages.size > 1
+    assign is_marquee = true
+  endif
+-%}
+
+{%- if messages.size > 0 -%}
+  <div
+    class="kf-scheme kf-scheme--{{ section.settings.color_scheme.id }} kf-announcement{% if is_marquee %} kf-marquee{% if section.settings.edge_fade %} kf-marquee--fade{% endif %}{% endif %}"
+    style="--kf-marquee-duration: {{ section.settings.speed }}s;"
+    {% if section.settings.pause_on_hover and is_marquee %}data-pause-on-hover{% endif %}
+  >
+    {%- if is_marquee -%}
+      {%- for pass in (1..2) -%}
+        <div class="kf-marquee__track" {% if pass == 2 %}aria-hidden="true"{% endif %}>
+          {%- for block in messages -%}
+            <span class="kf-announcement__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.link != blank -%}
+                <a class="kf-announcement__link" href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+              {%- else -%}
+                {{ block.settings.text | escape }}
+              {%- endif -%}
+            </span>
+            <span class="kf-announcement__separator" aria-hidden="true">&bull;</span>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for block in messages -%}
+        <div class="kf-container kf-announcement__single" {{ block.shopify_attributes }}>
+          {%- if block.settings.link != blank -%}
+            <a class="kf-announcement__link" href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+          {%- else -%}
+            <span>{{ block.settings.text | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+.kf-announcement {
+  font-size: var(--kf-text-xs);
+  letter-spacing: var(--kf-label-spacing);
+  text-transform: var(--kf-label-transform);
+  padding-block: 0.6rem;
+}
+
+.kf-announcement__single {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.kf-announcement__item {
+  white-space: nowrap;
+}
+
+.kf-announcement__separator {
+  opacity: 0.45;
+}
+
+.kf-announcement__link {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+
+.kf-announcement[data-pause-on-hover]:hover .kf-marquee__track {
+  animation-play-state: paused;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "kf-announcement-section",
+  "enabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "Scrolling"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add two or more messages to turn the bar into a scrolling marquee."
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll duration",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "s",
+      "default": 30,
+      "info": "Higher is slower."
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "edge_fade",
+      "label": "Fade the edges",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Complimentary shipping on orders over $75"
+        },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [{ "type": "message" }]
+    }
+  ]
+}
+{% endschema %}

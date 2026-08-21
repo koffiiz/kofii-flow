@@ -1,0 +1,139 @@
+{%- comment -%}
+  Kofii Flow — Media frame
+  ---------------------------------------------------------------------------
+  Every image in the theme goes through this snippet. It guarantees a stable
+  aspect ratio (no layout shift), a correct srcset, honest width/height
+  attributes, focal-point cropping, and the shared hover behaviour.
+
+  Usage:
+    {% render 'kf-media',
+       image: section.settings.image,
+       ratio: 'portrait',
+       sizes: '(min-width: 990px) 33vw, 100vw',
+       loading: 'lazy' %}
+
+  Parameters:
+    image           (image)    Shopify image object. Omit to render a placeholder.
+    hover_image     (image)    second image, cross-faded on hover
+    alt             (string)   overrides the image alt text
+    ratio           (string)   adapt | square | portrait | tall | landscape | wide | ultrawide
+    custom_ratio    (string)   e.g. '3 / 2' — wins over `ratio`
+    sizes           (string)   sizes attribute; defaults to 100vw
+    widths          (string)   srcset widths
+    loading         (string)   lazy (default) | eager
+    priority        (boolean)  fetchpriority="high" — the LCP image only
+    fit             (string)   cover (default) | contain
+    flush           (boolean)  removes the corner radius
+    zoom            (boolean)  hover zoom microinteraction
+    parallax        (number)   parallax strength, 0 to 1
+    overlay_opacity (number)   0-100
+    overlay_style   (string)   solid (default) | gradient
+    overlay_color   (color)
+    placeholder     (string)   placeholder_svg_tag name for the empty state
+    class           (string)   extra classes on the frame
+    style           (string)   extra inline custom properties on the frame
+{%- endcomment -%}
+
+{%- liquid
+  assign media_ratio = ratio | default: 'landscape'
+  assign frame_class = 'kf-media kf-media--ratio'
+  assign ratio_value = blank
+
+  if custom_ratio != blank
+    assign ratio_value = custom_ratio
+  elsif media_ratio == 'adapt' and image != blank
+    assign ratio_value = image.aspect_ratio
+  else
+    assign frame_class = frame_class | append: ' kf-media--' | append: media_ratio
+  endif
+
+  if fit == 'contain'
+    assign frame_class = frame_class | append: ' kf-media--contain'
+  endif
+  if flush
+    assign frame_class = frame_class | append: ' kf-media--flush'
+  endif
+  if zoom
+    assign frame_class = frame_class | append: ' kf-media--zoom'
+  endif
+  if hover_image != blank
+    assign frame_class = frame_class | append: ' kf-media--swap'
+  endif
+
+  assign use_parallax = false
+  if parallax != blank and parallax > 0
+    assign use_parallax = true
+    assign frame_class = frame_class | append: ' kf-parallax-frame'
+  endif
+
+  if class != blank
+    assign frame_class = frame_class | append: ' ' | append: class
+  endif
+
+  assign image_sizes = sizes | default: '100vw'
+  assign image_widths = widths | default: '320,420,540,660,780,900,1080,1296,1512,1728,2048'
+  assign image_loading = loading | default: 'lazy'
+  comment
+    Never let alt be nil: image_tag would omit the attribute entirely. An
+    empty string is the correct value for a decorative image.
+  endcomment
+  assign image_alt = alt | default: image.alt | default: ''
+
+  assign priority_value = 'auto'
+  if priority
+    assign priority_value = 'high'
+  endif
+
+  assign focal_style = ''
+  if image.presentation.focal_point != blank
+    assign focal_style = 'object-position:' | append: image.presentation.focal_point | append: ';'
+  endif
+-%}
+
+<div
+  class="{{ frame_class }}"
+  {% if ratio_value != blank or style != blank %}style="{% if ratio_value != blank %}--kf-media-ratio: {{ ratio_value }};{% endif %}{{ style }}"{% endif %}
+>
+  {%- if image != blank -%}
+    {%- if use_parallax -%}<div class="kf-media__layer" data-kf-parallax="{{ parallax }}">{%- endif -%}
+
+    {{
+      image
+      | image_url: width: 2048
+      | image_tag:
+        class: 'kf-media__img',
+        loading: image_loading,
+        fetchpriority: priority_value,
+        widths: image_widths,
+        sizes: image_sizes,
+        alt: image_alt,
+        style: focal_style
+    }}
+
+    {%- if hover_image != blank -%}
+      {{
+        hover_image
+        | image_url: width: 1600
+        | image_tag:
+          class: 'kf-media__img kf-media__img--alt',
+          loading: 'lazy',
+          widths: image_widths,
+          sizes: image_sizes,
+          alt: ''
+      }}
+    {%- endif -%}
+
+    {%- if use_parallax -%}</div>{%- endif -%}
+  {%- elsif placeholder != blank -%}
+    <div class="kf-placeholder">
+      {{ placeholder | placeholder_svg_tag }}
+    </div>
+  {%- endif -%}
+
+  {%- if overlay_opacity != blank and overlay_opacity > 0 -%}
+    <div
+      class="kf-media__overlay{% if overlay_style == 'gradient' %} kf-media__overlay--gradient{% endif %}"
+      style="--kf-overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }};{% if overlay_color != blank %}--kf-overlay-color: {{ overlay_color }};{% endif %}"
+    ></div>
+  {%- endif -%}
+</div>

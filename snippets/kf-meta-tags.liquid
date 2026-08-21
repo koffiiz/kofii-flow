@@ -1,0 +1,65 @@
+{%- comment -%}
+  Kofii Flow — Social and SEO meta tags
+  ---------------------------------------------------------------------------
+  Shopify already emits the canonical link and a number of tags through
+  `content_for_header`. This snippet adds the description and the Open Graph /
+  X card set, and nothing that Shopify already provides.
+{%- endcomment -%}
+
+{%- liquid
+  assign og_title = page_title | default: shop.name
+  assign og_type = 'website'
+  assign og_description = page_description | default: shop.description | default: shop.name
+
+  if request.page_type == 'product'
+    assign og_type = 'product'
+  elsif request.page_type == 'article'
+    assign og_type = 'article'
+  elsif request.page_type == 'password'
+    assign og_type = 'website'
+  endif
+-%}
+
+<meta name="description" content="{{ og_description | escape }}">
+
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_description | escape }}">
+
+{%- if request.page_type == 'product' -%}
+  <meta property="og:price:amount" content="{{ product.price | divided_by: 100.0 }}">
+  <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+{%- endif -%}
+
+{%- liquid
+  assign share_image = null
+  if request.page_type == 'product' and product.featured_media
+    assign share_image = product.featured_media.preview_image
+  elsif request.page_type == 'article' and article.image
+    assign share_image = article.image
+  elsif request.page_type == 'collection' and collection.image
+    assign share_image = collection.image
+  elsif settings.share_image
+    assign share_image = settings.share_image
+  endif
+-%}
+
+{%- if share_image -%}
+  <meta property="og:image" content="http:{{ share_image | image_url: width: 1200 }}">
+  <meta property="og:image:secure_url" content="https:{{ share_image | image_url: width: 1200 }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="{{ 1200 | divided_by: share_image.aspect_ratio | round }}">
+  <meta property="og:image:alt" content="{{ share_image.alt | default: og_title | escape }}">
+  <meta name="twitter:card" content="summary_large_image">
+{%- else -%}
+  <meta name="twitter:card" content="summary">
+{%- endif -%}
+
+{%- if settings.brand_twitter_handle != blank -%}
+  <meta name="twitter:site" content="@{{ settings.brand_twitter_handle | remove: '@' | escape }}">
+{%- endif -%}
+
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_description | escape }}">
