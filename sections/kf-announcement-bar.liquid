@@ -5,39 +5,92 @@
   marquee, using the shared keyframes in kf-motion.css — the track is
   duplicated in markup so the loop is seamless with no JavaScript at all.
 
-  The duplicate track is aria-hidden, so the messages are announced once.
+  The scrolling case is wrapped in <kf-marquee>, which adds the pause control
+  WCAG 2.2 SC 2.2.2 requires for motion that starts on its own and runs past
+  five seconds. Pause-on-hover alone does not satisfy it: it does nothing for a
+  keyboard or touch visitor.
+
+  The duplicate track is aria-hidden AND inert. aria-hidden on its own hides
+  the copies from a screen reader while leaving their links focusable, which
+  strands a keyboard visitor on a control they cannot perceive.
+
+  Neither the component stylesheet nor the script loads for a single message,
+  because a static bar has nothing to pause. This section renders on every page
+  of the store, so that distinction is worth keeping.
 {%- endcomment -%}
 
 {%- liquid
+  assign s = section.settings
   assign messages = section.blocks | where: 'type', 'message'
   assign is_marquee = false
   if messages.size > 1
     assign is_marquee = true
   endif
+
+  assign pause_label = 'general.accessibility.pause_animation' | t
+  assign play_label = 'general.accessibility.play_animation' | t
 -%}
 
+{%- if is_marquee -%}
+  {{ 'component-marquee.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'kf-marquee.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- capture announcement_messages -%}
+  {%- for block in messages -%}
+    <span class="kf-announcement__item" {{ block.shopify_attributes }}>
+      {%- if block.settings.link != blank -%}
+        <a class="kf-announcement__link" href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+      {%- else -%}
+        {{ block.settings.text | escape }}
+      {%- endif -%}
+    </span>
+    <span class="kf-announcement__separator" aria-hidden="true">&bull;</span>
+  {%- endfor -%}
+{%- endcapture -%}
+
 {%- if messages.size > 0 -%}
-  <div
-    class="kf-scheme kf-scheme--{{ section.settings.color_scheme.id }} kf-announcement{% if is_marquee %} kf-marquee{% if section.settings.edge_fade %} kf-marquee--fade{% endif %}{% endif %}"
-    style="--kf-marquee-duration: {{ section.settings.speed }}s;"
-    {% if section.settings.pause_on_hover and is_marquee %}data-pause-on-hover{% endif %}
-  >
-    {%- if is_marquee -%}
-      {%- for pass in (1..2) -%}
-        <div class="kf-marquee__track" {% if pass == 2 %}aria-hidden="true"{% endif %}>
-          {%- for block in messages -%}
-            <span class="kf-announcement__item" {{ block.shopify_attributes }}>
-              {%- if block.settings.link != blank -%}
-                <a class="kf-announcement__link" href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
-              {%- else -%}
-                {{ block.settings.text | escape }}
-              {%- endif -%}
-            </span>
-            <span class="kf-announcement__separator" aria-hidden="true">&bull;</span>
-          {%- endfor -%}
-        </div>
-      {%- endfor -%}
-    {%- else -%}
+  {%- if is_marquee -%}
+    <kf-marquee
+      class="kf-scheme kf-scheme--{{ s.color_scheme.id }} kf-announcement kf-announcement--marquee"
+      style="--kf-marquee-duration: {{ s.speed }}s;"
+      {% if s.pause_on_hover %}data-kf-pause-hover{% endif %}
+    >
+      <div class="kf-marquee{% if s.edge_fade %} kf-marquee--fade{% endif %}" data-kf-marquee>
+        {%- for pass in (1..2) -%}
+          <div
+            class="kf-marquee__track"
+            data-kf-marquee-track
+            {% if pass == 2 %}aria-hidden="true" inert{% endif %}
+          >
+            {{ announcement_messages }}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%}
+        Hidden until <kf-marquee> reveals it — a button that cannot work
+        without the script should not be offered at all.
+      {%- endcomment -%}
+      <button
+        class="kf-marquee-toggle"
+        type="button"
+        data-kf-marquee-toggle
+        data-pause-label="{{ pause_label | escape }}"
+        data-play-label="{{ play_label | escape }}"
+        aria-label="{{ pause_label | escape }}"
+        hidden
+      >
+        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--pause">
+          {%- render 'kf-icon', name: 'pause', size: 'sm' -%}
+        </span>
+        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--play">
+          {%- render 'kf-icon', name: 'play', size: 'sm' -%}
+        </span>
+      </button>
+    </kf-marquee>
+  {%- else -%}
+    <div class="kf-scheme kf-scheme--{{ s.color_scheme.id }} kf-announcement">
       {%- for block in messages -%}
         <div class="kf-container kf-announcement__single" {{ block.shopify_attributes }}>
           {%- if block.settings.link != blank -%}
@@ -47,8 +100,8 @@
           {%- endif -%}
         </div>
       {%- endfor -%}
-    {%- endif -%}
-  </div>
+    </div>
+  {%- endif -%}
 {%- endif -%}
 
 {% stylesheet %}
@@ -79,8 +132,22 @@
   text-decoration-thickness: 1px;
 }
 
-.kf-announcement[data-pause-on-hover]:hover .kf-marquee__track {
-  animation-play-state: paused;
+/* Pause-on-hover now comes from component-marquee.css via
+   `data-kf-pause-hover`, so it also covers :focus-within and is identical
+   wherever a marquee appears. */
+
+/* The pause control needs a 44px target, and the bar's own padding leaves it
+   about 37px tall — without this the button would overhang into the header. */
+.kf-announcement--marquee {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-block: 0;
+}
+
+.kf-announcement--marquee .kf-marquee {
+  flex: 1;
+  min-width: 0;
 }
 {% endstylesheet %}
 

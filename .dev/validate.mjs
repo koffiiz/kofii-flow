@@ -78,8 +78,13 @@ function flattenLocaleKeys(node, prefix = '', out = new Set()) {
 /**
  * Shopify rejects a theme upload when a range setting is malformed, and the
  * error message is not always specific about which setting is at fault.
- * Rules: min < max, step > 0, (max - min) must be divisible by step, at most
- * 101 steps, and the default must sit inside the range.
+ * Rules: min < max, step > 0, (max - min) must be divisible by step, at least
+ * 3 and at most 101 steps, and the default must sit inside the range.
+ *
+ * The lower bound is the one that is easy to miss. A two-position range looks
+ * perfectly reasonable in a schema — "1 or 2 columns on mobile" — and Shopify
+ * rejects the whole theme for it. Use a `select` for a two-way choice, which
+ * is what the rest of this theme does for mobile column counts.
  */
 function checkRange(setting, relPath, scope) {
   const { id, min, max, step, default: value } = setting;
@@ -99,6 +104,13 @@ function checkRange(setting, relPath, scope) {
   }
   if (step > 0 && span / step > 101) {
     fail(relPath, `${where} has ${Math.round(span / step)} steps; Shopify allows at most 101`);
+  }
+  // Positions, not intervals: a min/max/step of 1/2/1 is two positions.
+  if (step > 0 && span / step + 1 < 3) {
+    fail(
+      relPath,
+      `${where} has ${Math.round(span / step) + 1} steps; Shopify requires at least 3 — use a select for a two-way choice`
+    );
   }
   if (typeof value === 'number' && (value < min || value > max)) {
     fail(relPath, `${where} has default ${value} outside ${min}–${max}`);
@@ -275,6 +287,31 @@ const presetQueue = [];
 
 for (const relPath of liquidFiles) {
   const source = read(relPath);
+
+  // 2b. Unterminated output tags.
+  //
+  // Shopify ends a `{{ ... }}` at the FIRST `}` it sees — the scanner regex is
+  // `/\}\}?/` — so one literal closing brace inside an output tag truncates it
+  // and the upload is rejected with "not properly terminated". It is legal
+  // Liquid everywhere else, so nothing local catches it: the theme validates,
+  // Theme Check passes, and it fails at `shopify theme push`.
+  //
+  // Put the value in a `{% liquid %}` tag instead, where the scanner looks for
+  // `%}` and a bare `}` is harmless. JSON-LD `{search_term_string}` templates
+  // are the usual way to meet this.
+  for (let i = source.indexOf('{{'); i !== -1; ) {
+    const close = source.indexOf('}', i + 2);
+    if (close === -1 || source[close + 1] !== '}') {
+      const line = source.slice(0, i).split(/\r?\n/).length;
+      const snippet = source.slice(i, close === -1 ? i + 60 : close + 1);
+      fail(
+        relPath,
+        `line ${line}: output tag has a literal "}" inside it and will not upload — ${snippet.trim()}`
+      );
+      break;
+    }
+    i = source.indexOf('{{', close + 1);
+  }
 
   // 3. asset_url references
   for (const match of source.matchAll(/'([^']+\.(?:css|js|svg|png|jpg|woff2?))'\s*\|\s*asset_url/g)) {

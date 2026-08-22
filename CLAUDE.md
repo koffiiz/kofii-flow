@@ -21,6 +21,7 @@ It is original work — not a fork or reskin of Dawn, Prestige, Impact, Motion, 
 9. **Accessibility is not negotiable.** Keyboard, focus, ARIA and contrast come before any visual effect.
 10. **Filters are not allowed on `{% render %}` arguments.** Resolve them first with `assign`. This applies to `| t`, `| default`, `| money` — everything. Theme Check catches it; save yourself the round trip.
 11. **No placeholder code.** Do not ship `TODO: implement later` for anything a merchant would reasonably expect to work. If something is not built, say so in the roadmap below rather than faking it.
+12. **Never put a literal `}` inside `{{ … }}`.** Shopify ends an output tag at the *first* `}` (the scanner is `/\}\}?/`), so one brace inside truncates the tag and the theme is rejected on upload — "not properly terminated". Nothing local catches it: it is legal Liquid, so the validator used to pass and Theme Check still does. Assign the value in a `{% liquid %}` tag instead, where the scanner looks for `%}` and a bare `}` is harmless. JSON-LD `{search_term_string}` templates are the usual way to hit this. `npm run validate` now fails on it.
 
 ---
 
@@ -319,7 +320,7 @@ Then check by hand:
 
 ## 10. Current state and roadmap
 
-**Phase 4 — marketing library (in progress).** Built so far: rich text, image with text (five layouts), featured collection (grid / carousel / horizontal scroll) with quick add, scrolling story, timeline, and lookbook (hotspots or a scroll-driven guided tour that zooms to each product). Shared components added along the way: <kf-slider>, <kf-quick-add>, <kf-scroll-story>, and the variant picker / buy buttons extracted into snippets so quick add and the product page share one implementation. Sections are being added one at a time.
+**Phase 4 — marketing library (in progress).** Built so far: rich text, image with text (five layouts), featured collection (grid / carousel / horizontal scroll) with quick add, scrolling story, timeline, lookbook (hotspots or a scroll-driven guided tour that zooms to each product), marquee, and stacking cards (pure `position: sticky`, no JavaScript). Shared components added along the way: <kf-slider>, <kf-quick-add>, <kf-scroll-story>, <kf-marquee>, and the variant picker / buy buttons extracted into snippets so quick add and the product page share one implementation. Sections are being added one at a time.
 
 **Phase 3b — collection (complete).** `main-collection-product-grid.liquid` with Shopify native storefront filtering and sorting, `main-collection-banner.liquid`, `main-list-collections.liquid`, `<kf-facets>`, and the `collection` / `list-collections` templates. Products render through the shared product card.
 
@@ -339,19 +340,18 @@ Then check by hand:
 - The Cart AJAX API returns the full `<div id="shopify-section-…">` wrapper, so swaps target the inner `[data-kf-cart-content]` anchor.
 - Anything rendered in both the drawer and the cart page needs a `scope` prefix on its element ids, or `/cart` ends up with duplicate ids.
 
-**Phase 2 — product page (complete).** `main-product.liquid` with a fully block-driven information column; `<kf-product-gallery>` (thumbnails, keyboard nav, video and external video, hover magnify, native-`<dialog>` lightbox); `<kf-variant-picker>` (Section Rendering API, no duplicated price logic in JS); `<kf-product-form>` (AJAX add, real error surfacing); `<kf-quantity>`; `<kf-accordion>`; `<kf-share>`; `<kf-sticky-atc>`; 13 product theme blocks; Product JSON-LD; `templates/product.json`.
+**Phase 2 — product page (complete).** `main-product.liquid` with a fully block-driven information column; `<kf-product-gallery>` (thumbnails, keyboard nav, video and external video, hover magnify, native-`<dialog>` lightbox); `<kf-variant-picker>` (Section Rendering API, no duplicated price logic in JS); `<kf-product-form>` (AJAX add, real error surfacing); `<kf-quantity>`; `<kf-accordion>`; `<kf-share>`; `<kf-sticky-atc>`; 13 product theme blocks; Product JSON-LD; `templates/product.json`. Related and complementary products are a section of their own, `kf-product-recommendations.liquid`.
 
 **Phase 1 — foundation (complete).** Design tokens, color schemes, typography, spacing, base CSS, component CSS, Kofii Motion, `KF` core, drawer/disclosure/header/predictive-search elements, theme blocks, header (with mega menus, mobile nav, predictive search), footer, hero, search page, page, 404, apps section, `index`/`page`/`search`/`404` templates.
 
 **Not built yet — do not pretend otherwise:**
 
 - Templates: `blog`, `article`, `gift_card`, `password`, customer templates.
-- Sections: `main-blog`, `main-article`, and the rest of the marketing library (bento, marquee, product spotlight, testimonials, logo cloud, comparison, before/after, video, FAQ, tabs, stats, image reveal, newsletter).
+- Sections: `main-blog`, `main-article`, and the rest of the marketing library (bento, product spotlight, testimonials, logo cloud, comparison, before/after, video, FAQ, tabs, stats, image reveal, newsletter).
 - Featured collection has grid, carousel and horizontal-scroll layouts. An editorial layout (oversized first product) is not built.
 - Timeline has vertical and alternating layouts. A horizontal (scrolling) timeline is not built — it needs a second spine orientation rather than a reuse of the existing CSS.
-- Components: quick add, slider, marquee element, tabs.
+- Components: tabs.
 - Product card quick-add (the card itself is complete and in use).
-- Complementary / related products on the product page — needs a section of its own.
 - **3D models are not wired up.** `kf-product-media.liquid` emits the correct `model_viewer_tag` markup and the frame CSS exists, but the theme never loads Shopify's model-viewer feature (`Shopify.loadFeatures` with `model-viewer-ui`). Because the tag is rendered with `reveal: 'interaction'`, a model currently degrades to its poster image rather than breaking — but it is not interactive. Do not claim 3D support until the loader is added and tested on a product that actually has a model.
 - Art-directed mobile images in `kf-media` (focal point covers the common case today).
 - Schema label translation (`locales/*.schema.json`). Schema labels are currently authored in English inline.

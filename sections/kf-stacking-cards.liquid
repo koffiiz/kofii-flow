@@ -1,0 +1,504 @@
+{%- comment -%}
+  Kofii Flow — Stacking cards
+  ---------------------------------------------------------------------------
+  Cards that pin as the page scrolls, each coming to rest slightly below the
+  last so they layer into a deck. Built for how-it-works steps, brand pillars,
+  service tiers — a sequence that benefits from being read in order.
+
+  There is no JavaScript here, and none is needed. Every card sticks at the
+  same `top` and the staircase is drawn with a `transform` — see the stylesheet
+  for why those two cannot be swapped. That is why this is not part of Kofii
+  Motion: it is a layout behaviour, not an animation. Nothing is ever hidden,
+  so there is no failure mode where content does not appear.
+
+  Each card can carry its own color scheme, which is what makes the deck read
+  as separate surfaces rather than one long panel.
+
+  Blocks are section-local: a card here is a fixed shape (image, heading, text,
+  link) tied to the stacking behaviour, not a content unit worth exposing to
+  other sections.
+{%- endcomment -%}
+
+{{ 'section-stacking-cards.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign stack_class = 'kf-stack kf-stack--' | append: s.card_layout
+
+  assign has_header = false
+  if s.heading != blank or s.eyebrow != blank or s.text != blank
+    assign has_header = true
+  endif
+
+  comment
+    Both pinned layouts need a heading to pin — otherwise the desktop grid
+    reserves an empty column and squeezes the cards.
+
+    Desktop and mobile are separate switches on purpose. Pinning beside the
+    deck is free on a wide screen; pinning across the top of a phone costs a
+    fifth of the viewport permanently, so it is opt in.
+  endcomment
+  if has_header and s.header_position == 'side'
+    assign stack_class = stack_class | append: ' kf-stack--header-side'
+  endif
+  if has_header and s.header_pin_mobile
+    assign stack_class = stack_class | append: ' kf-stack--header-pin-mobile'
+  endif
+
+  assign stack_style = '--kf-stack-offset: ' | append: s.stack_offset | append: 'px;'
+  assign stack_style = stack_style | append: ' --kf-stack-step: ' | append: s.stack_step | append: 'px;'
+  assign stack_style = stack_style | append: ' --kf-stack-card-height: ' | append: s.card_height | append: 'px;'
+  assign stack_style = stack_style | append: ' --kf-stack-gap: ' | append: s.card_gap | append: 'px;'
+  assign stack_style = stack_style | append: ' --kf-stack-end: ' | append: s.stack_end | append: 'px;'
+  assign stack_style = stack_style | append: ' --kf-stack-header-reserve: ' | append: s.header_reserve_mobile | append: 'px;'
+  comment
+    svh, not vh: the small viewport height does not change when a mobile
+    browser retracts its chrome mid-scroll, so the deck does not resize under
+    the reader's thumb.
+  endcomment
+  assign stack_style = stack_style | append: ' --kf-stack-card-height-mobile: ' | append: s.card_height_mobile | append: 'svh;'
+
+  comment
+    Which way the deck fans. Both axes are emitted so the CSS is one transform
+    rather than a rule per path, and the card count is needed to narrow the
+    cards by however far a sideways fan travels.
+  endcomment
+  case s.stack_path
+    when 'horizontal'
+      assign step_x = s.stack_step
+      assign step_y = 0
+    when 'diagonal'
+      assign step_x = s.stack_step
+      assign step_y = s.stack_step
+    else
+      assign step_x = 0
+      assign step_y = s.stack_step
+  endcase
+
+  assign stack_style = stack_style | append: ' --kf-stack-step-x: ' | append: step_x | append: 'px;'
+  assign stack_style = stack_style | append: ' --kf-stack-step-y: ' | append: step_y | append: 'px;'
+  assign stack_style = stack_style | append: ' --kf-stack-count: ' | append: section.blocks.size | append: ';'
+
+  assign media_sizes = '(min-width: 750px) 45vw, 100vw'
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: stack_class, style: stack_style %}>
+  <div class="kf-container">
+    <div class="kf-stack__inner">
+    {%- if has_header -%}
+      {%- comment -%}
+        The heading is wrapped rather than being the grid item itself. A sticky
+        box can only travel inside its containing block, and a grid item that
+        IS the heading is exactly as tall as the heading — nowhere to go. The
+        wrapper stretches to the full row height (the height of the deck) and
+        the heading sticks inside it.
+      {%- endcomment -%}
+      <div class="kf-stack__aside">
+        <header class="kf-section-header kf-stack__header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+          {%- if s.eyebrow != blank -%}
+            <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if s.heading != blank -%}
+            <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+          {%- endif -%}
+          {%- if s.text != blank -%}
+            <div class="kf-section-header__text kf-rte">{{ s.text }}</div>
+          {%- endif -%}
+        </header>
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ol class="kf-stack__list" role="list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign card_index = forloop.index0
+            assign card_scheme = block.settings.color_scheme
+
+            assign card_class = 'kf-stack__card kf-scheme'
+            if card_scheme.id != blank
+              assign card_class = card_class | append: ' kf-scheme--' | append: card_scheme.id
+            endif
+          -%}
+          <li
+            class="kf-stack__item"
+            style="--kf-stack-i: {{ card_index }};"
+            {{ block.shopify_attributes }}
+          >
+            <article class="{{ card_class }}">
+              {%- if block.settings.image != blank -%}
+                <div class="kf-stack__media">
+                  {%- render 'kf-media',
+                    image: block.settings.image,
+                    ratio: s.media_ratio,
+                    sizes: media_sizes
+                  -%}
+                </div>
+              {%- endif -%}
+
+              <div class="kf-stack__body">
+                {%- if s.show_numbers -%}
+                  <p class="kf-label kf-stack__number" aria-hidden="true">
+                    {{- forloop.index -}}
+                  </p>
+                {%- endif -%}
+
+                {%- if block.settings.eyebrow != blank -%}
+                  <p class="kf-label kf-stack__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="{{ s.card_heading_size }}">{{ block.settings.heading }}</h3>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <div class="kf-rte kf-stack__text">{{ block.settings.text }}</div>
+                {%- endif -%}
+
+                {%- if block.settings.link_label != blank -%}
+                  {%- render 'kf-button',
+                    label: block.settings.link_label,
+                    href: block.settings.link,
+                    style: block.settings.link_style,
+                    icon: 'arrow'
+                  -%}
+                {%- endif -%}
+              </div>
+            </article>
+          </li>
+        {%- endfor -%}
+
+        {%- comment -%}
+          Load bearing, not a spacer for looks. A sticky box can only be pushed
+          down until its bottom meets the bottom of its containing block, and
+          the last card's bottom IS the bottom of this list — so without
+          trailing room inside the list it never sticks at all and slides
+          straight over the finished deck. See the stylesheet for the two
+          obvious alternatives that do not work.
+        {%- endcomment -%}
+        <li class="kf-stack__end" aria-hidden="true"></li>
+      </ol>
+    {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stacking cards",
+  "tag": "section",
+  "class": "kf-stack-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How it works"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "header_position",
+      "label": "Heading position",
+      "options": [
+        { "value": "side", "label": "Pinned beside the cards" },
+        { "value": "above", "label": "Above the cards" }
+      ],
+      "default": "side",
+      "info": "Applies from 990px up. Pinned holds the heading still beside the deck while the cards stack past it."
+    },
+    {
+      "type": "checkbox",
+      "id": "header_pin_mobile",
+      "label": "Also pin the heading on mobile",
+      "default": false,
+      "info": "Off by default. A pinned bar takes about a fifth of a phone screen for the whole section, and the card numbers already show where you are. Worth turning on for a short two or three word heading."
+    },
+    {
+      "type": "range",
+      "id": "header_reserve_mobile",
+      "label": "Space for the pinned heading on mobile",
+      "min": 48,
+      "max": 220,
+      "step": 4,
+      "unit": "px",
+      "default": 96,
+      "info": "Only used when the heading is pinned on mobile. How far down the cards start, to clear it — raise it for a two-line heading or one with text under it."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Number the cards",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "card_heading_size",
+      "label": "Card heading size",
+      "options": [
+        { "value": "kf-h4", "label": "Small" },
+        { "value": "kf-h3", "label": "Medium" },
+        { "value": "kf-h2", "label": "Large" }
+      ],
+      "default": "kf-h3"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "card_layout",
+      "label": "Card layout",
+      "options": [
+        { "value": "media-start", "label": "Image on the left" },
+        { "value": "media-end", "label": "Image on the right" },
+        { "value": "alternate", "label": "Alternate sides" },
+        { "value": "stacked", "label": "Image above the text" }
+      ],
+      "default": "media-start",
+      "info": "Cards without an image are always a single column."
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Minimum card height",
+      "min": 200,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "default": 380,
+      "info": "Desktop and tablet. Mobile uses a share of the screen instead."
+    },
+    {
+      "type": "range",
+      "id": "card_height_mobile",
+      "label": "Card height on mobile",
+      "min": 40,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 68,
+      "info": "Share of the screen each card fills, so one card reads as roughly one screen on any phone."
+    },
+    {
+      "type": "header",
+      "content": "Stacking"
+    },
+    {
+      "type": "select",
+      "id": "stack_path",
+      "label": "Direction the deck fans",
+      "options": [
+        { "value": "vertical", "label": "Down" },
+        { "value": "horizontal", "label": "Sideways" },
+        { "value": "diagonal", "label": "Down and sideways" }
+      ],
+      "default": "vertical",
+      "info": "Sideways and diagonal narrow the cards to keep the fan inside the page, and both fall back to Down below 750px where there is no width to spare."
+    },
+    {
+      "type": "range",
+      "id": "stack_step",
+      "label": "Offset between cards",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24,
+      "info": "How much of each card stays visible once the next one covers it. Set to 0 to stack them exactly on top of each other."
+    },
+    {
+      "type": "range",
+      "id": "stack_offset",
+      "label": "Distance from the top",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 32,
+      "info": "Measured below the sticky header, if you have one."
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Scroll between cards",
+      "min": 40,
+      "max": 400,
+      "step": 20,
+      "unit": "px",
+      "default": 160,
+      "info": "How far you scroll before the next card arrives. This section uses roughly one card height of scroll per card, so keep the number of cards low."
+    },
+    {
+      "type": "range",
+      "id": "stack_end",
+      "label": "Hold at the end",
+      "min": 40,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 240,
+      "info": "How long the finished deck stays on screen before the section scrolls away. The last card needs some of this to settle at all."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Pick your pieces"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>A sentence or two on what happens at this step, and why it matters.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "link_style",
+          "label": "Link style",
+          "options": [
+            { "value": "plain", "label": "Text link" },
+            { "value": "secondary", "label": "Outlined button" },
+            { "value": "primary", "label": "Solid button" }
+          ],
+          "default": "plain"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "Card color scheme",
+          "default": "scheme-2"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stacking cards",
+      "blocks": [
+        { "type": "card", "settings": { "heading": "Pick your pieces" } },
+        { "type": "card", "settings": { "heading": "We make them to order" } },
+        { "type": "card", "settings": { "heading": "Delivered in two weeks" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

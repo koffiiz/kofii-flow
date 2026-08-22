@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Kofii Flow — Product recommendations
+   Loaded by sections/kf-product-recommendations.liquid.
+
+   The cards themselves are the shared product card, so there is nothing about
+   their appearance here — only the row that holds them.
+   ========================================================================== */
+
+/* The custom element is empty until the fetch lands. It must not reserve any
+   height while empty, or a store with no recommendations set up gets a blank
+   band on every product page. */
+kf-product-recommendations {
+  display: block;
+}
+
+.kf-recs__header {
+  margin-bottom: var(--kf-space-md);
+}
+
+.kf-recs__list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(var(--kf-recs-cols, 4), minmax(0, 1fr));
+  gap: var(--kf-space-md);
+}
+
+@media (max-width: 989px) {
+  .kf-recs__list {
+    grid-template-columns: repeat(var(--kf-recs-cols-tablet, 3), minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 749px) {
+  .kf-recs__list {
+    grid-template-columns: repeat(var(--kf-recs-cols-mobile, 2), minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   Scrolling row on small screens
+   --------------------------------------------------------------------------
+   Four recommendations do not fit across a phone, and shrinking them to fit
+   makes every card unreadable. This keeps them full size and lets the row
+   scroll — CSS scroll-snap only, no slider element and no JavaScript.
+
+   Deliberately NOT <kf-slider>: reusing it would mean copying its dots,
+   progress bar and arrow markup into a second section, which is the
+   duplication rule 1 exists to prevent. If carousels are wanted in more
+   places, that markup should become a snippet first.
+   ========================================================================== */
+
+@media (max-width: 749px) {
+  .kf-recs--scroll-mobile .kf-recs__list {
+    display: flex;
+    /* Full bleed to the screen edge, so the row reads as continuing past it
+       rather than stopping short inside the page gutter. */
+    margin-inline: calc(var(--kf-page-gutter) * -1);
+    padding-inline: var(--kf-page-gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: var(--kf-page-gutter);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .kf-recs--scroll-mobile .kf-recs__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kf-recs--scroll-mobile .kf-recs__item {
+    flex: 0 0 var(--kf-recs-mobile-width, 62vw);
+    scroll-snap-align: start;
+  }
+}
+
+/* A focused card must not sit half off-screen; without this the outline can be
+   clipped by the scroll container. */
+.kf-recs__item:focus-within {
+  scroll-snap-align: start;
+}

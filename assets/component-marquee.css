@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Kofii Flow — Marquee component
+   --------------------------------------------------------------------------
+   Everything <kf-marquee> itself needs, loaded by EVERY section that renders
+   one: the marquee band and the announcement bar.
+
+   The scrolling mechanics are separate again, in kf-motion.css, because the
+   two-track animation predates this element and runs without it.
+
+   Item styling belongs to the section — a marquee message and a marquee band
+   item look nothing alike.
+   ========================================================================== */
+
+/* An unregistered custom element is `display: inline`, which would give the
+   toggle nothing to position against until the script boots — and the toggle
+   is hidden until then, so the bug would only ever appear as a flash. */
+kf-marquee {
+  display: block;
+  position: relative;
+}
+
+/* Reserve the toggle's width so items scroll PAST it rather than under it.
+   The chip is semi-transparent, and text sliding beneath it reads as a smudge
+   rather than as a control.
+
+   This is kept even when the script never boots and the button stays hidden.
+   A band 44px narrower than it could be is a far smaller flaw than the smear,
+   and the alternative — padding on the overflow container — does not work:
+   flex items still paint into the padding box when they overflow. */
+kf-marquee .kf-marquee {
+  /* The button's own width PLUS the gap it is inset by — reserving only the
+     width leaves the last few pixels of the track sliding under the chip. */
+  margin-inline-end: calc(2.75rem + var(--kf-space-2xs));
+}
+
+/* ==========================================================================
+   Pause control
+   --------------------------------------------------------------------------
+   WCAG 2.2 SC 2.2.2: motion that starts on its own and runs for more than five
+   seconds needs a mechanism to pause it. Pause-on-hover is not that mechanism
+   — it does nothing for a keyboard or touch visitor — so this button is not
+   optional decoration, and it is why <kf-marquee> exists at all.
+   ========================================================================== */
+
+.kf-marquee-toggle {
+  position: absolute;
+  /* Vertically centred against whatever height the host ends up being, so the
+     same rule works in a full band and in a thin announcement bar. */
+  inset-block: 0;
+  margin-block: auto;
+  inset-inline-end: var(--kf-space-2xs);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  /* Full 44px target; the visible chip is deliberately smaller. */
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kf-radius-circle);
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+.kf-marquee-toggle::before {
+  content: "";
+  position: absolute;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: var(--kf-radius-circle);
+  background-color: var(--kf-color-background);
+  opacity: 0.85;
+}
+
+.kf-marquee-toggle:hover,
+.kf-marquee-toggle:focus-visible {
+  opacity: 1;
+}
+
+.kf-marquee-toggle:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+}
+
+.kf-marquee-toggle .kf-icon {
+  position: relative;
+  z-index: 1;
+}
+
+/* Both icons ship in the markup and one is hidden, so changing state costs no
+   DOM work and keeps icon markup out of JavaScript. */
+.kf-marquee-toggle__icon {
+  display: grid;
+}
+
+.kf-marquee-toggle__icon--play,
+kf-marquee[data-paused] .kf-marquee-toggle__icon--pause {
+  display: none;
+}
+
+kf-marquee[data-paused] .kf-marquee-toggle__icon--play {
+  display: grid;
+}
+
+/* ==========================================================================
+   Pause on hover
+   --------------------------------------------------------------------------
+   A convenience on top of the button, never a replacement for it.
+
+   `:focus-within` is part of this rather than a nicety: without it, tabbing to
+   a link inside a moving track would chase a target that keeps sliding away.
+   ========================================================================== */
+
+[data-kf-pause-hover] .kf-marquee:hover .kf-marquee__track,
+[data-kf-pause-hover] .kf-marquee:focus-within .kf-marquee__track {
+  animation-play-state: paused;
+}

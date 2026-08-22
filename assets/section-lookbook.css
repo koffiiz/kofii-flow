@@ -306,6 +306,15 @@
     align-items: start;
   }
 
+  /* `order` moves the image across but does NOT carry its track with it. Grid
+     fills tracks in order-modified document order, so with the image ordered
+     last the STEPS take the 1.35fr track and the image ends up in the narrow
+     one — it visibly shrinks the moment you switch sides. Swapping the
+     template is what keeps the image on the wider column either way. */
+  .kf-js .kf-lookbook__tour--media-right {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  }
+
   .kf-js .kf-lookbook__tour--media-right .kf-lookbook__viewport {
     order: 2;
   }
@@ -327,7 +336,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 70svh;
+    min-height: 50svh;
     padding-block: var(--kf-space-md);
   }
 
@@ -337,14 +346,25 @@
      gets the benefit. */
   /* `width: 100%` is doing real work here, not padding out the rule. A flex
      item stops stretching the moment a cross-axis margin is `auto`, so
-     centring alone would leave the card sized by its own contents and cards
+     alignment alone would leave the card sized by its own contents and cards
      would change width as you scrolled. An explicit width, capped, keeps every
-     card identical and lets the auto margins centre it. */
+     card identical and lets the auto margins place it.
+
+     Centre is the base case; the two rules below move it by choosing which
+     side absorbs the leftover space. Logical, so an RTL store mirrors. */
   .kf-js .kf-lookbook__step .kf-product-card {
     width: 100%;
     max-width: 20rem;
     height: auto;
     margin-inline: auto;
+  }
+
+  .kf-js .kf-lookbook__tour--steps-start .kf-lookbook__step .kf-product-card {
+    margin-inline: 0 auto;
+  }
+
+  .kf-js .kf-lookbook__tour--steps-end .kf-lookbook__step .kf-product-card {
+    margin-inline: auto 0;
   }
 
   /* Optional, and off by default: these are shoppable cards, and dimming a

@@ -74,6 +74,7 @@
   if s.tour_media_position == 'right'
     assign tour_class = tour_class | append: ' kf-lookbook__tour--media-right'
   endif
+  assign tour_class = tour_class | append: ' kf-lookbook__tour--steps-' | append: s.tour_steps_alignment
 -%}
 
 {%- comment -%}
@@ -318,6 +319,18 @@
       ],
       "default": "left",
       "info": "Applies from 990px up. Below that the image sits above the products."
+    },
+    {
+      "type": "select",
+      "id": "tour_steps_alignment",
+      "label": "Guided tour product alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "end", "label": "Right" }
+      ],
+      "default": "center",
+      "info": "Where each product card sits in its column. Applies from 990px up."
     },
     {
       "type": "checkbox",

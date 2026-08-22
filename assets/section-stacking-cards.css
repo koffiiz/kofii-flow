@@ -1,0 +1,380 @@
+/* ==========================================================================
+   Kofii Flow — Stacking cards
+   Loaded by sections/kf-stacking-cards.liquid.
+
+   The whole effect is `position: sticky` and nothing else. No scroll listener,
+   no IntersectionObserver, no measuring, no JavaScript — which is also why it
+   is not part of Kofii Motion: this is a layout behaviour, not an animation.
+
+   Each card sticks a little lower than the one before it, so as the page
+   scrolls the cards come to rest on top of each other in a deck.
+
+     card 0 sticks at  offset + 0 * step
+     card 1 sticks at  offset + 1 * step   (covering card 0 except its top edge)
+     card 2 sticks at  offset + 2 * step
+
+   The scroll distance BETWEEN each card sticking comes from the gap in the
+   list, not from spacers.
+   ========================================================================== */
+
+.kf-stack__header {
+  margin-bottom: var(--kf-space-xl);
+}
+
+/* ==========================================================================
+   Pinned heading
+   --------------------------------------------------------------------------
+   The heading holds still beside the deck while the cards stack past it.
+
+   Only from 990px up: below that there is no room for two columns, so the
+   heading goes back to sitting above the cards and the wrapper is a plain
+   block — which is what it already is by default.
+
+   The heading is NOT the grid item. A sticky box can only travel inside its
+   containing block, and a grid item sized to the heading is exactly as tall as
+   the heading, so it would have nowhere to go and would never move. The
+   wrapper is the grid item and stretches to the full row height — the height
+   of the deck — and the heading sticks inside it.
+
+   That also rules out `align-items: start` on this grid: it would shrink the
+   wrapper back to its content and silently undo the whole thing.
+   ========================================================================== */
+
+@media (min-width: 990px) {
+  .kf-stack--header-side .kf-stack__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.75fr);
+    gap: var(--kf-space-xl);
+  }
+
+  .kf-stack--header-side .kf-stack__header {
+    position: sticky;
+    top: calc(var(--kf-sticky-offset, 0px) + var(--kf-stack-offset, 2rem));
+    margin-bottom: 0;
+  }
+}
+
+/* Pinning the heading across the top on mobile — OPT IN, and off by default.
+   --------------------------------------------------------------------------
+   The default mobile treatment is further down: the heading scrolls away like
+   every other section's, and each card takes the screen. That is deliberate.
+   A pinned bar costs about 22% of a 390x844 viewport permanently, for a label
+   already read once, and it cannot size itself — CSS has no way to measure the
+   heading, so the space it occupies is a hand-set number that a two-line
+   heading breaks.
+
+   It is kept because a store with a short two-word heading may genuinely want
+   it, and because it works: the bar paints ABOVE the cards on an opaque
+   background, so a slightly wrong reserve only eats into the deck's top
+   slivers rather than breaking anything. A transparent heading here would let
+   card text slide through the letters, which is why the background is not
+   optional. */
+@media (max-width: 989px) {
+  /* The wrapper does the sticking here, not the heading, and it is deliberately
+     TALL — its bottom sits level with the bottom of a resting card.
+
+     That is what makes the heading leave with the deck. A sticky box is
+     released when its own bottom reaches the bottom of its containing block,
+     so a short heading outlives a tall card by the difference between them:
+     measured at ~338px of scroll where the heading sat pinned alone after
+     every card had gone. Matching its height matches its release.
+
+     Height and flow would normally fight — a tall wrapper would shove the deck
+     hundreds of pixels down the page. The grid below puts the wrapper and the
+     list in the SAME cell so they overlap instead, which costs the deck
+     nothing. The wrapper is transparent and inert; only the bar inside it is
+     visible and clickable. */
+  .kf-stack--header-pin-mobile .kf-stack__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kf-stack--header-pin-mobile .kf-stack__aside,
+  .kf-stack--header-pin-mobile .kf-stack__list {
+    grid-area: 1 / 1;
+  }
+
+  .kf-stack--header-pin-mobile .kf-stack__aside {
+    position: sticky;
+    top: var(--kf-sticky-offset, 0px);
+    height: calc(
+      var(--kf-stack-header-reserve, 6rem) +
+      var(--kf-stack-offset, 2rem) +
+      var(--kf-stack-card-height-mobile, 68svh)
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Sharing a cell means the list starts at the top of it, so without this the
+     first card would sit on top of the bar before either has pinned. The
+     reserve is exactly "space for the pinned heading", so it is the right
+     number twice over. */
+  .kf-stack--header-pin-mobile .kf-stack__list {
+    padding-block-start: var(--kf-stack-header-reserve, 6rem);
+  }
+
+  /* A solid BAR, not floating text. Two things make that work, and both are
+     load bearing:
+
+     `top` is flush against the sticky header rather than offset below it. Any
+     gap there is a strip the cards scroll through, so the heading reads as
+     text stamped onto a passing card instead of a bar it slides behind.
+
+     The background is full bleed to the screen edges. Inside the container
+     padding it would leave the card's shoulders visible either side of the
+     heading, which gives the same broken impression. */
+  .kf-stack--header-pin-mobile .kf-stack__header {
+    /* Static: the wrapper above does the sticking now. `relative` only so the
+       gap filler below measures against THIS box — the bar is full bleed and
+       the wrapper is not, so anchoring to the wrapper would leave the filler
+       narrower than the bar it is meant to continue. */
+    position: relative;
+    /* The wrapper is inert so it cannot swallow taps meant for the deck; the
+       bar itself still needs to take them, for links inside the heading. */
+    pointer-events: auto;
+    background-color: var(--kf-color-background);
+    margin-inline: calc(var(--kf-page-gutter) * -1);
+    padding-inline: var(--kf-page-gutter);
+    padding-block: var(--kf-space-sm) var(--kf-space-2xs);
+    margin-bottom: var(--kf-space-md);
+  }
+
+  /* Fills the strip between the top of the screen and the bar.
+     --kf-sticky-offset reserves room for the site header, but that header is
+     not always painting there: it hides on scroll-down in one of its modes,
+     and it is absent entirely in some previews. Whenever it is not, that
+     reserved strip is a window the cards scroll through, directly above the
+     bar — which is the overlap this whole rule exists to stop.
+
+     It has to be a pseudo-element. Doing the same job with padding-block-start
+     would work while pinned and then wreck the unpinned state, because a
+     sticky box keeps its padding in normal flow: the heading would sit a
+     header's height further down the page before it ever pinned. */
+  .kf-stack--header-pin-mobile .kf-stack__header::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 100%;
+    height: var(--kf-sticky-offset, 0px);
+    background-color: inherit;
+    pointer-events: none;
+  }
+
+  .kf-stack--header-pin-mobile .kf-stack__item {
+    top: calc(
+      var(--kf-sticky-offset, 0px) +
+      var(--kf-stack-header-reserve, 6rem) +
+      var(--kf-stack-offset, 2rem)
+    );
+  }
+}
+
+/* Nothing in this subtree may set `overflow` to anything but `visible`.
+   A sticky element is clipped by its nearest scrolling ancestor, so a stray
+   `overflow: hidden` anywhere above a card silently turns the whole deck back
+   into a plain list — and it looks intentional, which is what makes it hard
+   to spot. */
+.kf-stack__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-stack-gap, var(--kf-space-3xl));
+  list-style: none;
+}
+
+/* Every card sticks at the SAME top, and the staircase is drawn with a
+   transform. That split is the whole trick, and it is not interchangeable with
+   putting the offset in `top`.
+
+   A sticky box is released when its bottom reaches the bottom of its
+   containing block. Every card here shares one containing block, so laddering
+   `top` would make `top + height` differ by one step per card and they would
+   release in reverse order, one step apart — measured at 2085 / 2105 / 2130 /
+   2155. Each released card then slides up into the one above it, and the deck
+   visibly collapses into a single flat pile before it leaves.
+
+   `transform` moves the painted card without touching its layout box, so every
+   card has an identical release point and the deck exits rigidly with its
+   offsets intact. Measured spread after the change: 0px.
+
+   --kf-stack-i is the card's index, written inline by Liquid; multiplying a
+   unitless number by a length is valid in calc, so the staircase is one
+   expression rather than a rule per card. */
+.kf-stack__item {
+  position: sticky;
+  top: calc(var(--kf-sticky-offset, 0px) + var(--kf-stack-offset, 2rem));
+
+  /* Narrowed by exactly the distance the fan travels sideways, so a horizontal
+     path stays inside the container instead of pushing the page wider. On a
+     vertical path step-x is 0 and this resolves to a plain 100%. */
+  width: calc(100% - (var(--kf-stack-count, 1) - 1) * var(--kf-stack-step-x, 0px));
+
+  transform: translate(
+    calc(var(--kf-stack-i, 0) * var(--kf-stack-step-x, 0px)),
+    calc(var(--kf-stack-i, 0) * var(--kf-stack-step-y, 1.5rem))
+  );
+}
+
+/* ==========================================================================
+   Mobile
+   --------------------------------------------------------------------------
+   A phone gets a deck of screens, not a page of cards.
+
+   The heading is NOT pinned here by default — it scrolls away like every other
+   section's, which is also what the scrolling story does with its pinned column
+   below 990px. What replaces it is the card number: that is the "where am I"
+   cue a pinned title was really providing, and it costs no permanent chrome.
+
+   Cards take most of the viewport height, so scrolling the deck feels like
+   flipping through it one screen at a time — but they keep the page gutter
+   either side rather than going edge to edge.
+   ========================================================================== */
+
+@media (max-width: 749px) {
+  /* A sideways fan costs real width, and there is none to spare — eight cards
+     at 24px would eat 168px of a 375px screen. Every path collapses to the
+     vertical one, and the step is capped: 24px reads loose against the corner
+     radius once the card is only a phone wide. */
+  .kf-stack__item {
+    --kf-stack-step-x: 0px;
+    --kf-stack-step-y: min(var(--kf-stack-step, 1.5rem), 1rem);
+  }
+
+  /* The deck keeps the page gutter rather than going edge to edge. Full bleed
+     reads cramped at this size: the card fills the screen with no ground
+     around it, so the stack stops looking like cards and the offsets behind it
+     lose their edge. The gutter is the theme's own page margin, so the deck
+     lines up with every other section on the page. */
+
+  /* Qualified with .kf-stack so it outranks the base card rule on specificity
+     rather than on source order — the base rule is further down this file, and
+     an unqualified selector here loses to it silently. */
+  .kf-stack .kf-stack__card {
+    /* Screen-relative, not a fixed pixel height: a card sized in px is a
+       different fraction of the screen on every phone. `svh` is the small
+       viewport height, so it does not jump when mobile browser chrome
+       retracts mid-scroll the way `vh` does. */
+    min-height: var(--kf-stack-card-height-mobile, 68svh);
+    padding: var(--kf-space-md);
+  }
+}
+
+/* No z-index anywhere: positioned siblings already paint in DOM order, so a
+   later card covers an earlier one for free. Adding z-index here would create
+   stacking contexts that fight the section transition tokens. */
+
+/* ==========================================================================
+   The end spacer — load bearing, not decoration
+   --------------------------------------------------------------------------
+   A sticky box can only be pushed down until its own bottom reaches the bottom
+   of its containing block. The last card's bottom edge IS the bottom of the
+   list, so it has zero room to move and never sticks at all: it slides up over
+   the finished deck and straight off the top.
+
+   This empty item gives the list somewhere for that last card to go.
+
+   Two more obvious fixes do not work, both measured:
+     padding-block-end on the list   — sticky is bounded by the parent's
+                                       CONTENT box, so padding is outside it
+     margin-block-end on the card    — the margin belongs to the sticky box and
+                                       travels with it, adding no slack
+
+   Its height also sets how long the completed deck stays on screen before the
+   section scrolls away.
+   ========================================================================== */
+
+.kf-stack__end {
+  flex: 0 0 auto;
+  height: var(--kf-stack-end, 15rem);
+  /* Nothing to see; it exists purely to extend the containing block. */
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.kf-stack__card {
+  display: grid;
+  gap: var(--kf-space-lg);
+  align-items: center;
+  padding: var(--kf-space-lg);
+  border-radius: var(--kf-radius-xl);
+  /* Opaque is not a style choice. A translucent card would show the deck
+     stacked underneath it and the effect would read as a rendering bug. */
+  background-color: var(--kf-color-background);
+  color: var(--kf-color-text);
+  box-shadow: var(--kf-shadow-lg);
+  min-height: var(--kf-stack-card-height, 24rem);
+}
+
+.kf-stack__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+}
+
+.kf-stack__number {
+  color: var(--kf-color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.kf-stack__eyebrow {
+  color: var(--kf-color-muted);
+}
+
+.kf-stack__text {
+  max-width: 46ch;
+}
+
+.kf-stack__media {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Card layouts
+   ========================================================================== */
+
+@media (min-width: 750px) {
+  .kf-stack--media-start .kf-stack__card,
+  .kf-stack--media-end .kf-stack__card,
+  .kf-stack--alternate .kf-stack__card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding: var(--kf-space-xl);
+  }
+
+  .kf-stack--media-end .kf-stack__media {
+    order: 2;
+  }
+
+  /* Alternating uses the item index rather than :nth-child, so it stays
+     correct when a card has no image and renders single column. */
+  .kf-stack--alternate .kf-stack__item:nth-child(even) .kf-stack__media {
+    order: 2;
+  }
+}
+
+/* A card with no image is a single column whatever the layout setting says. */
+.kf-stack__card:not(:has(.kf-stack__media)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ==========================================================================
+   Reduced motion
+   --------------------------------------------------------------------------
+   A deck of cards sliding over one another is exactly the kind of movement
+   that causes vestibular discomfort. There is no gentler version to fall back
+   to, so the stacking is switched off entirely and the cards become an
+   ordinary list — which is what the markup already is.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-stack__item {
+    position: static;
+    /* The staircase has to go with the stacking. Left in place it would just
+       shove each card progressively further down an ordinary list. */
+    transform: none;
+  }
+}

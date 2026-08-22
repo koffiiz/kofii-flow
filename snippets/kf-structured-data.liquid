@@ -6,7 +6,19 @@
   section that owns that content, so nothing is ever declared twice.
 
   Rendered once, on the homepage, from `layout/theme.liquid`.
+
+  The search URL template is built here rather than inline below, and it has to
+  be. Shopify tokenizes an output tag by scanning for the first `}` — the regex
+  is `/\}\}?/` — so a literal `}` inside `{{ ... }}` ends the tag early and the
+  theme fails to upload with "not properly terminated". The SearchAction
+  urlTemplate needs a literal `{search_term_string}`, so it is assigned inside
+  a `{% liquid %}` tag, where the scanner looks for `%}` and a bare `}` is
+  harmless.
 {%- endcomment -%}
+
+{%- liquid
+  assign search_url_template = shop.url | append: '/search?q={search_term_string}'
+-%}
 
 <script type="application/ld+json">
   {
@@ -14,7 +26,7 @@
     "@graph": [
       {
         "@type": "Organization",
-        "@id": {{ shop.url | append: '#organization' | json }},
+        "@id": {{ shop.url | append: '#organization' | json }}, 
         "name": {{ shop.name | json }},
         "url": {{ shop.url | json }}
         {%- if settings.share_image -%}
@@ -50,7 +62,7 @@
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": {{ shop.url | append: '/search?q={search_term_string}' | json }}
+            "urlTemplate": {{ search_url_template | json }}
           },
           "query-input": "required name=search_term_string"
         }

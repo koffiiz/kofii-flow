@@ -4,7 +4,9 @@
       "skip_to_content": "Skip to content",
       "close": "Close",
       "opens_new_window": "Opens in a new window",
-      "image_link": "Open link"
+      "image_link": "Open link",
+      "pause_animation": "Pause animation",
+      "play_animation": "Play animation"
     },
     "meta": {
       "tagged_html": "Tagged {{ tags }}",

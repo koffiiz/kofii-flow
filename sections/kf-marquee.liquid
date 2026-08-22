@@ -1,0 +1,372 @@
+{%- comment -%}
+  Kofii Flow — Marquee
+  ---------------------------------------------------------------------------
+  A band of text or images scrolling continuously. Two uses in one section: an
+  oversized statement band, and a moving logo or badge strip.
+
+  The scrolling is the shared implementation in kf-motion.css, the same one the
+  announcement bar uses — two tracks duplicated in the markup, animated with
+  `@keyframes kf-marquee`. It runs with no JavaScript at all.
+
+  <kf-marquee> adds the two things CSS cannot: the pause control that WCAG 2.2
+  SC 2.2.2 requires for self-starting motion, and enough repeats of a short
+  item list to fill the viewport (the track carries `min-width: 100%`, so three
+  short words would otherwise stretch and trail a dead gap on every pass).
+
+  The separator is emitted AFTER every item including the last. That is what
+  keeps the spacing even across the seam where the loop repeats — drop it on
+  the last item and the join gets visibly tighter than the rest.
+
+  Blocks are section-local: a marquee item is a scrap of text or one image, not
+  a content unit worth exposing to other sections.
+{%- endcomment -%}
+
+{{ 'section-marquee.css' | asset_url | stylesheet_tag }}
+{{ 'component-marquee.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-marquee.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+
+  assign band_class = 'kf-marquee-band'
+  if s.uppercase
+    assign band_class = band_class | append: ' kf-marquee-band--uppercase'
+  endif
+
+  assign marquee_class = 'kf-marquee'
+  if s.edge_fade
+    assign marquee_class = marquee_class | append: ' kf-marquee--fade'
+  endif
+
+  comment
+    The shared keyframes always travel one direction; `animation-direction`
+    is what reverses them, so there is only ever one set of keyframes.
+  endcomment
+  assign direction = 'normal'
+  if s.direction == 'right'
+    assign direction = 'reverse'
+  endif
+
+  assign band_style = '--kf-marquee-duration: ' | append: s.speed | append: 's;'
+  assign band_style = band_style | append: ' --kf-marquee-direction: ' | append: direction | append: ';'
+  assign band_style = band_style | append: ' --kf-marquee-gap: ' | append: s.gap | append: 'px;'
+  assign band_style = band_style | append: ' --kf-marquee-image-height: ' | append: s.image_height | append: 'px;'
+
+  case s.separator
+    when 'dot'
+      assign separator_mark = '&bull;'
+    when 'slash'
+      assign separator_mark = '/'
+    when 'asterisk'
+      assign separator_mark = '&lowast;'
+    else
+      assign separator_mark = ''
+  endcase
+
+  comment
+    Resolved once here rather than inline, so the filter runs a single time
+    and the values are ready to use as plain attribute values below.
+  endcomment
+  assign pause_label = 'general.accessibility.pause_animation' | t
+  assign play_label = 'general.accessibility.play_animation' | t
+  assign image_sizes = '(min-width: 750px) 20vw, 40vw'
+-%}
+
+{%- capture marquee_items -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign item_class = 'kf-marquee-band__item'
+      if block.type == 'text' and block.settings.text_style == 'outline'
+        assign item_class = item_class | append: ' kf-marquee-band__item--outline'
+      endif
+    -%}
+    <div class="{{ item_class }}" {{ block.shopify_attributes }}>
+      {%- if block.type == 'image' -%}
+        {%- if block.settings.link != blank -%}<a class="kf-marquee-band__link" href="{{ block.settings.link }}">{%- endif -%}
+        {%- render 'kf-media',
+          image: block.settings.image,
+          ratio: 'adapt',
+          fit: 'contain',
+          flush: true,
+          sizes: image_sizes,
+          placeholder: 'image',
+          class: 'kf-marquee-band__media'
+        -%}
+        {%- if block.settings.link != blank -%}</a>{%- endif -%}
+      {%- else -%}
+        {%- if block.settings.link != blank -%}
+          <a class="kf-marquee-band__link" href="{{ block.settings.link }}">
+            <span class="kf-marquee-band__text {{ s.text_size }}">{{ block.settings.text | escape }}</span>
+          </a>
+        {%- else -%}
+          <span class="kf-marquee-band__text {{ s.text_size }}">{{ block.settings.text | escape }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- if separator_mark != blank -%}
+      <span class="kf-marquee-band__separator {{ s.text_size }}" aria-hidden="true">{{ separator_mark }}</span>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: band_class, style: band_style %}>
+  {%- if section.blocks.size > 0 -%}
+    {%- unless s.full_width -%}<div class="kf-container">{%- endunless -%}
+
+    <kf-marquee {% if s.pause_on_hover %}data-kf-pause-hover{% endif %}>
+      <div class="{{ marquee_class }}" data-kf-marquee>
+        {%- comment -%}
+          Pass 2 is the duplicate that makes the loop seamless. It is `inert`
+          as well as aria-hidden so its links do not collect a second set of
+          tab stops — aria-hidden alone would hide them from a screen reader
+          while leaving them focusable, which is worse than either.
+        {%- endcomment -%}
+        {%- for pass in (1..2) -%}
+          <div
+            class="kf-marquee__track"
+            data-kf-marquee-track
+            {% if pass == 2 %}aria-hidden="true" inert{% endif %}
+          >
+            {{ marquee_items }}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%}
+        Hidden until <kf-marquee> reveals it: without the element there is
+        nothing to pause, and offering a dead button is worse than none.
+      {%- endcomment -%}
+      <button
+        class="kf-marquee-toggle"
+        type="button"
+        data-kf-marquee-toggle
+        data-pause-label="{{ pause_label | escape }}"
+        data-play-label="{{ play_label | escape }}"
+        aria-label="{{ pause_label | escape }}"
+        hidden
+      >
+        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--pause">
+          {%- render 'kf-icon', name: 'pause', size: 'sm' -%}
+        </span>
+        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--play">
+          {%- render 'kf-icon', name: 'play', size: 'sm' -%}
+        </span>
+      </button>
+    </kf-marquee>
+
+    {%- unless s.full_width -%}</div>{%- endunless -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Marquee",
+  "tag": "section",
+  "class": "kf-marquee-band-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        { "value": "kf-h5", "label": "Extra small" },
+        { "value": "kf-h4", "label": "Small" },
+        { "value": "kf-h3", "label": "Medium" },
+        { "value": "kf-h2", "label": "Large" },
+        { "value": "kf-h1", "label": "Extra large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase text",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "separator",
+      "label": "Separator",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "dot", "label": "Dot" },
+        { "value": "slash", "label": "Slash" },
+        { "value": "asterisk", "label": "Asterisk" }
+      ],
+      "default": "dot"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true,
+      "info": "Turn off to keep the band inside the page margins."
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between items",
+      "min": 8,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "Image height",
+      "min": 16,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48,
+      "info": "Images are sized by height so logos of different shapes line up."
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Time for one loop",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "default": 40,
+      "info": "Higher is slower. A long band needs more time to cover the same distance."
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "options": [
+        { "value": "left", "label": "Right to left" },
+        { "value": "right", "label": "Left to right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true,
+      "info": "A pause button is always shown as well — hovering does nothing on a touch screen."
+    },
+    {
+      "type": "checkbox",
+      "id": "edge_fade",
+      "label": "Fade the edges",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping over $75"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "label": "Style",
+          "options": [
+            { "value": "solid", "label": "Solid" },
+            { "value": "outline", "label": "Outlined" }
+          ],
+          "default": "solid"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee",
+      "blocks": [
+        { "type": "text", "settings": { "text": "Free shipping over $75" } },
+        { "type": "text", "settings": { "text": "30 day returns" } },
+        { "type": "text", "settings": { "text": "Made in small batches" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,71 @@
+/* ==========================================================================
+   Kofii Flow — Marquee
+   Loaded by sections/kf-marquee.liquid.
+
+   Only the ITEMS belong here — a band item and an announcement message look
+   nothing alike. Two other stylesheets carry the rest, and both are shared:
+
+     kf-motion.css        the two-track scrolling animation
+     component-marquee.css  <kf-marquee> itself, and its pause control
+
+   The pause control lived in this file first. It moved the moment the
+   announcement bar started rendering one, which is exactly the failure the
+   CSS-location rule in CLAUDE.md warns about: correct on the section you built
+   it for, silently unstyled everywhere else.
+   ========================================================================== */
+
+/* ==========================================================================
+   Items
+   ========================================================================== */
+
+.kf-marquee-band__item {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  /* A marquee item that wraps would change the track width mid-animation and
+     break the loop, so items never wrap. */
+  white-space: nowrap;
+}
+
+.kf-marquee-band__text {
+  margin: 0;
+  line-height: 1.05;
+}
+
+.kf-marquee-band--uppercase .kf-marquee-band__text {
+  text-transform: uppercase;
+  letter-spacing: var(--kf-label-spacing);
+}
+
+/* Outlined text is the one genuinely marquee-specific type treatment: it lets
+   a very large band sit over a busy section without shouting. */
+.kf-marquee-band__item--outline .kf-marquee-band__text {
+  -webkit-text-stroke: 1px currentColor;
+  color: transparent;
+}
+
+.kf-marquee-band__separator {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  opacity: 0.4;
+  line-height: 1;
+}
+
+.kf-marquee-band__link {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+.kf-marquee-band__link:hover {
+  opacity: 0.7;
+}
+
+/* Height-led rather than width-led, so a row of logos with different aspect
+   ratios lines up. The frame keeps its own ratio and derives its width. */
+.kf-marquee-band__media {
+  block-size: var(--kf-marquee-image-height, 3rem);
+  inline-size: auto;
+  flex: 0 0 auto;
+}

@@ -133,7 +133,17 @@
         "padding_top": 40,
         "padding_bottom": 64
       }
+    },
+    "recommendations": {
+      "type": "kf-product-recommendations",
+      "settings": {
+        "intent": "related",
+        "heading": "You may also like",
+        "limit": 4,
+        "columns_desktop": 4,
+        "mobile_layout": "scroll"
+      }
     }
   },
-  "order": ["main"]
+  "order": ["main", "recommendations"]
 }

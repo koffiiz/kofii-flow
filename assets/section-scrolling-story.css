@@ -84,6 +84,14 @@
     top: calc(var(--kf-sticky-offset, 0px) + var(--kf-space-lg));
   }
 
+  /* The track has to swap with it. `order` reorders items, not tracks, so grid
+     would hand the 0.8fr / 1.25fr media track to the STEPS and leave the media
+     on the plain 1fr — inverting the Media width setting whenever the media is
+     on the right. Only visible when media width is not the default. */
+  .kf-js .kf-story--media-right .kf-story__inner {
+    grid-template-columns: minmax(0, 1fr) var(--kf-story-media, 1fr);
+  }
+
   .kf-js .kf-story--media-right .kf-story__media {
     order: 2;
   }
