@@ -1,0 +1,486 @@
+{%- comment -%}
+  Kofii Flow — Lookbook
+  ---------------------------------------------------------------------------
+  A styled image with hotspots pinned to the products in it, in one of two
+  interaction modes over identical pins.
+
+  Hotspots
+    Tapping a pin reveals a small product card, which carries the shared quick
+    add control — so a shopper can buy the look without leaving the page.
+    Placement is computed here, not measured in JavaScript: a hotspot past the
+    halfway mark opens its card back toward the middle of the image, so the
+    card cannot hang off the edge. One Liquid comparison instead of a layout
+    read on every open.
+
+  Guided tour
+    The image pins and zooms to each product as its card scrolls past. Better
+    on phones, where hunting for a small dot is the weak point of the hotspot
+    mode, and it costs roughly a screen of scroll per product — which the
+    setting says out loud, because that is the merchant's call to make.
+
+    The zoom is `transform-origin` set to the pin's own coordinates plus a
+    scale. Origin at that point means the scale keeps it fixed, so there is no
+    translate to compute. The pinned two-column layout is a progressive
+    enhancement; the base layout is the image with its products listed under
+    it, which is what small screens and no-JavaScript visitors get.
+
+  Every hotspot is a real <a href> to its product in both modes. <kf-lookbook>
+  intercepts the click to open a card instead; with no JavaScript the hotspots
+  stay links and the section still works as a shoppable image.
+
+  Blocks are section-local — a hotspot is a coordinate plus a product, which is
+  meaningless outside this section.
+{%- endcomment -%}
+
+{{ 'section-lookbook.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+{{ 'component-variant-picker.css' | asset_url | stylesheet_tag }}
+{{ 'component-buy-buttons.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-lookbook.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quick-add.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-product-form.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign is_tour = false
+  if s.interaction == 'tour'
+    assign is_tour = true
+  endif
+
+  assign lookbook_class = 'kf-lookbook kf-lookbook--' | append: s.hotspot_style
+  if is_tour
+    assign lookbook_class = lookbook_class | append: ' kf-lookbook--tour'
+    if s.tour_dim
+      assign lookbook_class = lookbook_class | append: ' kf-lookbook--tour-dim'
+    endif
+  endif
+
+  assign card_sizes = '(min-width: 990px) 16rem, 60vw'
+  assign tour_card_sizes = '(min-width: 990px) 20rem, 45vw'
+
+  comment
+    Capped in the schema at 160%. Past that the browser is upsampling the
+    merchant's own photography — a 1200px stage at 2x wants 2400px of source
+    and kf-media only requests up to 2048.
+  endcomment
+  assign tour_zoom = s.tour_zoom | divided_by: 100.0
+
+  assign tour_class = 'kf-lookbook__tour'
+  if s.tour_media_position == 'right'
+    assign tour_class = tour_class | append: ' kf-lookbook__tour--media-right'
+  endif
+-%}
+
+{%- comment -%}
+  The pins are identical in both modes, so they are built once. Only the
+  popover differs: the tour puts the card in the scrolling column instead, and
+  a pin with no panel falls through <kf-lookbook> as a plain link.
+{%- endcomment -%}
+{%- capture lookbook_pins -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign hotspot_product = block.settings.product
+      assign panel_id = 'KfHotspot-' | append: section.id | append: '-' | append: forloop.index
+
+      assign hotspot_class = 'kf-lookbook__hotspot'
+      unless is_tour
+        comment
+          Open the card back toward the centre when the hotspot sits in the
+          far half, so it never hangs off the edge of the image.
+        endcomment
+        if block.settings.x > 50
+          assign hotspot_class = hotspot_class | append: ' kf-lookbook__hotspot--flip-x'
+        endif
+        if block.settings.y > 55
+          assign hotspot_class = hotspot_class | append: ' kf-lookbook__hotspot--flip-y'
+        endif
+      endunless
+    -%}
+
+    {%- if hotspot_product != blank -%}
+      <div
+        class="{{ hotspot_class }}"
+        style="--kf-hotspot-x: {{ block.settings.x }}%; --kf-hotspot-y: {{ block.settings.y }}%;"
+        {{ block.shopify_attributes }}
+      >
+        <a
+          class="kf-lookbook__dot"
+          href="{{ hotspot_product.url }}"
+          data-kf-hotspot
+          {% unless is_tour %}aria-controls="{{ panel_id }}"{% endunless %}
+        >
+          {%- if s.hotspot_style == 'number' -%}
+            <span aria-hidden="true">{{ forloop.index }}</span>
+          {%- endif -%}
+          <span class="kf-visually-hidden">{{ hotspot_product.title | escape }}</span>
+        </a>
+
+        {%- unless is_tour -%}
+          <div class="kf-lookbook__popover" id="{{ panel_id }}" hidden>
+            {%- render 'kf-product-card',
+              product: hotspot_product,
+              heading_tag: 'h3',
+              sizes: card_sizes,
+              show_swatches: false,
+              show_vendor: false,
+              class: 'kf-product-card--mini'
+            -%}
+          </div>
+        {%- endunless -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: lookbook_class %}>
+  <div class="kf-container">
+    {%- if s.heading != blank or s.eyebrow != blank or s.text != blank -%}
+      <header class="kf-section-header kf-lookbook__header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="kf-section-header__text kf-rte">{{ s.text }}</div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if is_tour -%}
+      <kf-lookbook class="{{ tour_class }}" data-mode="tour" data-zoom="{{ tour_zoom }}">
+        <div class="kf-lookbook__viewport">
+          <div class="kf-lookbook__frame" data-kf-lookbook-frame>
+            {%- render 'kf-media',
+              image: s.image,
+              ratio: s.media_ratio,
+              sizes: '(min-width: 990px) 55vw, 100vw',
+              placeholder: 'lifestyle-1',
+              flush: true,
+              class: 'kf-lookbook__media'
+            -%}
+            {{ lookbook_pins }}
+          </div>
+        </div>
+
+        {%- if section.blocks.size > 0 -%}
+          <ol class="kf-lookbook__steps" role="list">
+            {%- for block in section.blocks -%}
+              {%- if block.settings.product != blank -%}
+                {%- comment -%}
+                  Fractions, not percentages: the frame transform multiplies
+                  these by the zoom, so they cannot carry a unit.
+                {%- endcomment -%}
+                <li
+                  class="kf-lookbook__step"
+                  data-kf-tour-step
+                  data-x="{{ block.settings.x | divided_by: 100.0 }}"
+                  data-y="{{ block.settings.y | divided_by: 100.0 }}"
+                >
+                  {%- render 'kf-product-card',
+                    product: block.settings.product,
+                    heading_tag: 'h3',
+                    sizes: tour_card_sizes
+                  -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ol>
+        {%- endif -%}
+      </kf-lookbook>
+    {%- else -%}
+      <kf-lookbook class="kf-lookbook__stage">
+        {%- render 'kf-media',
+          image: s.image,
+          ratio: s.media_ratio,
+          sizes: '(min-width: 990px) 80vw, 100vw',
+          placeholder: 'lifestyle-1',
+          class: 'kf-lookbook__media'
+        -%}
+        {{ lookbook_pins }}
+      </kf-lookbook>
+
+      {%- if s.show_products and section.blocks.size > 0 -%}
+        {%- comment -%}
+          An optional plain list of the same products. Hotspots get cramped on a
+          small image with many pins, and this gives a straightforward way to
+          shop the look without hunting for dots.
+        {%- endcomment -%}
+        <ul
+          class="kf-grid kf-lookbook__products"
+          role="list"
+          style="--kf-grid-cols: {{ s.products_columns }}; --kf-grid-cols-tablet: 3; --kf-grid-cols-mobile: 2;"
+          {% render 'kf-motion-attrs', stagger: true, stagger_delay: 60 %}
+        >
+          {%- for block in section.blocks -%}
+            {%- if block.settings.product != blank -%}
+              <li {% render 'kf-motion-attrs', animation: s.animation %}>
+                {%- render 'kf-product-card',
+                  product: block.settings.product,
+                  heading_tag: 'h3',
+                  sizes: '(min-width: 990px) 25vw, 50vw'
+                -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Lookbook",
+  "tag": "section",
+  "class": "kf-lookbook-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop the look"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "header",
+      "content": "Interaction"
+    },
+    {
+      "type": "select",
+      "id": "interaction",
+      "label": "Interaction",
+      "options": [
+        { "value": "hotspots", "label": "Hotspots" },
+        { "value": "tour", "label": "Guided tour" }
+      ],
+      "default": "hotspots",
+      "info": "Hotspots: tapping a pin opens its product card. Guided tour: the image zooms to each product as it scrolls past, which takes about one screen of scrolling per product."
+    },
+    {
+      "type": "range",
+      "id": "tour_zoom",
+      "label": "Guided tour zoom",
+      "min": 100,
+      "max": 160,
+      "step": 5,
+      "unit": "%",
+      "default": 140,
+      "info": "Use a large, sharp image. Zooming crops into the original file, so a small image will look soft."
+    },
+    {
+      "type": "select",
+      "id": "tour_media_position",
+      "label": "Guided tour image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left",
+      "info": "Applies from 990px up. Below that the image sits above the products."
+    },
+    {
+      "type": "checkbox",
+      "id": "tour_dim",
+      "label": "Dim the products you are not on",
+      "default": false,
+      "info": "More editorial, but it also dims prices and add-to-cart buttons."
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Add a hotspot for each product in the shot, then drag its position with the X and Y sliders."
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "select",
+      "id": "hotspot_style",
+      "label": "Hotspot style",
+      "options": [
+        { "value": "dot", "label": "Dot" },
+        { "value": "plus", "label": "Plus" },
+        { "value": "number", "label": "Number" }
+      ],
+      "default": "plus"
+    },
+    {
+      "type": "header",
+      "content": "Product list"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_products",
+      "label": "Also list the products below the image",
+      "default": false,
+      "info": "Hotspots only — the guided tour already lists them. Useful when the image has many pins, or on small screens where they are fiddly."
+    },
+    {
+      "type": "range",
+      "id": "products_columns",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Product list animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Hotspot",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "range",
+          "id": "x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook",
+      "blocks": [
+        { "type": "hotspot", "settings": { "x": 32, "y": 38 } },
+        { "type": "hotspot", "settings": { "x": 64, "y": 62 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

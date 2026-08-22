@@ -100,6 +100,8 @@
       "card_hover": "swap",
       "product_card_ratio": "portrait",
       "product_card_align": "start",
+      "product_card_equal_height": true,
+      "product_card_quick_add": true,
       "product_card_vendor": false,
       "product_card_swatches": true,
       "product_card_rating": false,

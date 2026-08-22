@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Kofii Flow — Timeline
+   Loaded by sections/kf-timeline.liquid.
+
+   Every entry is a two-column grid: a marker rail and a body. The alternating
+   layout turns that into three columns from 990px up and moves the body from
+   one side to the other on even entries — the markup is identical for both.
+   ========================================================================== */
+
+.kf-timeline__header {
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-timeline__list {
+  list-style: none;
+}
+
+.kf-timeline__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 var(--kf-space-sm);
+}
+
+/* Marker rail -------------------------------------------------------------- */
+
+.kf-timeline__marker {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  gap: var(--kf-space-3xs);
+}
+
+.kf-timeline__dot {
+  display: grid;
+  place-items: center;
+  width: var(--kf-timeline-dot, 0.75rem);
+  height: var(--kf-timeline-dot, 0.75rem);
+  border-radius: var(--kf-radius-circle);
+  background-color: var(--kf-color-accent);
+  color: var(--kf-color-background);
+  font-size: var(--kf-text-xs);
+  font-weight: 600;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+/* A numbered marker needs to be a readable disc, not a bullet. */
+.kf-timeline--marker-number {
+  --kf-timeline-dot: 2rem;
+}
+
+.kf-timeline__spine {
+  display: block;
+  width: var(--kf-border-width-thick);
+  height: 100%;
+  min-height: var(--kf-space-lg);
+  background-color: var(--kf-color-border);
+  overflow: hidden;
+}
+
+/* The drawn-in portion. Default is fully drawn, so no JavaScript, reduced
+   motion or Flow Mode off all leave the spine complete — it only collapses
+   while an animated entry is waiting to play. */
+.kf-timeline__spine-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: top;
+  background-color: var(--kf-color-accent);
+  transition: transform var(--kf-motion-slower) var(--kf-ease-out);
+}
+
+.kf-motion .kf-timeline__item[data-kf-animate]:not([data-kf-inview]) .kf-timeline__spine-fill {
+  transform: scaleY(0);
+}
+
+/* Body --------------------------------------------------------------------- */
+
+.kf-timeline__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+  padding-bottom: var(--kf-space-lg);
+}
+
+.kf-timeline__item:last-child .kf-timeline__body {
+  padding-bottom: 0;
+}
+
+.kf-timeline__date {
+  color: var(--kf-color-accent);
+}
+
+.kf-timeline__text {
+  max-width: 52ch;
+}
+
+.kf-timeline__media {
+  width: 100%;
+  max-width: 22rem;
+  margin-block: var(--kf-space-3xs);
+}
+
+/* ==========================================================================
+   Alternating
+   ========================================================================== */
+
+@media (min-width: 990px) {
+  .kf-timeline--alternating .kf-timeline__item {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    column-gap: var(--kf-space-lg);
+  }
+
+  .kf-timeline--alternating .kf-timeline__marker {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Odd entries sit left of the spine and are right-aligned into it. */
+  .kf-timeline--alternating .kf-timeline__body {
+    grid-column: 1;
+    grid-row: 1;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .kf-timeline--alternating .kf-timeline__item:nth-child(even) .kf-timeline__body {
+    grid-column: 3;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  /* The media box is capped, so let it follow its side rather than stretch. */
+  .kf-timeline--alternating .kf-timeline__media {
+    align-self: flex-end;
+  }
+
+  .kf-timeline--alternating .kf-timeline__item:nth-child(even) .kf-timeline__media {
+    align-self: flex-start;
+  }
+}
+
+/* Alternating entries need matched vertical space on both sides so the spine
+   reads as continuous rather than stepping. */
+@media (min-width: 990px) {
+  .kf-timeline--alternating .kf-timeline__body {
+    padding-bottom: var(--kf-space-xl);
+  }
+}

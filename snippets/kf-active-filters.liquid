@@ -1,0 +1,69 @@
+{%- comment -%}
+  Kofii Flow — Active filter chips
+  ---------------------------------------------------------------------------
+  Shows what is currently applied, with a way to remove each one. Every chip is
+  a real link to Shopify's own `url_to_remove`, so removing a filter works with
+  scripting disabled; <kf-facets> intercepts the click when it is available.
+
+  Price is shown as a single chip covering the range rather than two, because
+  "from" and "to" are one decision to a shopper.
+
+  Parameters:
+    filters   (array of filter, required)
+    clear_url (string, required)  where Clear all points — the unfiltered
+                                  collection or search URL
+{%- endcomment -%}
+
+{%- liquid
+  assign active_count = 0
+  for filter in filters
+    assign active_count = active_count | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value or filter.max_value.value
+        assign active_count = active_count | plus: 1
+      endif
+    endif
+  endfor
+-%}
+
+{%- if active_count > 0 -%}
+  <div class="kf-active-filters">
+    <h3 class="kf-visually-hidden">{{ 'collections.filters.active' | t }}</h3>
+
+    <ul class="kf-active-filters__list" role="list">
+      {%- for filter in filters -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value or filter.max_value.value -%}
+            {%- liquid
+              assign from_price = filter.min_value.value | default: 0 | money
+              assign to_price = filter.max_value.value | default: filter.range_max | money
+            -%}
+            <li>
+              <a class="kf-chip" href="{{ filter.url_to_remove }}" data-kf-facet-remove>
+                <span>{{ from_price }} &ndash; {{ to_price }}</span>
+                {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+                <span class="kf-visually-hidden">{{ 'collections.filters.remove' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        {%- else -%}
+          {%- for value in filter.active_values -%}
+            <li>
+              <a class="kf-chip" href="{{ value.url_to_remove }}" data-kf-facet-remove>
+                <span>{{ value.label | escape }}</span>
+                {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+                <span class="kf-visually-hidden">
+                  {{- 'collections.filters.remove_value' | t: value: value.label -}}
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <a class="kf-link kf-active-filters__clear" href="{{ clear_url }}" data-kf-facet-remove>
+      {{ 'collections.filters.clear_all' | t }}
+    </a>
+  </div>
+{%- endif -%}

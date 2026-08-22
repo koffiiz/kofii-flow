@@ -1,0 +1,231 @@
+{%- comment -%}
+  Kofii Flow — Collections list
+  ---------------------------------------------------------------------------
+  The /collections index. A grid of collection cards, each one a single
+  stretched link so screen readers announce one target per card — the same
+  pattern the product card uses.
+
+  Empty collections are skipped by default: a card that leads to nothing is
+  worse than a shorter grid.
+{%- endcomment -%}
+
+{{ 'section-collection.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign card_sizes = '(min-width: 990px) 33vw, (min-width: 768px) 50vw, 100vw'
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-collection-list' %}>
+  <div class="kf-container">
+    <header class="kf-section-header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+      <h1 class="{{ s.heading_size }}">
+        {%- if s.heading != blank -%}{{ s.heading | escape }}{%- else -%}{{ 'collections.all_title' | t }}{%- endif -%}
+      </h1>
+    </header>
+
+    {%- paginate collections by s.per_page -%}
+      {%- assign rendered = 0 -%}
+
+      <ul
+        class="kf-grid kf-collection-list__grid"
+        role="list"
+        style="--kf-grid-cols: {{ s.columns_desktop }}; --kf-grid-cols-tablet: 2; --kf-grid-cols-mobile: {{ s.columns_mobile }};"
+        {% render 'kf-motion-attrs', motion: section.settings %}
+      >
+        {%- for collection in collections -%}
+          {%- if collection.products_count > 0 or s.show_empty -%}
+            {%- assign rendered = rendered | plus: 1 -%}
+            <li class="kf-collection-card">
+              {%- render 'kf-media',
+                image: collection.featured_image,
+                ratio: s.image_ratio,
+                sizes: card_sizes,
+                zoom: true,
+                placeholder: 'collection-1',
+                class: 'kf-collection-card__media'
+              -%}
+
+              <div class="kf-collection-card__body">
+                <h2 class="kf-collection-card__title">
+                  <a class="kf-card__link" href="{{ collection.url }}">{{ collection.title | escape }}</a>
+                </h2>
+                {%- if s.show_count -%}
+                  <p class="kf-text-sm kf-text-muted">
+                    {{ 'collections.product_count' | t: count: collection.products_count }}
+                  </p>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+
+      {%- if rendered == 0 -%}
+        <div class="kf-empty">
+          <p class="kf-text-lg">{{ 'collections.none' | t }}</p>
+        </div>
+      {%- endif -%}
+
+      {%- render 'kf-pagination', paginate: paginate, anchor: '#MainContent' -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "tag": "section",
+  "class": "kf-collection-list-section",
+  "enabled_on": {
+    "templates": ["list-collections"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave blank to use the default."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" },
+        { "value": "kf-display-sm", "label": "Display" }
+      ],
+      "default": "kf-h1"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Collections per page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "landscape", "label": "Landscape (4:3)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show product count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_empty",
+      "label": "Include collections with no products",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "Stagger cards",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

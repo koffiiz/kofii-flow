@@ -6,7 +6,7 @@ A premium, animation-rich Shopify Online Store 2.0 theme.
 
 Kofii Flow pairs Shopify's commerce platform with Webflow-grade interaction quality, built on a real design system: two-layer design tokens, one animation engine, one product card, one button, one media frame. No React, no Tailwind, no GSAP, no jQuery — Liquid, modern CSS, and vanilla Custom Elements.
 
-> **Status: Phase 3a complete.** The design system, motion engine, header, footer, hero, search, page, 404, the full product page and the cart (drawer + page) are production-quality. Collection, blog and the wider marketing section library are not built yet. See [CLAUDE.md § 10](CLAUDE.md#10-current-state-and-roadmap) for the exact list.
+> **Status: Phase 3 complete.** The design system, motion engine, header, footer, hero, search, page, 404, the product page, the cart (drawer + page) and the collection page (with native filtering) are production-quality. Rich text, image with text, featured collection (with quick add), scrolling story, timeline and lookbook are built; the rest of the marketing library and the blog are not. See [CLAUDE.md § 10](CLAUDE.md#10-current-state-and-roadmap) for the exact list.
 
 ---
 
@@ -163,6 +163,8 @@ JavaScript adds `data-kf-inview` when the element should play. Every keyframe, e
 `fade` · `fade-up` · `fade-down` · `fade-left` · `fade-right` · `scale-up` · `scale-down` · `zoom-in` · `blur-in` · `rotate-in` · `slide-up` · `clip-up` · `clip-left` · `clip-right` · `reveal`
 
 Plus continuous effects: `data-kf-parallax`, `data-kf-float`, and the marquee keyframes used by the announcement bar.
+
+The four wipe presets (`clip-up`, `clip-left`, `clip-right`, `reveal`) are implemented with `mask-size`, not `clip-path`: a clipped element reports `intersectionRatio: 0` to IntersectionObserver and would never be told to play. See CLAUDE.md before changing them.
 
 Direction names describe the direction of travel — `fade-up` rises, so it starts below.
 

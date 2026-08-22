@@ -271,7 +271,19 @@
     body.style.top = '';
     body.style.width = '';
     body.style.paddingRight = '';
+
+    // The restore must be INSTANT. `html` carries `scroll-behavior: smooth`
+    // for anchor links, and dropping `position: fixed` puts the document at
+    // scroll 0 — so a smooth scrollTo animates visibly from the top back down
+    // every time a drawer or dialog closes.
+    //
+    // An inline style beats the stylesheet rule, and is more widely supported
+    // than passing `behavior: 'instant'`.
+    var root = document.documentElement;
+    var previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
     window.scrollTo(0, savedScrollY);
+    root.style.scrollBehavior = previousBehavior;
   };
 
   /* ------------------------------------------------------------- Announcements */

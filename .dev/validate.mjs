@@ -168,6 +168,43 @@ function checkColorSchemeGroup(setting, relPath) {
   }
 }
 
+/**
+ * Preset blocks are only exercised when a merchant adds the section from the
+ * picker, so a bad type here fails in the Theme Editor rather than at upload —
+ * exactly the kind of error that is easy to ship unnoticed.
+ *
+ * Handles both shapes Shopify accepts (an array of blocks, or an object keyed
+ * by block id) and recurses into nested blocks.
+ */
+function checkPresetBlocks(blocks, schema, relPath, scope) {
+  if (!blocks) return;
+
+  const declared = new Set((schema.blocks || []).map((b) => b.type));
+  const acceptsTheme = declared.has('@theme');
+  const list = Array.isArray(blocks) ? blocks : Object.values(blocks);
+
+  for (const block of list) {
+    if (!block || !block.type) continue;
+
+    const known =
+      declared.has(block.type) ||
+      (acceptsTheme && blockNames.has(block.type)) ||
+      block.type.startsWith('@');
+
+    if (!known) {
+      fail(relPath, `${scope} uses block type "${block.type}", which this section does not accept`);
+      continue;
+    }
+
+    // A nested preset block is owned by the block file, not this schema.
+    const childSchema = blockNames.has(block.type)
+      ? schemasByFile.get(block.type) || { blocks: [] }
+      : schema;
+
+    checkPresetBlocks(block.blocks, childSchema, relPath, `${scope} > "${block.type}"`);
+  }
+}
+
 function collectSettingIds(schemaSettings, into, relPath, scope) {
   const seen = new Set();
   for (const setting of schemaSettings || []) {
@@ -234,6 +271,7 @@ const liquidFiles = [
 ];
 
 const schemasByFile = new Map();
+const presetQueue = [];
 
 for (const relPath of liquidFiles) {
   const source = read(relPath);
@@ -272,10 +310,23 @@ for (const relPath of liquidFiles) {
       if (schema.presets) {
         for (const preset of schema.presets) {
           if (!preset.name) fail(relPath, 'a preset is missing "name"');
+          // Deferred: sections are parsed before blocks, so nested block
+          // schemas are not all loaded yet.
+          presetQueue.push({
+            blocks: preset.blocks,
+            schema,
+            relPath,
+            scope: `preset "${preset.name}"`
+          });
         }
       }
     }
   }
+}
+
+/* Presets run once every block schema is known. */
+for (const item of presetQueue) {
+  checkPresetBlocks(item.blocks, item.schema, item.relPath, item.scope);
 }
 
 /* ------------------------------- 5. templates and section groups reference real sections */

@@ -1,0 +1,87 @@
+{%- comment -%}
+  Kofii Flow — Quick add panel
+  ---------------------------------------------------------------------------
+  Rendered on its own when <kf-quick-add> requests
+  /products/<handle>?section_id=quick-add, and injected into the shared dialog.
+
+  It renders the SAME variant picker and buy button snippets as the product
+  page — there is no second implementation of either. `scope: 'QuickAdd'`
+  keeps its input ids from colliding with a product page in the same document
+  (which happens on a product page showing related products).
+
+  Deliberately not a full product page: media, title, price, variants and add
+  to cart, plus a link to the product for everything else.
+{%- endcomment -%}
+
+{{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+{{ 'component-variant-picker.css' | asset_url | stylesheet_tag }}
+{{ 'component-buy-buttons.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign form_id = 'KfQuickAddForm-' | append: product.id
+  assign variant = product.selected_or_first_available_variant
+  assign full_details = 'products.product.view_full_details' | t
+-%}
+
+<div data-kf-quick-add-content>
+  {%- comment -%}
+    The product root must sit INSIDE the content wrapper: only the wrapper's
+    innerHTML is copied into the dialog, so attributes on the wrapper itself
+    would be lost.
+
+    <kf-variant-picker> reads the section id from this element. Without it the
+    picker refuses to run — changing a variant would leave the price and buy
+    button untouched.
+  {%- endcomment -%}
+  <div data-kf-product-root data-kf-section-id="quick-add">
+    {%- if product != blank -%}
+      <div class="kf-quick-add">
+      <div class="kf-quick-add__media">
+        {%- render 'kf-media',
+          image: product.featured_media.preview_image,
+          ratio: 'square',
+          sizes: '(min-width: 750px) 200px, 40vw',
+          widths: '200,400,600',
+          placeholder: 'product-1'
+        -%}
+      </div>
+
+      <div class="kf-quick-add__info">
+        <h2 class="kf-quick-add__title">
+          <a href="{{ product.url }}">{{ product.title | escape }}</a>
+        </h2>
+
+        <div data-kf-variant-region="price">
+          {%- render 'kf-price', product: product, variant: variant, show_from: false -%}
+        </div>
+
+        {%- render 'kf-variant-picker',
+          product: product,
+          form_id: form_id,
+          scope: 'QuickAdd',
+          style: 'auto',
+          show_selected_value: true,
+          update_url: false
+        -%}
+
+        {%- render 'kf-buy-buttons',
+          product: product,
+          form_id: form_id,
+          scope: 'QuickAdd',
+          show_quantity: true,
+          show_dynamic_checkout: false
+        -%}
+
+          <a class="kf-link kf-quick-add__full" href="{{ product.url }}">{{ full_details }}</a>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- comment -%}
+  No schema block: this section is only ever rendered through the Section
+  Rendering API, and a schema would put it in the Theme Editor section picker
+  where it makes no sense.
+{%- endcomment -%}

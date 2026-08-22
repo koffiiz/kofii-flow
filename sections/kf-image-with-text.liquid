@@ -1,0 +1,377 @@
+{%- comment -%}
+  Kofii Flow — Image with text
+  ---------------------------------------------------------------------------
+  The workhorse marketing section. One image, one column of theme blocks, five
+  compositions:
+
+    image-left / image-right  two columns, media on the chosen side
+    stacked                   media above the content, single column
+    overlapping               content sits in a card over the media edge
+    editorial                 asymmetric, larger media, content offset down
+
+  The content column owns no markup of its own — it is theme blocks, so it
+  gains anything added to /blocks for free, and merchants reorder it freely.
+
+  Motion is deliberately split in two:
+    - the content column is a stagger container, sequencing whichever blocks
+      opt into an animation
+    - the media has its own reveal, passed as explicit parameters rather than
+      through the settings object, so it cannot inherit the column's stagger
+      and turn the image into a stagger parent
+{%- endcomment -%}
+
+{{ 'section-image-with-text.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign layout_class = 'kf-image-text kf-image-text--' | append: s.layout
+  assign layout_class = layout_class | append: ' kf-image-text--w-' | append: s.content_width
+  assign layout_class = layout_class | append: ' kf-image-text--align-' | append: s.alignment
+
+  case s.media_width
+    when 'small'
+      assign media_track = '0.8fr'
+    when 'large'
+      assign media_track = '1.3fr'
+    else
+      assign media_track = '1fr'
+  endcase
+
+  assign parallax_strength = s.media_parallax | divided_by: 100.0
+
+  comment
+    Built here because render arguments accept neither filters nor expressions.
+  endcomment
+  assign root_style = '--kf-it-media: ' | append: media_track | append: '; --kf-it-align: ' | append: s.content_position | append: ';'
+
+  assign media_sizes = '(min-width: 990px) 55vw, 100vw'
+-%}
+
+<div
+  {% render 'kf-section-attrs',
+    s: section.settings,
+    extra_class: layout_class,
+    style: root_style %}
+>
+  <div class="kf-container">
+    <div class="kf-image-text__inner">
+      <div
+        class="kf-image-text__media"
+        {% render 'kf-motion-attrs',
+          animation: s.media_animation,
+          duration: s.animation_duration,
+          easing: s.animation_easing,
+          trigger: s.animation_trigger,
+          delay: s.media_animation_delay %}
+      >
+        {%- render 'kf-media',
+          image: s.image,
+          ratio: s.media_ratio,
+          sizes: media_sizes,
+          parallax: parallax_strength,
+          placeholder: 'lifestyle-1'
+        -%}
+      </div>
+
+      <div
+        class="kf-image-text__content"
+        {% render 'kf-motion-attrs', motion: section.settings %}
+      >
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "section",
+  "class": "kf-image-text-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "image-left", "label": "Image left" },
+        { "value": "image-right", "label": "Image right" },
+        { "value": "stacked", "label": "Stacked" },
+        { "value": "overlapping", "label": "Overlapping" },
+        { "value": "editorial", "label": "Editorial" }
+      ],
+      "default": "image-left"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "info": "Applies to the stacked layout.",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "end", "label": "Right" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Vertical alignment",
+      "info": "Applies when the image and text sit side by side.",
+      "options": [
+        { "value": "start", "label": "Top" },
+        { "value": "center", "label": "Middle" },
+        { "value": "end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Set the focal point on the image so it crops well on every screen size."
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "select",
+      "id": "media_width",
+      "label": "Image width",
+      "info": "Applies when the image and text sit side by side.",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "range",
+      "id": "media_parallax",
+      "label": "Parallax strength",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 0,
+      "info": "Ignored when Flow Mode is off or the visitor prefers reduced motion."
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each content block has its own animation. This section plays them in sequence."
+    },
+    {
+      "type": "select",
+      "id": "media_animation",
+      "label": "Image reveal",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "zoom-in", "label": "Zoom" },
+        { "value": "blur-in", "label": "Blur" },
+        { "value": "clip-up", "label": "Clip reveal" },
+        { "value": "clip-right", "label": "Wipe from left" },
+        { "value": "reveal", "label": "Editorial reveal" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "media_animation_delay",
+      "label": "Image reveal delay",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animate the text column",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "Stagger text blocks",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 90
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "Duration",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "fast", "label": "Fast" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "slow", "label": "Slow" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Easing",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "smooth", "label": "Smooth" },
+        { "value": "out", "label": "Ease out" },
+        { "value": "spring", "label": "Spring-like" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "scroll", "label": "On scroll" },
+        { "value": "load", "label": "On load" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Image with text",
+      "blocks": [
+        {
+          "type": "badge",
+          "settings": {
+            "text": "How it is made",
+            "style": "outline",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "heading",
+          "settings": {
+            "heading": "Cut, stitched and finished by hand",
+            "heading_size": "kf-h2",
+            "heading_tag": "h2",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p>Use this space for the part of your process a photograph cannot explain on its own.</p>",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "label": "Learn more",
+            "style": "secondary",
+            "animation": "fade-up"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

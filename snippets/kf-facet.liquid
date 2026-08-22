@@ -1,0 +1,177 @@
+{%- comment -%}
+  Kofii Flow — Filter group
+  ---------------------------------------------------------------------------
+  Renders one Shopify storefront filter. Three types, all driven by Shopify:
+
+    list         checkboxes, optionally shown as swatches or images
+    price_range  two number inputs bounded by the collection's real price range
+    boolean      a single checkbox
+
+  Every input is named with Shopify's own `param_name`, so the enclosing form
+  submits a valid filter URL with no JavaScript involved. Counts, availability
+  and which values exist are all decided by Shopify — the theme never filters.
+
+  Built on <details> so groups collapse without JavaScript.
+
+  Parameters:
+    filter (filter, required)
+    open   (boolean)  start expanded
+{%- endcomment -%}
+
+{%- liquid
+  assign group_id = 'KfFacet-' | append: filter.param_name | replace: '.', '-'
+
+  assign should_open = open
+  if should_open == blank and filter.active_values.size > 0
+    assign should_open = true
+  endif
+-%}
+
+<details class="kf-facet" {% if should_open %}open{% endif %}>
+  <summary class="kf-facet__summary">
+    <span class="kf-facet__label">
+      {{ filter.label | escape }}
+      {%- if filter.active_values.size > 0 -%}
+        <span class="kf-facet__active-count">({{ filter.active_values.size }})</span>
+      {%- endif -%}
+    </span>
+    {%- render 'kf-icon', name: 'chevron', class: 'kf-facet__icon', size: 'sm' -%}
+  </summary>
+
+  <div class="kf-facet__body" id="{{ group_id }}">
+    {%- case filter.type -%}
+
+      {%- when 'price_range' -%}
+        {%- liquid
+          comment
+            Shopify returns these in cents, so money_without_currency converts
+            them to the units a shopper actually types. The comma strip keeps
+            the value valid for <input type="number"> in every locale format.
+          endcomment
+          assign price_max = filter.range_max | money_without_currency | replace: ',', ''
+          assign price_min_value = filter.min_value.value | money_without_currency | replace: ',', ''
+          assign price_max_value = filter.max_value.value | money_without_currency | replace: ',', ''
+        -%}
+
+        <div class="kf-facet__price" data-kf-facet-price>
+          <div class="kf-field kf-facet__price-field">
+            <label class="kf-field__label" for="{{ group_id }}-min">
+              {{ 'collections.filters.price_from' | t }}
+            </label>
+            <input
+              class="kf-input"
+              id="{{ group_id }}-min"
+              type="number"
+              name="{{ filter.min_value.param_name }}"
+              inputmode="decimal"
+              min="0"
+              max="{{ price_max }}"
+              step="1"
+              placeholder="0"
+              {% if filter.min_value.value %}value="{{ price_min_value }}"{% endif %}
+            >
+          </div>
+
+          <div class="kf-field kf-facet__price-field">
+            <label class="kf-field__label" for="{{ group_id }}-max">
+              {{ 'collections.filters.price_to' | t }}
+            </label>
+            <input
+              class="kf-input"
+              id="{{ group_id }}-max"
+              type="number"
+              name="{{ filter.max_value.param_name }}"
+              inputmode="decimal"
+              min="0"
+              max="{{ price_max }}"
+              step="1"
+              placeholder="{{ price_max }}"
+              {% if filter.max_value.value %}value="{{ price_max_value }}"{% endif %}
+            >
+          </div>
+        </div>
+
+      {%- when 'boolean' -%}
+        <ul class="kf-facet__list" role="list">
+          {%- for value in filter.values -%}
+            {%- assign value_id = group_id | append: '-' | append: forloop.index -%}
+            <li class="kf-facet__item">
+              <input
+                class="kf-facet__checkbox"
+                type="checkbox"
+                id="{{ value_id }}"
+                name="{{ value.param_name }}"
+                value="{{ value.value }}"
+                {% if value.active %}checked{% endif %}
+              >
+              <label class="kf-facet__value" for="{{ value_id }}">
+                <span class="kf-facet__value-label">{{ value.label | escape }}</span>
+                <span class="kf-facet__count">({{ value.count }})</span>
+              </label>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+      {%- else -%}
+        <ul class="kf-facet__list kf-facet__list--{{ filter.presentation | default: 'text' }}" role="list">
+          {%- for value in filter.values -%}
+            {%- liquid
+              assign value_id = group_id | append: '-' | append: forloop.index
+
+              comment
+                A value with no matching products and which is not currently
+                selected is disabled rather than hidden, so the list does not
+                reflow under the shopper as they refine.
+              endcomment
+              assign is_disabled = false
+              if value.count == 0 and value.active == false
+                assign is_disabled = true
+              endif
+            -%}
+            <li class="kf-facet__item{% if is_disabled %} kf-facet__item--disabled{% endif %}">
+              <input
+                class="kf-facet__checkbox"
+                type="checkbox"
+                id="{{ value_id }}"
+                name="{{ value.param_name }}"
+                value="{{ value.value | escape }}"
+                {% if value.active %}checked{% endif %}
+                {% if is_disabled %}disabled{% endif %}
+              >
+              <label class="kf-facet__value" for="{{ value_id }}">
+                {%- if filter.presentation == 'swatch' and value.swatch -%}
+                  <span
+                    class="kf-facet__swatch"
+                    style="
+                      {%- if value.swatch.image -%}
+                        --kf-swatch-image: url({{ value.swatch.image | image_url: width: 64 }});
+                      {%- elsif value.swatch.color -%}
+                        --kf-swatch-color: {{ value.swatch.color }};
+                      {%- endif -%}
+                    "
+                  ></span>
+                {%- elsif filter.presentation == 'image' and value.image -%}
+                  {%- render 'kf-media',
+                    image: value.image,
+                    ratio: 'square',
+                    sizes: '40px',
+                    widths: '40,80,120',
+                    class: 'kf-facet__image'
+                  -%}
+                {%- endif -%}
+
+                <span class="kf-facet__value-label">{{ value.label | escape }}</span>
+                <span class="kf-facet__count">({{ value.count }})</span>
+              </label>
+            </li>
+          {%- endfor -%}
+        </ul>
+    {%- endcase -%}
+
+    {%- if filter.active_values.size > 0 -%}
+      <a class="kf-link kf-facet__clear" href="{{ filter.url_to_remove }}" data-kf-facet-remove>
+        {{ 'collections.filters.clear' | t }}
+      </a>
+    {%- endif -%}
+  </div>
+</details>

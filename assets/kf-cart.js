@@ -140,6 +140,68 @@
       });
   }
 
+  /**
+   * The one add-to-cart implementation. Used by the product form and by quick
+   * add, so the two can never drift on error handling, section refreshing or
+   * the events they emit.
+   *
+   * Accepts a FormData (a real product form) or a plain object
+   * ({ items: [{ id, quantity }] }) and adds the cart sections to either, so
+   * the drawer is already rendered by the time it opens.
+   *
+   * Resolves with { added, cart }. Rejects with Shopify's own message — its
+   * `description` is written for shoppers ("You can only add 2 to the cart"),
+   * so it is surfaced rather than replaced.
+   */
+  function add(body) {
+    var ids = sectionIds().join(',');
+    var request = { method: 'POST', headers: { Accept: 'application/json' } };
+
+    if (body instanceof FormData) {
+      if (ids) {
+        body.append('sections', ids);
+        body.append('sections_url', window.location.pathname);
+      }
+      request.body = body;
+    } else {
+      request.headers['Content-Type'] = 'application/json';
+      request.body = JSON.stringify(
+        Object.assign({}, body, ids ? { sections: ids, sections_url: window.location.pathname } : {})
+      );
+    }
+
+    return fetch(window.routes.cart_add_url + '.js', request)
+      .then(function (response) {
+        return response.json().then(function (data) {
+          return { ok: response.ok, data: data };
+        });
+      })
+      .then(function (result) {
+        if (!result.ok) {
+          throw new Error(result.data.description || result.data.message || 'Add to cart failed');
+        }
+
+        applySections(result.data.sections);
+
+        return fetch(window.routes.cart_url + '.js', { headers: { Accept: 'application/json' } })
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (cart) {
+            var opensDrawer = document.documentElement.dataset.kfCartType === 'drawer';
+
+            KF.emit(KF.events.cartUpdate, {
+              cart: cart,
+              sections: result.data.sections,
+              added: result.data,
+              open: opensDrawer
+            });
+
+            return { added: result.data, cart: cart, opensDrawer: opensDrawer };
+          });
+      });
+  }
+
   /* ----------------------------------------------------------- Cart items */
 
   class KFCartItemsElement extends HTMLElement {
@@ -288,6 +350,7 @@
   KF.define('kf-cart-recommendations', KFCartRecommendationsElement);
 
   KF.cart = {
+    add: add,
     mutate: mutate,
     applySections: applySections,
     sectionIds: sectionIds

@@ -1,0 +1,186 @@
+/* ==========================================================================
+   Kofii Flow — Slider
+   Base styles for <kf-slider>. Shared by every section that offers a carousel,
+   so it lives in a component sheet rather than a section one.
+
+   The track is a real scroll container: with no JavaScript it is still a
+   swipeable, keyboard-scrollable row. Arrows and dots are enhancement only.
+   ========================================================================== */
+
+kf-slider {
+  display: block;
+  position: relative;
+}
+
+.kf-slider__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--kf-slide-width, 78%);
+  gap: var(--kf-grid-gap);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+
+  /* A slim scrollbar is the DEFAULT, not an oversight. A mouse cannot scroll a
+     horizontal container with a vertical wheel, so a track with no scrollbar
+     and no arrows is genuinely unreachable on desktop. The scrollbar is only
+     hidden below, and only where arrows exist to replace it. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--kf-color-border-strong) transparent;
+
+  /* Bleed to the viewport edge on small screens so a partially visible next
+     slide signals that the row scrolls. */
+  padding-inline: var(--kf-page-gutter);
+  margin-inline: calc(var(--kf-page-gutter) * -1);
+  scroll-padding-inline: var(--kf-page-gutter);
+}
+
+.kf-slider__track::-webkit-scrollbar {
+  height: 4px;
+}
+
+.kf-slider__track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kf-slider__track::-webkit-scrollbar-thumb {
+  background-color: var(--kf-color-border-strong);
+  border-radius: var(--kf-radius-pill);
+}
+
+/* Touch devices scroll by swiping, so the bar is pure clutter there. */
+@media (hover: none) {
+  .kf-slider__track {
+    scrollbar-width: none;
+  }
+
+  .kf-slider__track::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Arrows replace the scrollbar as the affordance, so hide it when they exist. */
+kf-slider:has([data-kf-slider-next]) .kf-slider__track {
+  scrollbar-width: none;
+}
+
+kf-slider:has([data-kf-slider-next]) .kf-slider__track::-webkit-scrollbar {
+  display: none;
+}
+
+.kf-slider__slide {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .kf-slider__track {
+    grid-auto-columns: var(--kf-slide-width-tablet, 42%);
+  }
+}
+
+@media (min-width: 990px) {
+  .kf-slider__track {
+    grid-auto-columns: calc(
+      (100% - (var(--kf-slide-count, 4) - 1) * var(--kf-grid-gap)) / var(--kf-slide-count, 4)
+    );
+    padding-inline: 0;
+    margin-inline: 0;
+    scroll-padding-inline: 0;
+  }
+}
+
+/* Controls ---------------------------------------------------------------- */
+
+.kf-slider__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-3xs);
+}
+
+.kf-slider__prev .kf-icon {
+  transform: rotate(180deg);
+}
+
+.kf-slider__controls button[disabled] {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Once every slide fits, paging controls are meaningless. */
+kf-slider[data-static] .kf-slider__controls,
+kf-slider[data-static] .kf-slider__dots,
+kf-slider[data-static] .kf-slider__progress {
+  display: none;
+}
+
+/* Progress pill ------------------------------------------------------------
+   A scrollbar rendered on the theme's terms. The thumb is sized to the
+   visible fraction of the track and positioned by scroll progress, both fed
+   in from JS as custom properties.
+
+   Decorative: the track itself is focusable and scrollable, so this is
+   aria-hidden and never a control. */
+
+.kf-slider__progress {
+  position: relative;
+  width: min(12rem, 60%);
+  height: 4px;
+  margin: var(--kf-space-sm) auto 0;
+  border-radius: var(--kf-radius-pill);
+  background-color: var(--kf-color-border);
+  overflow: hidden;
+}
+
+.kf-slider__progress-thumb {
+  position: absolute;
+  inset-block: 0;
+  width: var(--kf-progress-size, 30%);
+  /* Travels the leftover track, so it never overshoots either end. */
+  left: calc((100% - var(--kf-progress-size, 30%)) * var(--kf-progress-pos, 0));
+  border-radius: inherit;
+  background-color: var(--kf-color-heading);
+}
+
+.kf-slider__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.15rem;
+  margin-top: var(--kf-space-sm);
+  list-style: none;
+}
+
+/* The visible dot is small; the button around it carries the touch target.
+   `aria-current` lives on the button, so the dot is styled from there.
+
+   The cell is a FIXED width — wide enough for the expanded pill. If it sized
+   to its content, the active pill growing would re-centre the whole row and
+   nudge every other dot sideways on each change. */
+.kf-slider__dot-button {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 2.75rem;
+}
+
+/* Pill, not circle: the active item stretches into a lozenge rather than
+   just changing colour, so the current position is readable at a glance. */
+.kf-slider__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: var(--kf-radius-pill);
+  background-color: var(--kf-color-border-strong);
+  transition: width var(--kf-motion-normal) var(--kf-ease-out),
+              background-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-slider__dot-button[aria-current="true"] .kf-slider__dot {
+  width: 1.25rem;
+  background-color: var(--kf-color-heading);
+}
+
+@media (hover: hover) {
+  .kf-slider__dot-button:not([aria-current="true"]):hover .kf-slider__dot {
+    background-color: var(--kf-color-muted);
+  }
+}

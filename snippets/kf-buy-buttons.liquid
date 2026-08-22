@@ -1,0 +1,129 @@
+{%- comment -%}
+  Kofii Flow — Buy buttons
+  ---------------------------------------------------------------------------
+  The single add-to-cart form implementation. Rendered by the product page
+  block and by the quick add panel.
+
+  The form id is passed in rather than derived, because the product page and a
+  quick add panel can both exist in one document and two forms sharing an id
+  would break form association for the quantity input and the variant select.
+
+  <kf-product-form> intercepts the submit for an AJAX add. With scripting
+  disabled the form posts to /cart/add normally and the shopper lands on the
+  cart — still a complete purchase path.
+
+  Parameters:
+    product   (product, required)
+    form_id   (string, required)
+    show_dynamic_checkout (boolean)
+    show_quantity (boolean)  render a quantity field inside the form
+    scope     (string)       id prefix for the quantity field
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign id_scope = scope | default: 'Product'
+
+  assign is_available = false
+  if variant.available
+    assign is_available = true
+  endif
+
+  assign is_disabled = true
+  if is_available
+    assign is_disabled = false
+  endif
+
+  assign button_label = 'products.product.add_to_cart' | t
+  if is_available == false
+    if variant == blank
+      assign button_label = 'products.product.unavailable' | t
+    else
+      assign button_label = 'products.product.sold_out' | t
+    endif
+  endif
+
+  assign unavailable_text = 'products.product.unavailable' | t
+  assign add_button_attrs = 'data-kf-add-button data-unavailable-text="' | append: unavailable_text | append: '"'
+-%}
+
+{%- if product != blank -%}
+  <div class="kf-buy-buttons" data-kf-variant-region="buy-buttons">
+    <kf-product-form>
+      {%- form 'product',
+        product,
+        id: form_id,
+        class: 'kf-product-form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ variant.id }}"
+          {% unless is_available %}disabled{% endunless %}
+        >
+
+        {%- if show_quantity -%}
+          <div class="kf-field kf-buy-buttons__quantity">
+            <label class="kf-visually-hidden" for="{{ id_scope }}-quantity">
+              {{- 'products.product.quantity' | t -}}
+            </label>
+            <kf-quantity>
+              <button
+                type="button"
+                class="kf-quantity__button"
+                data-kf-quantity-step="down"
+                aria-label="{{ 'products.product.quantity_decrease' | t }}"
+              >
+                {%- render 'kf-icon', name: 'minus', size: 'sm' -%}
+              </button>
+              <input
+                class="kf-quantity__input"
+                id="{{ id_scope }}-quantity"
+                type="number"
+                name="quantity"
+                value="1"
+                min="1"
+                inputmode="numeric"
+                autocomplete="off"
+              >
+              <button
+                type="button"
+                class="kf-quantity__button"
+                data-kf-quantity-step="up"
+                aria-label="{{ 'products.product.quantity_increase' | t }}"
+              >
+                {%- render 'kf-icon', name: 'plus', size: 'sm' -%}
+              </button>
+            </kf-quantity>
+          </div>
+        {%- endif -%}
+
+        <div class="kf-buy-buttons__row" id="{{ form_id }}-actions">
+          {%- render 'kf-button',
+            label: button_label,
+            type: 'submit',
+            style: 'primary',
+            size: 'lg',
+            full: true,
+            disabled: is_disabled,
+            attributes: add_button_attrs
+          -%}
+        </div>
+
+        {%- if show_dynamic_checkout and is_available -%}
+          {{ form | payment_button }}
+        {%- endif -%}
+
+        <p class="kf-form-message kf-form-message--error" data-kf-form-error role="alert" hidden></p>
+
+        <p class="kf-form-status" data-kf-form-status hidden>
+          {%- render 'kf-icon', name: 'check', size: 'sm' -%}
+          <span>{{ 'products.product.added_to_cart' | t }}</span>
+          <a class="kf-link" href="{{ routes.cart_url }}">{{ 'products.product.view_cart' | t }}</a>
+        </p>
+      {%- endform -%}
+    </kf-product-form>
+  </div>
+{%- endif -%}

@@ -1,0 +1,556 @@
+{%- comment -%}
+  Kofii Flow — Featured collection
+  ---------------------------------------------------------------------------
+  Merchandises one collection three ways: a grid, a carousel with arrows, or a
+  free horizontal scroller. All three render the shared product card, so a
+  product looks identical here, in a collection grid, in search and in the cart
+  upsell.
+
+  Both scrolling layouts use <kf-slider>: a CSS scroll-snap track whose index
+  is read from scroll position. Without JavaScript the track stays a swipeable,
+  scrollable row — arrows, dots and the progress pill are the only things the
+  element adds.
+
+  A horizontal row cannot be scrolled by a vertical mouse wheel, so when arrows
+  are turned off the track keeps a slim scrollbar. Never hide both.
+
+  Stagger contract (easy to get wrong): the LIST carries data-kf-stagger and
+  each ITEM carries data-kf-animate. The engine claims animated descendants of
+  a stagger container and sequences them. Putting the animation on the list
+  instead makes the whole grid animate as one block and silently does nothing
+  per card.
+{%- endcomment -%}
+
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+{{ 'component-variant-picker.css' | asset_url | stylesheet_tag }}
+{{ 'component-buy-buttons.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-quick-add.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-product-form.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
+{%- if section.settings.layout != 'grid' -%}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+{%- comment -%}
+  The slider element is only needed when there is something for it to drive.
+  Horizontal scroll with no pagination stays entirely JavaScript-free.
+{%- endcomment -%}
+{%- liquid
+  assign needs_slider = false
+  if section.settings.layout != 'grid' and section.settings.show_arrows
+    assign needs_slider = true
+  endif
+  if section.settings.layout != 'grid' and section.settings.pagination != 'none'
+    assign needs_slider = true
+  endif
+-%}
+{%- if needs_slider -%}
+  <script src="{{ 'kf-slider.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- liquid
+  assign s = section.settings
+  assign target = s.collection
+
+  assign products = target.products
+  assign product_count = products.size
+  if product_count > s.products_to_show
+    assign product_count = s.products_to_show
+  endif
+
+  assign is_track = false
+  if s.layout != 'grid'
+    assign is_track = true
+  endif
+
+  comment
+    Roughly how wide one card is on desktop. Slightly generous, which is the
+    safe direction for srcset.
+  endcomment
+  assign desktop_vw = 100 | divided_by: s.columns_desktop | plus: 2
+  assign card_sizes = '(min-width: 990px) ' | append: desktop_vw | append: 'vw, (min-width: 768px) 33vw, 50vw'
+
+  assign grid_style = '--kf-grid-cols: ' | append: s.columns_desktop | append: '; --kf-grid-cols-tablet: 3; --kf-grid-cols-mobile: ' | append: s.columns_mobile | append: ';'
+  assign track_style = '--kf-slide-count: ' | append: s.columns_desktop | append: ';'
+
+  assign card_ratio = s.image_ratio
+  if card_ratio == 'default'
+    assign card_ratio = blank
+  endif
+
+  assign view_all_label = s.view_all_label
+  if view_all_label == blank
+    assign view_all_label = 'collections.view_all' | t
+  endif
+
+  assign pagination_label = 'general.slider.pagination' | t
+-%}
+
+{%- capture slider_pagination -%}
+  {%- if is_track and s.pagination == 'dots' -%}
+    <ul class="kf-slider__dots" role="list">
+      {%- for i in (1..product_count) -%}
+        <li>
+          <button
+            type="button"
+            class="kf-slider__dot-button"
+            data-kf-slider-dot
+            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+          >
+            <span class="kf-slider__dot" aria-hidden="true"></span>
+            <span class="kf-visually-hidden">
+              {{- 'general.slider.go_to' | t: index: forloop.index -}}
+            </span>
+          </button>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- elsif is_track and s.pagination == 'progress' -%}
+    <div
+      class="kf-slider__progress"
+      data-kf-slider-progress
+      aria-hidden="true"
+      title="{{ pagination_label | escape }}"
+    >
+      <span class="kf-slider__progress-thumb"></span>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture section_header -%}
+  {%- if s.heading != blank or s.subheading != blank or s.show_view_all -%}
+    <div class="kf-featured__header">
+      <div class="kf-section-header kf-featured__intro">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.subheading != blank -%}
+          <div class="kf-section-header__text kf-rte">{{ s.subheading }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="kf-featured__actions">
+        {%- if is_track and s.show_arrows -%}
+          <div class="kf-slider__controls">
+            <button type="button" class="kf-icon-button kf-slider__prev" data-kf-slider-prev>
+              {%- render 'kf-icon', name: 'arrow' -%}
+              <span class="kf-visually-hidden">{{ 'general.slider.previous' | t }}</span>
+            </button>
+            <button type="button" class="kf-icon-button kf-slider__next" data-kf-slider-next>
+              {%- render 'kf-icon', name: 'arrow' -%}
+              <span class="kf-visually-hidden">{{ 'general.slider.next' | t }}</span>
+            </button>
+          </div>
+        {%- endif -%}
+
+        {%- if s.show_view_all and target != blank -%}
+          {%- render 'kf-button',
+            label: view_all_label,
+            href: target.url,
+            style: s.view_all_style,
+            size: 'sm',
+            icon: 'arrow'
+          -%}
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture product_items -%}
+  {%- if product_count > 0 -%}
+    {%- for product in products limit: s.products_to_show -%}
+      <li
+        class="{% if is_track %}kf-slider__slide{% else %}kf-featured__item{% endif %}"
+        {% if is_track %}data-kf-slider-slide{% endif %}
+        {% render 'kf-motion-attrs',
+          animation: s.animation,
+          duration: s.animation_duration,
+          easing: s.animation_easing %}
+      >
+        {%- render 'kf-product-card',
+          product: product,
+          heading_tag: 'h3',
+          ratio: card_ratio,
+          sizes: card_sizes,
+          loading: 'lazy'
+        -%}
+      </li>
+    {%- endfor -%}
+  {%- else -%}
+    {%- comment -%}
+      Empty state: placeholder cards so the section reads as a product row in
+      the Theme Editor before a collection is chosen.
+    {%- endcomment -%}
+    {%- for i in (1..s.products_to_show) limit: 4 -%}
+      <li class="{% if is_track %}kf-slider__slide{% else %}kf-featured__item{% endif %}" {% if is_track %}data-kf-slider-slide{% endif %}>
+        {%- render 'kf-product-card', heading_tag: 'h3', ratio: card_ratio -%}
+      </li>
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-featured' %}>
+  <div class="kf-container">
+    {%- if needs_slider -%}
+      <kf-slider class="kf-featured__slider" style="{{ track_style }}">
+        {{ section_header }}
+        <ul
+          class="kf-slider__track"
+          role="list"
+          data-kf-slider-track
+          tabindex="0"
+          aria-label="{{ s.heading | default: target.title | escape }}"
+          {% render 'kf-motion-attrs',
+            stagger: true,
+            stagger_delay: s.animation_stagger_delay,
+            trigger: s.animation_trigger %}
+        >
+          {{ product_items }}
+        </ul>
+        {{ slider_pagination }}
+      </kf-slider>
+    {%- elsif is_track -%}
+      {{ section_header }}
+      <ul
+        class="kf-slider__track"
+        role="list"
+        style="{{ track_style }}"
+        tabindex="0"
+        aria-label="{{ s.heading | default: target.title | escape }}"
+        {% render 'kf-motion-attrs',
+          stagger: true,
+          stagger_delay: s.animation_stagger_delay,
+          trigger: s.animation_trigger %}
+      >
+        {{ product_items }}
+      </ul>
+    {%- else -%}
+      {{ section_header }}
+      <ul
+        class="kf-grid kf-featured__grid"
+        role="list"
+        style="{{ grid_style }}"
+        {% render 'kf-motion-attrs',
+          stagger: true,
+          stagger_delay: s.animation_stagger_delay,
+          trigger: s.animation_trigger %}
+      >
+        {{ product_items }}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.kf-featured__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--kf-space-sm);
+  margin-bottom: var(--kf-space-md);
+}
+
+.kf-featured__intro {
+  margin-bottom: 0;
+  flex: 1 1 20rem;
+}
+
+.kf-featured__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-2xs);
+  flex: 0 0 auto;
+}
+
+.kf-featured__grid,
+.kf-featured__slider .kf-slider__track {
+  list-style: none;
+}
+
+.kf-featured__grid {
+  --kf-grid-gap: var(--kf-space-md);
+}
+
+/* The scroll track is focusable so it can be reached and scrolled by keyboard;
+   the focus ring would otherwise sit on nothing. */
+.kf-slider__track:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: var(--kf-focus-offset);
+  border-radius: var(--kf-radius-md);
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "tag": "section",
+  "class": "kf-featured-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best sellers"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Text"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Carousel with arrows" },
+        { "value": "scroll", "label": "Horizontal scroll" }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "info": "Applies to the grid layout. The scrolling layouts always show one and a bit.",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "info": "Applies to the carousel and horizontal scroll layouts. With arrows off, a slim scrollbar is shown instead — a mouse cannot scroll a horizontal row without one.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "pagination",
+      "label": "Pagination",
+      "info": "Applies to the carousel and horizontal scroll layouts. A progress pill is the better choice when there are more than a handful of products.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "progress", "label": "Progress pill" },
+        { "value": "dots", "label": "Dots" }
+      ],
+      "default": "progress"
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "paragraph",
+      "content": "Vendor, ratings, swatches and badges are set once for the whole theme in Theme settings > Media and cards."
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "default", "label": "Theme default" },
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" },
+        { "value": "landscape", "label": "Landscape (4:3)" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "header",
+      "content": "View all"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show a link to the collection",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "Link label",
+      "info": "Leave blank to use the theme default."
+    },
+    {
+      "type": "select",
+      "id": "view_all_style",
+      "label": "Link style",
+      "options": [
+        { "value": "primary", "label": "Solid" },
+        { "value": "secondary", "label": "Outline" },
+        { "value": "plain", "label": "Text link" }
+      ],
+      "default": "plain"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Card animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "Duration",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "fast", "label": "Fast" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "slow", "label": "Slow" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Easing",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "smooth", "label": "Smooth" },
+        { "value": "out", "label": "Ease out" },
+        { "value": "spring", "label": "Spring-like" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "scroll", "label": "On scroll" },
+        { "value": "load", "label": "On load" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection"
+    }
+  ]
+}
+{% endschema %}

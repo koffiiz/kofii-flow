@@ -1,0 +1,148 @@
+/* ==========================================================================
+   Kofii Flow — Image with text
+   Loaded by sections/kf-image-with-text.liquid.
+
+   Every layout is a different grid over the same two children: media and
+   content. Mobile is one column in all five — the compositions only differ
+   from 990px up, because an overlapping card or an asymmetric split has
+   nowhere to go on a phone.
+   ========================================================================== */
+
+.kf-image-text__inner {
+  display: grid;
+  gap: var(--kf-space-md);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: var(--kf-it-align, center);
+}
+
+.kf-image-text__media {
+  min-width: 0;
+}
+
+.kf-image-text__media .kf-media {
+  width: 100%;
+}
+
+.kf-image-text__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  min-width: 0;
+}
+
+/* Text alignment ---------------------------------------------------------- */
+
+.kf-image-text--align-center .kf-image-text__content {
+  align-items: center;
+  text-align: center;
+}
+
+.kf-image-text--align-end .kf-image-text__content {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Button groups and trust rows are flex containers, so text-align does not
+   reach them. */
+.kf-image-text--align-center .kf-button-group,
+.kf-image-text--align-center .kf-trust {
+  justify-content: center;
+}
+
+.kf-image-text--align-end .kf-button-group,
+.kf-image-text--align-end .kf-trust {
+  justify-content: flex-end;
+}
+
+/* ==========================================================================
+   Stacked
+   ========================================================================== */
+
+.kf-image-text--stacked.kf-image-text--w-narrow .kf-image-text__content { max-width: var(--kf-narrow-width); }
+.kf-image-text--stacked.kf-image-text--w-medium .kf-image-text__content { max-width: var(--kf-content-width); }
+
+.kf-image-text--stacked.kf-image-text--align-center .kf-image-text__content {
+  margin-inline: auto;
+}
+
+.kf-image-text--stacked.kf-image-text--align-end .kf-image-text__content {
+  margin-inline-start: auto;
+}
+
+/* ==========================================================================
+   Overlapping
+   --------------------------------------------------------------------------
+   Mobile: the card is pulled up over the bottom of the image and inset from
+   the edges, which is the only way the overlap reads at narrow widths.
+   ========================================================================== */
+
+.kf-image-text--overlapping .kf-image-text__content {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(var(--kf-space-lg) * -1);
+  margin-inline: var(--kf-space-sm);
+  padding: var(--kf-space-md);
+  border-radius: var(--kf-radius-lg);
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-md);
+}
+
+/* ==========================================================================
+   Desktop compositions
+   ========================================================================== */
+
+@media (min-width: 990px) {
+  .kf-image-text__inner {
+    gap: var(--kf-space-xl);
+  }
+
+  /* Side by side -------------------------------------------------------- */
+
+  .kf-image-text--image-left .kf-image-text__inner {
+    grid-template-columns: var(--kf-it-media, 1fr) minmax(0, 1fr);
+  }
+
+  .kf-image-text--image-right .kf-image-text__inner {
+    grid-template-columns: minmax(0, 1fr) var(--kf-it-media, 1fr);
+  }
+
+  /* Media is first in the DOM so it leads on mobile, where it carries the
+     most meaning. Reordering here keeps that without duplicating markup. */
+  .kf-image-text--image-right .kf-image-text__media {
+    order: 2;
+  }
+
+  /* Overlapping --------------------------------------------------------- */
+
+  .kf-image-text--overlapping .kf-image-text__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+    gap: 0;
+  }
+
+  .kf-image-text--overlapping .kf-image-text__media {
+    grid-column: 1 / 9;
+    grid-row: 1;
+  }
+
+  .kf-image-text--overlapping .kf-image-text__content {
+    grid-column: 7 / 13;
+    grid-row: 1;
+    margin: 0;
+    padding: var(--kf-space-lg);
+    box-shadow: var(--kf-shadow-lg);
+  }
+
+  /* Editorial ------------------------------------------------------------
+     Asymmetric on purpose: the media is the larger column and the text drops
+     below its top edge, so the two never read as a symmetrical pair. */
+
+  .kf-image-text--editorial .kf-image-text__inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: start;
+  }
+
+  .kf-image-text--editorial .kf-image-text__content {
+    padding-top: var(--kf-space-xl);
+  }
+}

@@ -1,0 +1,201 @@
+{%- comment -%}
+  Kofii Flow — Collection banner
+  ---------------------------------------------------------------------------
+  The collection heading, description and optional image. Separate from the
+  product grid so a merchant can remove it, reorder it, or put marketing
+  sections between it and the products.
+
+  The collection title is the page <h1>.
+{%- endcomment -%}
+
+{{ 'section-collection.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign has_image = false
+  if s.show_image and collection.image
+    assign has_image = true
+  endif
+
+  assign banner_class = 'kf-collection-banner kf-collection-banner--' | append: s.layout
+  if has_image
+    assign banner_class = banner_class | append: ' kf-collection-banner--has-image'
+  endif
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: banner_class %}>
+  {%- if has_image and s.layout == 'overlay' -%}
+    <div class="kf-collection-banner__backdrop">
+      {%- render 'kf-media',
+        image: collection.image,
+        ratio: 'wide',
+        sizes: '100vw',
+        loading: 'eager',
+        priority: true,
+        flush: true,
+        class: 'kf-collection-banner__media'
+      -%}
+      {%- if s.overlay_opacity > 0 -%}
+        <div
+          class="kf-media__overlay kf-media__overlay--gradient"
+          style="--kf-overlay-opacity: {{ s.overlay_opacity | divided_by: 100.0 }};"
+        ></div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="kf-container kf-collection-banner__inner">
+    <div class="kf-collection-banner__content" {% render 'kf-motion-attrs', motion: section.settings %}>
+      {%- if s.show_breadcrumb -%}
+        <nav class="kf-breadcrumb" aria-label="{{ 'general.breadcrumb' | t }}">
+          <ol class="kf-breadcrumb__list" role="list">
+            <li><a class="kf-link" href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+            <li aria-current="page">{{ collection.title | escape }}</li>
+          </ol>
+        </nav>
+      {%- endif -%}
+
+      <h1 class="{{ s.heading_size }}">{{ collection.title | escape }}</h1>
+
+      {%- if s.show_description and collection.description != blank -%}
+        <div class="kf-collection-banner__description kf-rte kf-text-muted">
+          {{ collection.description }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if has_image and s.layout == 'split' -%}
+      <div class="kf-collection-banner__figure">
+        {%- render 'kf-media',
+          image: collection.image,
+          ratio: 'landscape',
+          sizes: '(min-width: 990px) 40vw, 100vw',
+          loading: 'eager',
+          priority: true
+        -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection banner",
+  "tag": "section",
+  "class": "kf-collection-banner-section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "simple", "label": "Text only" },
+        { "value": "split", "label": "Text with image beside it" },
+        { "value": "overlay", "label": "Text over the collection image" }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" },
+        { "value": "kf-display-sm", "label": "Display" }
+      ],
+      "default": "kf-h1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show collection image",
+      "default": true,
+      "info": "Uses the image set on the collection in your admin."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 35,
+      "info": "Applies to the overlay layout only."
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "reveal", "label": "Editorial reveal" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "load", "label": "On load" },
+        { "value": "scroll", "label": "On scroll" }
+      ],
+      "default": "load"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ]
+}
+{% endschema %}

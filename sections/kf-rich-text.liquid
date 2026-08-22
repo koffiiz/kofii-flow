@@ -1,0 +1,265 @@
+{%- comment -%}
+  Kofii Flow — Rich text
+  ---------------------------------------------------------------------------
+  A centred column of type: eyebrow, heading, paragraph, buttons. The section
+  every store needs between two heavier ones.
+
+  It owns no content of its own. Everything inside is theme blocks — the same
+  heading, text, button, badge, image, divider and spacer blocks the hero uses
+  — so anything added to /blocks becomes available here for free.
+
+  The content column is a Kofii Motion stagger container: each block carries
+  its own animation setting and this section sequences whichever ones opt in.
+  No animation code lives here.
+
+  No section stylesheet: these rules are a handful of layout modifiers that
+  nothing else could reuse, so they stay inline.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+
+  assign rich_class = 'kf-rich-text'
+  assign rich_class = rich_class | append: ' kf-rich-text--w-' | append: s.content_width
+  assign rich_class = rich_class | append: ' kf-rich-text--align-' | append: s.alignment
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: rich_class %}>
+  <div class="kf-container">
+    <div class="kf-rich-text__inner" {% render 'kf-motion-attrs', motion: section.settings %}>
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+.kf-rich-text__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  min-width: 0;
+}
+
+.kf-rich-text--w-narrow .kf-rich-text__inner { max-width: var(--kf-narrow-width); }
+.kf-rich-text--w-medium .kf-rich-text__inner { max-width: var(--kf-content-width); }
+.kf-rich-text--w-wide .kf-rich-text__inner { max-width: 64rem; }
+.kf-rich-text--w-full .kf-rich-text__inner { max-width: none; }
+
+.kf-rich-text--align-center .kf-rich-text__inner {
+  align-items: center;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.kf-rich-text--align-end .kf-rich-text__inner {
+  align-items: flex-end;
+  text-align: right;
+  margin-inline-start: auto;
+}
+
+/* Button groups and trust rows are flex containers of their own, so they need
+   their own alignment rather than inheriting text-align. */
+.kf-rich-text--align-center .kf-button-group,
+.kf-rich-text--align-center .kf-trust {
+  justify-content: center;
+}
+
+.kf-rich-text--align-end .kf-button-group,
+.kf-rich-text--align-end .kf-trust {
+  justify-content: flex-end;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Rich text",
+  "tag": "section",
+  "class": "kf-rich-text-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "wide", "label": "Wide" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "end", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each block has its own animation. This section plays them in sequence."
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animate the whole column",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "Stagger blocks",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 90
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "Duration",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "fast", "label": "Fast" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "slow", "label": "Slow" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Easing",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "smooth", "label": "Smooth" },
+        { "value": "out", "label": "Ease out" },
+        { "value": "spring", "label": "Spring-like" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "scroll", "label": "On scroll" },
+        { "value": "load", "label": "On load" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Rich text",
+      "blocks": [
+        {
+          "type": "badge",
+          "settings": {
+            "text": "Our promise",
+            "style": "outline",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "heading",
+          "settings": {
+            "heading": "Made to be kept, not replaced",
+            "heading_size": "kf-h2",
+            "heading_tag": "h2",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p>Two or three sentences on what you stand for. Say the thing a shopper cannot find on any other store, and stop there.</p>",
+            "text_size": "lg",
+            "animation": "fade-up"
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "label": "Read our story",
+            "style": "secondary",
+            "animation": "fade-up"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

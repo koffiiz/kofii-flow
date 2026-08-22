@@ -438,6 +438,20 @@
       },
       {
         "type": "checkbox",
+        "id": "product_card_equal_height",
+        "label": "Match card heights in a row",
+        "default": true,
+        "info": "Cards fill the tallest in their row and prices line up along the bottom, so a longer product title cannot make the grid look ragged."
+      },
+      {
+        "type": "checkbox",
+        "id": "product_card_quick_add",
+        "label": "Show quick add",
+        "default": true,
+        "info": "Adds single-variant products straight to the cart. Products with options open a panel so the shopper can choose."
+      },
+      {
+        "type": "checkbox",
         "id": "product_card_vendor",
         "label": "Show vendor",
         "default": false

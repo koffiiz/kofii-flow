@@ -10,6 +10,8 @@
       "tagged_html": "Tagged {{ tags }}",
       "page": "Page {{ page }}"
     },
+    "home": "Home",
+    "breadcrumb": "Breadcrumb",
     "navigation": {
       "menu": "Menu",
       "primary": "Primary",
@@ -49,6 +51,12 @@
       "language_label": "Language",
       "update": "Update"
     },
+    "slider": {
+      "previous": "Previous",
+      "next": "Next",
+      "pagination": "Scroll position",
+      "go_to": "Go to item {{ index }}"
+    },
     "pagination": {
       "label": "Pagination",
       "previous": "Previous page",
@@ -79,6 +87,9 @@
       },
 
       "add_to_cart": "Add to cart",
+      "quick_add": "Quick add",
+      "choose_options": "Choose options",
+      "view_full_details": "View full details",
       "added_to_cart": "Added to cart",
       "view_cart": "View cart",
       "choose_variant": "Choose an option",
@@ -123,6 +134,31 @@
         "one": "Check another location",
         "other": "Check all {{ count }} locations"
       }
+    }
+  },
+
+  "collections": {
+    "all_title": "Collections",
+    "none": "There are no collections to show yet.",
+    "empty": "No products found",
+    "empty_filters": "Try removing a filter or two.",
+    "sort_by": "Sort by",
+    "view_all": "View all",
+    "product_count": {
+      "zero": "No products",
+      "one": "1 product",
+      "other": "{{ count }} products"
+    },
+    "filters": {
+      "title": "Filter",
+      "active": "Active filters",
+      "apply": "Apply filters",
+      "clear": "Clear",
+      "clear_all": "Clear all",
+      "remove": "Remove this filter",
+      "remove_value": "Remove {{ value }}",
+      "price_from": "From",
+      "price_to": "To"
     }
   },
 

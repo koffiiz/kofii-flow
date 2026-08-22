@@ -16,7 +16,12 @@
     heading_tag  (string)    h2 | h3 (default) — keep the page heading order sane
     show_vendor / show_swatches / show_rating / show_sale_badge (boolean)
                              override the global defaults
+    equal_height (boolean)   overrides the global "Match card heights in a row"
+                             setting. Only has an effect when the card is a
+                             grid or flex item, which is how every listing
+                             section renders it.
     placeholder  (string)    placeholder_svg_tag name, e.g. 'product-apparel-1'
+    show_quick_add (boolean) overrides the global quick add setting
 
   Accessibility: exactly one link per card. The title link is stretched over
   the whole card with ::after, so screen readers announce one target and the
@@ -30,7 +35,13 @@
   assign rating_visible = show_rating | default: settings.product_card_rating, allow_false: true
   assign sale_badge_visible = show_sale_badge | default: settings.product_card_sale_badge, allow_false: true
 
+  assign equal_height_on = equal_height | default: settings.product_card_equal_height, allow_false: true
+  assign quick_add_visible = show_quick_add | default: settings.product_card_quick_add, allow_false: true
+
   assign card_class = 'kf-product-card kf-card'
+  if equal_height_on
+    assign card_class = card_class | append: ' kf-product-card--fill'
+  endif
   unless settings.card_style == 'plain'
     assign card_class = card_class | append: ' kf-card--' | append: settings.card_style
   endunless
@@ -98,6 +109,43 @@
         zoom: true,
         class: 'kf-product-card__media'
       -%}
+
+      {%- comment -%}
+        Quick add. A single-variant product carries data-variant-id and adds
+        straight to the cart; anything with options opens the quick add panel
+        so the shopper can choose. Sold-out products get no button at all.
+
+        This never replaces the card's link to the product — with scripting
+        off the button simply does nothing and the card still navigates.
+      {%- endcomment -%}
+      {%- if quick_add_visible and product.available -%}
+        {%- liquid
+          assign quick_variant = blank
+          if product.variants.size == 1
+            assign quick_variant = product.variants.first.id
+          endif
+
+          assign quick_close_label = 'general.accessibility.close' | t
+          assign quick_label = 'products.product.choose_options' | t
+          if quick_variant != blank
+            assign quick_label = 'products.product.quick_add' | t
+          endif
+        -%}
+        <kf-quick-add
+          data-product-url="{{ product.url }}"
+          data-product-title="{{ product.title | escape }}"
+          data-close-label="{{ quick_close_label | escape }}"
+          {% if quick_variant != blank %}data-variant-id="{{ quick_variant }}"{% endif %}
+        >
+          {%- render 'kf-button',
+            label: quick_label,
+            style: 'primary',
+            size: 'sm',
+            extra_class: 'kf-quick-add-button',
+            attributes: 'data-kf-quick-add'
+          -%}
+        </kf-quick-add>
+      {%- endif -%}
 
       <div class="kf-product-card__badges">
         {%- unless product.available -%}

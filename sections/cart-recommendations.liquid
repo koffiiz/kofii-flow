@@ -12,6 +12,15 @@
 {%- endcomment -%}
 
 {{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+{{ 'component-variant-picker.css' | asset_url | stylesheet_tag }}
+{{ 'component-buy-buttons.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-quick-add.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-product-form.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
 
 {%- if recommendations.performed and recommendations.products_count > 0 -%}
   <div class="kf-recommendations" data-kf-recommendations>

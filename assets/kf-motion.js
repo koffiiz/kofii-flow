@@ -72,6 +72,25 @@
 
   /* ---------------------------------------------------------------- Reveals */
 
+  /**
+   * Defers work by two frames so the browser has painted the initial state at
+   * least once before it changes.
+   *
+   * Without this, an element that is already in the viewport when the observer
+   * first runs has its hidden and played styles resolved in the same style
+   * recalculation. No transition runs and the reveal appears instantly — which
+   * is what happens on first load above the fold, and every time the Theme
+   * Editor re-renders a section that is on screen.
+   *
+   * It is most visible on the wipe presets, where "never animated" and
+   * "finished animating" look identical.
+   */
+  function nextFrames(fn) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(fn);
+    });
+  }
+
   function play(el, delayOverride) {
     if (typeof delayOverride === 'number') {
       el.style.setProperty('--kf-a-delay', delayOverride + 'ms');
@@ -110,11 +129,14 @@
       var replay = el.dataset.kfReplay === 'always';
 
       if (entry.isIntersecting) {
-        if (isGroup) {
-          playGroup(el);
-        } else {
-          play(el);
-        }
+        // Deferred so the hidden state is painted first — see nextFrames.
+        nextFrames(function () {
+          if (isGroup) {
+            playGroup(el);
+          } else {
+            play(el);
+          }
+        });
         if (!replay) revealObserver.unobserve(el);
       } else if (replay) {
         // Only reset once the element has left through the bottom edge, so
@@ -127,14 +149,16 @@
   }
 
   /**
-   * clip-path is switched to `none` once the transition settles so shadows,
-   * focus rings and hover lifts are not clipped by the reveal frame.
+   * The reveal mask is removed once the transition settles, so shadows, focus
+   * rings and hover lifts are not cut off at the box edge afterwards.
+   *
+   * Both spellings are checked because Safari reports the prefixed property.
    */
   function onTransitionEnd(event) {
     var el = event.target;
     if (!(el instanceof Element)) return;
     if (!el.hasAttribute('data-kf-inview')) return;
-    if (event.propertyName !== 'clip-path') return;
+    if (event.propertyName !== 'mask-size' && event.propertyName !== '-webkit-mask-size') return;
     el.setAttribute('data-kf-settled', '');
   }
 
@@ -143,11 +167,8 @@
     observed.add(el);
 
     if (el.dataset.kfTrigger === 'load') {
-      // Two frames: one for the initial state to paint, one to transition from.
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          if (el.hasAttribute('data-kf-stagger')) playGroup(el); else play(el);
-        });
+      nextFrames(function () {
+        if (el.hasAttribute('data-kf-stagger')) playGroup(el); else play(el);
       });
       return;
     }

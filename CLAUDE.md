@@ -90,6 +90,29 @@ Declarative and CSS-first. Liquid emits intent, CSS owns every visual state, JS 
 
 Net effect: no JS, blocked JS, failed JS, reduced motion or Flow Mode off all leave content fully visible. **Never make an element's visibility depend on JavaScript succeeding.**
 
+### Never hide an animated element with `clip-path`
+
+`IntersectionObserver` computes the intersection rect **after** clipping. An element hidden with `clip-path: inset(100% 0 0 0)` therefore has zero area and reports `intersectionRatio: 0`, which is below any non-zero threshold — so the engine never sees it enter the viewport, never adds `data-kf-inview`, and the element stays hidden **permanently**.
+
+Measured in-browser, at `threshold: 0`:
+
+| Hidden by | isIntersecting | ratio |
+| --- | --- | --- |
+| `clip-path` | true | **0.00** |
+| `mask` | true | 1.00 |
+| `opacity` | true | 1.00 |
+| `transform: scaleY(0)` | true | 1.00 |
+
+The wipe presets (`clip-up`, `clip-left`, `clip-right`, `reveal`) keep their names but are implemented with `mask-size`. A mask also fails safe: with no mask support the element is simply visible, whereas a broken `clip-path` hides content for good. Hide with `opacity`, `transform`, `filter` or `mask` — never `clip-path`.
+
+### Never play in the same frame the element is styled
+
+A reveal must be *painted* in its hidden state before it changes, or the browser resolves both styles in one recalculation and no transition runs. This happens on first load above the fold, and every time the Theme Editor re-renders a section that is on screen.
+
+`kf-motion.js` therefore defers every play by two animation frames (`nextFrames`). Do not remove that indirection to "simplify" the engine.
+
+It is hardest to spot on the wipe presets, where *never animated* and *finished animating* look identical — verify with `transitionstart` / `transitionend` timings, not by whether the element ended up visible.
+
 ### Shared animation settings
 
 Copy this block into a section schema to expose the full set. Include only what the section genuinely needs.
@@ -155,6 +178,16 @@ Copy this block into a section schema to expose the full set. Include only what 
 
 Put `data-kf-stagger` on the **parent** (via `animation_stagger: true`). The engine claims every descendant with `data-kf-animate`, marks them `data-kf-managed`, observes only the parent, and assigns each child `index * step` delay. Children are never observed individually.
 
+**The children must each carry `data-kf-animate`.** If only the parent has it, there are no descendants to claim: the container animates as one block and the stagger setting silently does nothing. In a section that means the list and the items get different attributes:
+
+```liquid
+<ul {% render 'kf-motion-attrs', stagger: s.animation_stagger, stagger_delay: s.animation_stagger_delay %}>
+  {%- for product in products -%}
+    <li {% render 'kf-motion-attrs', animation: s.animation %}>
+```
+
+Passing `motion: section.settings` to *both* is the trap — the list would take the animation as well and swallow the sequencing. Verified working output is `--kf-a-delay` of `0ms, 120ms, 240ms…` on the children.
+
 ### Flow Mode
 
 `Off | Subtle | Balanced | Expressive` on `<html data-kf-flow>`. It sets two multipliers — `--kf-flow-intensity` (distance) and `--kf-flow-duration` (time). **It is a dial on the existing system, not a second system.** Off disables the engine entirely.
@@ -219,6 +252,8 @@ which requires `color_scheme`, `padding_top`, `padding_bottom` settings (and opt
 
 Putting a shared component's styles in a section stylesheet is the failure mode to watch for: it looks correct on the section you built it for, and silently renders unstyled everywhere else. `<kf-quantity>` (product + cart), `.kf-stars` (product card + rating block) and the accordion block have all been moved for exactly this reason — do not move them back.
 
+**`position: fixed` does not escape a transformed ancestor.** A non-`none` `transform` (also `filter`, `perspective`, `contain: paint`, `backdrop-filter`, `will-change: transform`) makes that element the containing block for every fixed descendant, so viewport insets quietly resolve against it instead. It breaks in exactly one layout and looks fine everywhere else: the lookbook's mobile sheet rendered 16px wide beside its pin, because the pin wrapper was centred with `translate(-50%, -50%)`. Before writing a full-screen overlay, drawer or sheet, check every ancestor for a transform — and prefer centring the *child* so the positioned wrapper stays untransformed.
+
 **Naming:** marketing sections are `kf-*.liquid`. Shopify template sections keep canonical names (`main-product.liquid`, `main-collection-product-grid.liquid`, `main-cart.liquid`). Snippets and assets are `kf-*`. CSS classes are `kf-block__element--modifier`, max two nesting levels, no descendant chains.
 
 **Empty states:** every section must look intentional in the Theme Editor before configuration. Use `placeholder_svg_tag` through `kf-media`, and never emit a broken `<img>` or a JS error when data is missing.
@@ -243,7 +278,9 @@ Add a new block when the content unit is genuinely reusable across sections. Add
 - Everything below the fold is `loading="lazy"` with explicit dimensions (`image_tag` handles this).
 - All JS is `defer`. No render-blocking scripts beyond the tiny inline boot script.
 - Component JS is requested by the section that needs it, not bundled globally.
-- Animate only `transform`, `opacity`, `filter`, `clip-path`. Never animate layout properties.
+- Animate only `transform`, `opacity`, `filter`, `mask-size`. Never animate layout properties, and never hide an animated element with `clip-path` (see the Kofii Motion section).
+- **`transition: transform` does not cover a `transform-origin` change.** They are separate properties: change only the origin and the element jumps, with no transition created at all. Express a pan *inside* `transform` — `translate()` with the origin left at `0 0` — rather than adding `transform-origin` to the transition list, which also costs the compositor. The lookbook guided tour is the worked example.
+- Changing a **custom property** does start a transition on whatever property reads it through `var()`, and the value interpolates normally. `clamp()` with all-percentage arguments interpolates too, which is what lets a pan be clamped to its own bounds in pure CSS. Both verified in-browser.
 - Do not add `will-change` broadly — only for continuously animating elements (parallax).
 - **Per-file JS budget: 16 KB raw.** The always-loaded runtime is `kf-core.js` + `kf-motion.js` (22 KB raw / 6.4 KB gzip combined). If a component needs more, split it or load it on interaction — do not raise the threshold in `.theme-check.yml`.
 
@@ -282,6 +319,17 @@ Then check by hand:
 
 ## 10. Current state and roadmap
 
+**Phase 4 — marketing library (in progress).** Built so far: rich text, image with text (five layouts), featured collection (grid / carousel / horizontal scroll) with quick add, scrolling story, timeline, and lookbook (hotspots or a scroll-driven guided tour that zooms to each product). Shared components added along the way: <kf-slider>, <kf-quick-add>, <kf-scroll-story>, and the variant picker / buy buttons extracted into snippets so quick add and the product page share one implementation. Sections are being added one at a time.
+
+**Phase 3b — collection (complete).** `main-collection-product-grid.liquid` with Shopify native storefront filtering and sorting, `main-collection-banner.liquid`, `main-list-collections.liquid`, `<kf-facets>`, and the `collection` / `list-collections` templates. Products render through the shared product card.
+
+**Filtering rules:**
+
+- Filtering is Shopify’s. `collection.filters` decides which filters exist, which values are available and every count. **Never filter products in Liquid or JavaScript** — it would disagree with the server as soon as inventory or pagination changed.
+- Filter inputs are named with Shopify’s own `param_name`, so the form submits a valid filter URL with no JavaScript at all. The Apply button is hidden only once `.kf-js` is present.
+- **Form association is not DOM containment.** The sort select is bound to the filter form with `form="…"` and is not nested inside it, so `closest()` will not find it — use `element.form`. This silently broke sorting once.
+- Anything that must refresh when filters change needs `data-kf-facet-region`. The toolbar is not re-rendered, so the product count carries its own region.
+
 **Phase 3a — cart (complete).** `cart-drawer.liquid` (rendered from the layout, on every page), `main-cart.liquid`, `cart-recommendations.liquid`, `<kf-cart-items>`, `<kf-cart-note>`, `<kf-cart-recommendations>`, free-shipping progress, order note, line and cart level discounts, empty states, and `templates/cart.json`. The drawer and the cart page share one line-item snippet and one summary snippet.
 
 **Cart rules — do not break these:**
@@ -297,8 +345,10 @@ Then check by hand:
 
 **Not built yet — do not pretend otherwise:**
 
-- Templates: `collection`, `blog`, `article`, `list-collections`, `gift_card`, `password`, customer templates.
-- Sections: `main-collection-product-grid`, `main-blog`, `main-article`, and the marketing library (bento, marquee, image-with-text, featured collection, product spotlight, testimonials, logo cloud, comparison, before/after, video, lookbook, FAQ, tabs, timeline, stats, scrolling story, image reveal, newsletter, rich text, spacer).
+- Templates: `blog`, `article`, `gift_card`, `password`, customer templates.
+- Sections: `main-blog`, `main-article`, and the rest of the marketing library (bento, marquee, product spotlight, testimonials, logo cloud, comparison, before/after, video, FAQ, tabs, stats, image reveal, newsletter).
+- Featured collection has grid, carousel and horizontal-scroll layouts. An editorial layout (oversized first product) is not built.
+- Timeline has vertical and alternating layouts. A horizontal (scrolling) timeline is not built — it needs a second spine orientation rather than a reuse of the existing CSS.
 - Components: quick add, slider, marquee element, tabs.
 - Product card quick-add (the card itself is complete and in use).
 - Complementary / related products on the product page — needs a section of its own.
@@ -308,4 +358,4 @@ Then check by hand:
 
 **Known product-page limitation, by design:** the quantity input is deliberately *outside* the variant region, so a shopper's chosen quantity survives a variant change. The trade-off is that its `max` attribute does not re-render, so an over-order is caught server-side — `<kf-product-form>` surfaces Shopify's own message. Do not "fix" this by recomputing stock limits in JavaScript; that would create a second source of truth for inventory.
 
-**Phase order:** 3b — collection + native filtering. 4 — marketing section library. 5 — Theme Store readiness (schema i18n, remaining templates, full locale set).
+**Phase order:** 4 — marketing section library. 5 — blog + article. 6 — Theme Store readiness (schema i18n, remaining templates, full locale set).

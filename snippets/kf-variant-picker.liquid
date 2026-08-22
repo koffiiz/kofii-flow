@@ -1,0 +1,173 @@
+{%- comment -%}
+  Kofii Flow — Variant picker
+  ---------------------------------------------------------------------------
+  The single variant picker implementation. Rendered by the product page block
+  and by the quick add panel — the markup must never exist twice.
+
+  Swatches come from Shopify's native option-value swatches (Products >
+  Options), so merchants configure colours in the admin rather than in Liquid.
+
+  Form association
+    The picker sits OUTSIDE the product form. The form submits one hidden `id`
+    input which the picker updates, so there is a single source of truth for
+    the chosen variant however many controls are on the page.
+
+  Without JavaScript
+    A <noscript> <select name="id"> lists every variant, bound to the form with
+    the `form` attribute, so the page stays purchasable with scripting off.
+
+  Parameters:
+    product     (product, required)
+    form_id     (string, required)  the product form this belongs to
+    scope       (string, required)  id prefix — MUST differ between the product
+                                    page and the quick add panel, or the two
+                                    render colliding input ids
+    style       (string)  auto (default) | buttons | swatches | dropdown
+    show_selected_value (boolean)
+    update_url  (boolean) rewrite the address bar on change
+{%- endcomment -%}
+
+{%- liquid
+  assign picker_style = style | default: 'auto'
+  assign id_scope = scope | default: 'Product'
+
+  assign single_variant = false
+  if product.has_only_default_variant
+    assign single_variant = true
+  endif
+
+  assign update_url_value = 'false'
+  if update_url
+    assign update_url_value = 'true'
+  endif
+-%}
+
+{%- if product != blank and single_variant == false -%}
+  <kf-variant-picker
+    class="kf-variant-picker kf-stack"
+    data-product-url="{{ product.url }}"
+    data-update-url="{{ update_url_value }}"
+  >
+    <script type="application/json" data-kf-variant-data>
+      [
+        {%- for variant in product.variants -%}
+          {
+            "id": {{ variant.id }},
+            "available": {{ variant.available }},
+            "options": {{ variant.options | json }},
+            "featured_media_id": {% if variant.featured_media %}{{ variant.featured_media.id }}{% else %}null{% endif %}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    </script>
+
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign option_index = forloop.index0
+        assign group_name = 'kf-option-' | append: id_scope | append: '-' | append: product.id | append: '-' | append: option.position
+
+        assign has_swatch = false
+        for value in option.values
+          if value.swatch
+            assign has_swatch = true
+            break
+          endif
+        endfor
+
+        assign render_as = picker_style
+        if picker_style == 'auto'
+          if has_swatch
+            assign render_as = 'swatches'
+          else
+            assign render_as = 'buttons'
+          endif
+        endif
+      -%}
+
+      {%- if render_as == 'dropdown' -%}
+        <div class="kf-field kf-variant-option" data-option-index="{{ option_index }}">
+          <label class="kf-field__label" for="{{ group_name }}">{{ option.name | escape }}</label>
+          <select class="kf-select" id="{{ group_name }}" name="{{ group_name }}">
+            {%- for value in option.values -%}
+              <option
+                value="{{ value.name | escape }}"
+                data-option-value="{{ value.name | escape }}"
+                {% if value.selected %}selected{% endif %}
+                {% unless value.available %}data-unavailable{% endunless %}
+              >
+                {{ value.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- else -%}
+        <fieldset class="kf-variant-option" data-option-index="{{ option_index }}">
+          <legend class="kf-variant-option__legend">
+            <span>{{ option.name | escape }}</span>
+            {%- if show_selected_value -%}
+              <span class="kf-variant-option__value" data-kf-option-display>{{ option.selected_value | escape }}</span>
+            {%- endif -%}
+          </legend>
+
+          <div class="kf-variant-option__values">
+            {%- for value in option.values -%}
+              {%- assign input_id = group_name | append: '-' | append: forloop.index -%}
+              <span
+                data-option-value="{{ value.name | escape }}"
+                {% unless value.available %}data-unavailable{% endunless %}
+              >
+                <input
+                  class="kf-variant-option__input"
+                  type="radio"
+                  id="{{ input_id }}"
+                  name="{{ group_name }}"
+                  value="{{ value.name | escape }}"
+                  {% if value.selected %}checked{% endif %}
+                >
+                {%- if render_as == 'swatches' and value.swatch -%}
+                  <label
+                    class="kf-variant-swatch"
+                    for="{{ input_id }}"
+                    title="{{ value.name | escape }}"
+                    style="
+                      {%- if value.swatch.image -%}
+                        --kf-swatch-image: url({{ value.swatch.image | image_url: width: 96 }});
+                      {%- elsif value.swatch.color -%}
+                        --kf-swatch-color: {{ value.swatch.color }};
+                      {%- endif -%}
+                    "
+                  >
+                    <span class="kf-visually-hidden">{{ value.name }}</span>
+                  </label>
+                {%- else -%}
+                  <label class="kf-variant-button" for="{{ input_id }}">{{ value.name }}</label>
+                {%- endif -%}
+              </span>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endif -%}
+    {%- endfor -%}
+
+    <noscript>
+      <div class="kf-field">
+        <label class="kf-field__label" for="{{ form_id }}-variants">
+          {{ 'products.product.choose_variant' | t }}
+        </label>
+        <select class="kf-select" id="{{ form_id }}-variants" name="id" form="{{ form_id }}">
+          {%- for variant in product.variants -%}
+            <option
+              value="{{ variant.id }}"
+              {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
+              {% unless variant.available %}disabled{% endunless %}
+            >
+              {{ variant.title }}
+              {%- unless variant.available %} — {{ 'products.product.sold_out' | t }}{% endunless -%}
+              — {{ variant.price | money }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    </noscript>
+  </kf-variant-picker>
+{%- endif -%}

@@ -90,7 +90,7 @@
         "animation_trigger": "load",
         "animation_intensity": 100,
         "media_parallax": 0,
-        "color_scheme": "scheme-3",
+        "color_scheme": "scheme-1",
         "section_transition": "none",
         "padding_top": 48,
         "padding_bottom": 64

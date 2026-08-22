@@ -14,11 +14,13 @@
        failed JS, reduced motion or Flow Mode off, nothing is ever hidden.
      - Direction names describe the direction of travel: `fade-up` rises,
        `fade-left` moves left (so it starts to the right).
-     - Only transform, opacity, filter and clip-path are animated.
+     - Only transform, opacity, filter and mask-size are animated. Wipe
+       presets use a mask rather than clip-path on purpose — see the note
+       above those presets before changing them.
    ========================================================================== */
 
 .kf-motion [data-kf-animate] {
-  transition-property: opacity, transform, filter, clip-path;
+  transition-property: opacity, transform, filter, -webkit-mask-size, mask-size;
   transition-duration: calc(var(--kf-a-duration) * var(--kf-flow-duration));
   transition-delay: var(--kf-a-delay);
   transition-timing-function: var(--kf-a-easing);
@@ -74,31 +76,84 @@
   transform-origin: 50% 100%;
 }
 
-/* Slide and clip presets keep full opacity — they reveal by geometry. */
+/* Slide and wipe presets keep full opacity — they reveal by geometry. */
 .kf-motion [data-kf-animate="slide-up"]:not([data-kf-inview]) {
   opacity: 1;
   transform: translate3d(0, calc(var(--kf-a-shift) * 2), 0);
 }
 
-.kf-motion [data-kf-animate="clip-up"]:not([data-kf-inview]) {
-  opacity: 1;
-  clip-path: inset(100% 0 0 0);
+/* ---------------------------------------------------------- Wipe presets
+   These use a mask, NOT clip-path, and that is not a style preference.
+
+   IntersectionObserver computes the intersection rect *after* clipping, so an
+   element hidden with `clip-path: inset(100% ...)` has zero area and reports
+   intersectionRatio 0 — below any non-zero threshold. The engine therefore
+   never sees it enter the viewport, never adds data-kf-inview, and the element
+   stays clipped forever. Verified in-browser: clip-path -> ratio 0.00 while
+   mask, opacity and transform all -> ratio 1.00.
+
+   A mask also fails safe: if mask support is missing the element is simply
+   visible, where a broken clip-path hides content permanently.
+
+   Do not convert these back to clip-path. */
+
+/* The mask image and position are state-INDEPENDENT: they are declared here,
+   not inside `:not([data-kf-inview])`.
+
+   If mask-image only existed in the hidden state, adding data-kf-inview would
+   remove the mask in the same frame that mask-size begins transitioning — the
+   element would snap fully visible while the size animated on a mask that no
+   longer exists. The transition still fires, so it looks like it "works" in
+   code while showing nothing on screen. Only the SIZE may change per state. */
+.kf-motion [data-kf-animate="clip-up"],
+.kf-motion [data-kf-animate="clip-left"],
+.kf-motion [data-kf-animate="clip-right"],
+.kf-motion [data-kf-animate="reveal"] {
+  -webkit-mask-image: linear-gradient(#000, #000);
+  mask-image: linear-gradient(#000, #000);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
-.kf-motion [data-kf-animate="clip-left"]:not([data-kf-inview]) {
-  opacity: 1;
-  clip-path: inset(0 0 0 100%);
+/* Anchor edge — the side the reveal grows out of. */
+.kf-motion [data-kf-animate="clip-up"] {
+  -webkit-mask-position: bottom;
+  mask-position: bottom;
 }
 
-.kf-motion [data-kf-animate="clip-right"]:not([data-kf-inview]) {
-  opacity: 1;
-  clip-path: inset(0 100% 0 0);
+.kf-motion [data-kf-animate="clip-left"] {
+  -webkit-mask-position: right;
+  mask-position: right;
 }
 
-/* Editorial reveal: the content wipes up while lifting slightly. */
+.kf-motion [data-kf-animate="clip-right"] {
+  -webkit-mask-position: left;
+  mask-position: left;
+}
+
+.kf-motion [data-kf-animate="reveal"] {
+  -webkit-mask-position: top;
+  mask-position: top;
+}
+
+/* Hidden state: full opacity, zero-size mask. Vertical wipes collapse the
+   height, horizontal wipes collapse the width. */
+.kf-motion [data-kf-animate="clip-up"]:not([data-kf-inview]),
 .kf-motion [data-kf-animate="reveal"]:not([data-kf-inview]) {
   opacity: 1;
-  clip-path: inset(0 0 105% 0);
+  -webkit-mask-size: 100% 0%;
+  mask-size: 100% 0%;
+}
+
+.kf-motion [data-kf-animate="clip-left"]:not([data-kf-inview]),
+.kf-motion [data-kf-animate="clip-right"]:not([data-kf-inview]) {
+  opacity: 1;
+  -webkit-mask-size: 0% 100%;
+  mask-size: 0% 100%;
+}
+
+/* Editorial reveal also lifts slightly as it uncovers. */
+.kf-motion [data-kf-animate="reveal"]:not([data-kf-inview]) {
   transform: translate3d(0, calc(var(--kf-a-shift) * 0.5), 0);
 }
 
@@ -108,13 +163,15 @@
   opacity: 1;
   filter: none;
   transform: none;
-  clip-path: inset(0 0 0 0);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
-/* clip-path: none once settled so overflowing children (shadows, focus rings)
-   are not clipped after the animation finishes. */
+/* The mask is removed once settled so overflowing children — shadows, focus
+   rings, hover lifts — are not cut off at the box edge afterwards. */
 .kf-motion [data-kf-animate][data-kf-inview][data-kf-settled] {
-  clip-path: none;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 /* ==========================================================================
@@ -208,7 +265,8 @@
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
-    clip-path: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
     animation: none !important;
   }
 
@@ -223,5 +281,6 @@ html:not(.kf-motion) [data-kf-animate] {
   opacity: 1;
   transform: none;
   filter: none;
-  clip-path: none;
+  -webkit-mask-image: none;
+  mask-image: none;
 }

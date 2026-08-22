@@ -1,0 +1,381 @@
+/* ==========================================================================
+   Kofii Flow — Lookbook
+   Loaded by sections/kf-lookbook.liquid.
+   ========================================================================== */
+
+.kf-lookbook__header {
+  margin-bottom: var(--kf-space-md);
+}
+
+.kf-lookbook__stage {
+  position: relative;
+  display: block;
+}
+
+.kf-lookbook__media {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Hotspots
+   ========================================================================== */
+
+.kf-lookbook__hotspot {
+  position: absolute;
+  /* The pin is centred on its coordinate rather than hanging from the corner,
+     so the slider values mean what a merchant expects. */
+  inset-inline-start: var(--kf-hotspot-x, 50%);
+  inset-block-start: var(--kf-hotspot-y, 50%);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.kf-lookbook__dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* Visually small, but a full touch target — the tappable area extends past
+     the ring via padding rather than growing the ring itself. */
+  width: 2.75rem;
+  height: 2.75rem;
+  /* Pairs with the accent disc below — same treatment as the timeline
+     marker, which is the theme's other numbered dot on an accent fill. */
+  color: var(--kf-color-background);
+  cursor: pointer;
+}
+
+.kf-lookbook__dot::before {
+  content: "";
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--kf-radius-circle);
+  background-color: var(--kf-color-accent);
+  /* The shadow is what keeps the pin readable on an arbitrary photograph —
+     it matters more now the disc is a brand colour rather than a flat white,
+     since an accent can land close to the tones underneath it. */
+  box-shadow: var(--kf-shadow-md);
+  transition: transform var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+.kf-lookbook__dot > * {
+  position: relative;
+  z-index: 1;
+  font-size: var(--kf-text-xs);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* A quiet pulse so the pins read as interactive without being noisy. It stops
+   as soon as one is opened, and never runs under reduced motion. */
+.kf-motion .kf-lookbook__dot::after {
+  content: "";
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--kf-radius-circle);
+  border: var(--kf-border-width-thick) solid var(--kf-color-accent);
+  animation: kf-hotspot-pulse 2.4s var(--kf-ease-out) infinite;
+  pointer-events: none;
+}
+
+@keyframes kf-hotspot-pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  70% { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.kf-lookbook__hotspot[data-open] .kf-lookbook__dot::after {
+  animation: none;
+  opacity: 0;
+}
+
+@media (hover: hover) {
+  .kf-lookbook__dot:hover::before {
+    transform: scale(1.15);
+  }
+}
+
+.kf-lookbook__dot:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 0;
+  border-radius: var(--kf-radius-circle);
+}
+
+/* The plus mark is drawn rather than iconified: two lines, no request. */
+.kf-lookbook--plus .kf-lookbook__dot::before {
+  background-image:
+    linear-gradient(var(--kf-color-background), var(--kf-color-background)),
+    linear-gradient(var(--kf-color-background), var(--kf-color-background));
+  background-size: 0.6rem 1.5px, 1.5px 0.6rem;
+  background-position: center, center;
+  background-repeat: no-repeat;
+}
+
+/* ==========================================================================
+   Popover
+   ========================================================================== */
+
+.kf-lookbook__popover {
+  position: absolute;
+  z-index: 3;
+  width: min(16rem, 60vw);
+  padding: var(--kf-space-2xs);
+  border-radius: var(--kf-radius-md);
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-lg);
+
+  /* Default: below and to the right of the pin. */
+  inset-block-start: calc(50% + 1.5rem);
+  inset-inline-start: 50%;
+}
+
+/* Past the halfway mark, open back toward the middle of the image so the card
+   cannot hang off the edge. Set from the hotspot coordinates in Liquid. */
+.kf-lookbook__hotspot--flip-x .kf-lookbook__popover {
+  inset-inline-start: auto;
+  inset-inline-end: 50%;
+}
+
+.kf-lookbook__hotspot--flip-y .kf-lookbook__popover {
+  inset-block-start: auto;
+  inset-block-end: calc(50% + 1.5rem);
+}
+
+.kf-lookbook__popover .kf-product-card__title {
+  font-size: var(--kf-text-xs);
+}
+
+/* On small screens there is no room to anchor a card beside a pin, so it
+   becomes a sheet across the bottom of the screen instead.
+   --------------------------------------------------------------------------
+   The centring has to move off the wrapper and onto the dot first. A
+   transformed element becomes the containing block for its `position: fixed`
+   descendants, so while `translate(-50%, -50%)` sits on the wrapper the sheet
+   below resolves its insets against a 44px pin rather than the viewport — it
+   rendered 16px wide (44 - 2 x gutter) pinned beside the dot.
+
+   Translating the dot instead is equivalent: it is the wrapper's only in-flow
+   child, so -50% of the dot is the same distance as -50% of the wrapper, and
+   it stays correct if the pin is ever resized. */
+@media (max-width: 749px) {
+  .kf-lookbook__hotspot {
+    transform: none;
+  }
+
+  .kf-lookbook__dot {
+    transform: translate(-50%, -50%);
+  }
+
+  .kf-lookbook__popover,
+  .kf-lookbook__hotspot--flip-x .kf-lookbook__popover,
+  .kf-lookbook__hotspot--flip-y .kf-lookbook__popover {
+    position: fixed;
+    inset-inline: var(--kf-page-gutter);
+    inset-block: auto var(--kf-space-sm);
+    width: auto;
+    max-width: 24rem;
+    margin-inline: auto;
+  }
+}
+
+/* ==========================================================================
+   Product list
+   ========================================================================== */
+
+.kf-lookbook__products {
+  --kf-grid-gap: var(--kf-space-md);
+  margin-top: var(--kf-space-lg);
+  list-style: none;
+}
+
+/* ==========================================================================
+   Guided tour
+   --------------------------------------------------------------------------
+   The image pins and zooms to each product as its card scrolls past.
+
+   Same discipline as the scrolling story: the BASE layout is the fallback —
+   image on top, product cards in a grid underneath — and the pinned two-column
+   layout is added only at 990px with `.kf-js`. Without the element running
+   there is nothing to change the active step, so every card would sit against
+   the same un-zoomed image; the fallback is the honest result, not a downgrade.
+
+   This block is last in the file on purpose. Several rules below share their
+   specificity with the base pin rules above and rely on source order to win.
+   ========================================================================== */
+
+.kf-lookbook__tour {
+  display: grid;
+  gap: var(--kf-space-lg);
+}
+
+/* The zoom has to be clipped to something, and that something also carries the
+   corner radius the media frame would otherwise own. */
+.kf-lookbook__viewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--kf-radius-lg);
+}
+
+/* The framing happens entirely inside `transform`, with the origin parked at
+   the top-left. That is deliberate on two counts.
+
+   It is ONE property, so the move between hotspots is a single interpolated
+   transform — compositor-friendly, and the only thing on this theme's allowed
+   animation list that can express a pan and a zoom together. Driving it with
+   `transform-origin` instead would need that property in the transition too,
+   and transform-origin does not run on the compositor.
+
+   And it centres the product. Scaling about the pin keeps the pin pinned to
+   wherever it already was, so a hotspot in a corner just gets bigger in that
+   corner; translating brings it into the middle of the frame.
+
+   Reading the translate: move the hotspot to the centre of the viewport
+   (50% - fx * zoom), then clamp so the image can never pull away from an edge
+   and expose the background — (1 - zoom) * 100% is the furthest a scaled image
+   can travel and still cover its box.
+
+   The coordinates here are unitless fractions (0.32), NOT the percentages the
+   pins are positioned with, because they get multiplied by the zoom. That is
+   why they have their own property names. With every default in place this
+   whole expression collapses to the identity transform. */
+.kf-lookbook__frame {
+  position: relative;
+  transform-origin: 0 0;
+  transform:
+    translate(
+      clamp(
+        calc((1 - var(--kf-tour-zoom, 1)) * 100%),
+        calc(50% - var(--kf-tour-x, 0.5) * var(--kf-tour-zoom, 1) * 100%),
+        0%
+      ),
+      clamp(
+        calc((1 - var(--kf-tour-zoom, 1)) * 100%),
+        calc(50% - var(--kf-tour-y, 0.5) * var(--kf-tour-zoom, 1) * 100%),
+        0%
+      )
+    )
+    scale(var(--kf-tour-zoom, 1));
+  transition: transform var(--kf-motion-slow) var(--kf-ease-smooth);
+}
+
+.kf-lookbook__steps {
+  list-style: none;
+  display: grid;
+  gap: var(--kf-space-md);
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+}
+
+/* Pins ---------------------------------------------------------------------
+   Inside the frame, so they travel and scale with the image and stay on the
+   product they mark. Counter-scaling the ring keeps it a constant size on
+   screen instead of ballooning with the zoom. */
+
+.kf-lookbook--tour .kf-lookbook__dot::before {
+  transform: scale(calc(1 / var(--kf-tour-zoom, 1)));
+  transition: transform var(--kf-motion-slow) var(--kf-ease-smooth);
+}
+
+/* The pulse is an attention cue for pins you are meant to hunt for. Here the
+   zoom does that job, and a pulsing ring under a moving image is just noise. */
+.kf-lookbook--tour .kf-lookbook__dot::after {
+  animation: none;
+  opacity: 0;
+}
+
+/* Pinned layout ----------------------------------------------------------- */
+
+@media (min-width: 990px) {
+  /* Fading the other pins is what ties the card you are reading to the point
+     on the image — without it the zoom and the card look unrelated. It lives
+     in here, not outside, because nothing marks a pin active until the element
+     is running: at base width, or with no JavaScript, this would leave every
+     pin permanently at 30% and the image looking broken. */
+  .kf-js .kf-lookbook--tour .kf-lookbook__hotspot {
+    opacity: 0.3;
+    transition: opacity var(--kf-motion-normal) var(--kf-ease-standard);
+  }
+
+  .kf-js .kf-lookbook--tour .kf-lookbook__hotspot[data-active] {
+    opacity: 1;
+  }
+
+  .kf-js .kf-lookbook__tour {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: var(--kf-space-xl);
+    align-items: start;
+  }
+
+  .kf-js .kf-lookbook__tour--media-right .kf-lookbook__viewport {
+    order: 2;
+  }
+
+  .kf-js .kf-lookbook__viewport {
+    position: sticky;
+    top: calc(var(--kf-sticky-offset, 0px) + var(--kf-space-lg));
+  }
+
+  .kf-js .kf-lookbook__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Each card needs its own stretch of scroll, or two would cross the
+     activation band together and the image would flick between hotspots. */
+  .kf-js .kf-lookbook__step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70svh;
+    padding-block: var(--kf-space-md);
+  }
+
+  /* `height: auto` undoes the equal-height card option. It exists to square up
+     cards sharing a grid row; here each step holds one card, so all it would
+     do is stretch it down the full 70svh. The base grid layout above still
+     gets the benefit. */
+  /* `width: 100%` is doing real work here, not padding out the rule. A flex
+     item stops stretching the moment a cross-axis margin is `auto`, so
+     centring alone would leave the card sized by its own contents and cards
+     would change width as you scrolled. An explicit width, capped, keeps every
+     card identical and lets the auto margins centre it. */
+  .kf-js .kf-lookbook__step .kf-product-card {
+    width: 100%;
+    max-width: 20rem;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  /* Optional, and off by default: these are shoppable cards, and dimming a
+     price or an add-to-cart button costs more than the focus effect is worth
+     on most stores. Merchants who want the editorial version opt in. */
+  .kf-js .kf-lookbook--tour-dim .kf-lookbook__step {
+    opacity: 0.4;
+    transition: opacity var(--kf-motion-normal) var(--kf-ease-standard);
+  }
+
+  .kf-js .kf-lookbook--tour-dim .kf-lookbook__step[data-active] {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* A scroll-driven zoom is exactly the movement that causes vestibular
+     discomfort, so it is not softened — it is switched off. That happens in
+     JavaScript rather than here, because an inline style would outrank any
+     rule in this file. Transitions are already neutralised globally by
+     kf-motion.css, so the image simply holds still.
+
+     The pin highlight is kept: an opacity change on a 24px dot is not
+     movement, and with the zoom gone it is the only thing left connecting the
+     card you are reading to the point on the image.
+
+     Dimming the cards is not kept — same call the scrolling story makes.
+     Selectors are matched to the .kf-js rules above; a shorter one would lose
+     on specificity and the dim would survive. */
+  .kf-js .kf-lookbook--tour-dim .kf-lookbook__step,
+  .kf-js .kf-lookbook--tour-dim .kf-lookbook__step[data-active] {
+    opacity: 1;
+  }
+}

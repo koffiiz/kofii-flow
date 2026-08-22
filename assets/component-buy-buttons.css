@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Kofii Flow — Buy buttons
+   Styles for snippets/kf-buy-buttons.liquid.
+
+   Shared by the product page and the quick add panel — see the note in
+   component-variant-picker.css for why these are not in a section stylesheet.
+   ========================================================================== */
+
+.kf-buy-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+}
+
+/* A custom element is `display: inline` by default. Without this, the wrapper
+   above has a single inline child and its gap never reaches the real controls,
+   which sit inside the <form>. */
+kf-product-form {
+  display: block;
+}
+
+/* The form is where Add to cart, the dynamic checkout button and the status
+   messages actually live, so the spacing has to be applied here. */
+.kf-product-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-buy-buttons__row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-buy-buttons__row .kf-button {
+  flex: 1;
+}
+
+kf-product-form[data-loading] .kf-button.is-loading .kf-button__label {
+  opacity: 0.35;
+}
+
+.kf-button.is-loading::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  width: 1.1em;
+  height: 1.1em;
+  margin: -0.55em 0 0 -0.55em;
+  z-index: 3;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: kf-spin 700ms linear infinite;
+}
+
+@keyframes kf-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-button.is-loading::before {
+    animation-duration: 2s;
+  }
+}
+
+.kf-form-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-accent);
+}
+
+/* Shopify renders the dynamic checkout buttons; keep them on our rhythm. */
+.shopify-payment-button__button {
+  border-radius: var(--kf-button-radius) !important;
+  font-family: var(--kf-font-body) !important;
+  min-height: 2.9rem;
+}
+
+.shopify-payment-button__more-options {
+  margin-top: var(--kf-space-3xs);
+  font-size: var(--kf-text-sm);
+}
+

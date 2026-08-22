@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-list-collections",
+      "settings": {
+        "heading_size": "kf-h1",
+        "alignment": "start",
+        "columns_desktop": 3,
+        "columns_mobile": "1",
+        "per_page": 12,
+        "image_ratio": "landscape",
+        "show_count": true,
+        "show_empty": false,
+        "animation": "fade-up",
+        "animation_stagger": true,
+        "animation_stagger_delay": 60,
+        "color_scheme": "scheme-1",
+        "padding_top": 56,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

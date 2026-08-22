@@ -1,0 +1,140 @@
+/* ==========================================================================
+   Kofii Flow — Scrolling story
+   Loaded by sections/kf-scrolling-story.liquid.
+
+   Two layouts over the same markup:
+
+     base   a plain stacked sequence — each step with its own image above its
+            text. This is what small screens and no-JavaScript visitors get,
+            and it is the DEFAULT so that neither is a special case.
+     ≥990px with JavaScript, the media column pins and the inline step images
+            are hidden.
+
+   The pinned layout is gated on `.kf-js` rather than a media query alone,
+   because without the element running there is nothing to change the active
+   frame — every step would show the first image.
+   ========================================================================== */
+
+.kf-story__header {
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-story__inner {
+  display: grid;
+  gap: var(--kf-space-lg);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* The pinned stack is not rendered at all in the stacked layout. */
+.kf-story__media {
+  display: none;
+}
+
+.kf-story__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xl);
+  list-style: none;
+  min-width: 0;
+}
+
+.kf-story__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  min-width: 0;
+}
+
+.kf-story__step-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.kf-story__number {
+  color: var(--kf-color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.kf-story__eyebrow {
+  color: var(--kf-color-muted);
+}
+
+.kf-story__text {
+  max-width: 46ch;
+}
+
+/* ==========================================================================
+   Pinned layout
+   ========================================================================== */
+
+@media (min-width: 990px) {
+  .kf-js .kf-story__inner {
+    grid-template-columns: var(--kf-story-media, 1fr) minmax(0, 1fr);
+    gap: var(--kf-space-xl);
+    align-items: start;
+  }
+
+  .kf-js .kf-story__media {
+    display: grid;
+    position: sticky;
+    /* Clears a sticky header, and centres the media in what is left. */
+    top: calc(var(--kf-sticky-offset, 0px) + var(--kf-space-lg));
+  }
+
+  .kf-js .kf-story--media-right .kf-story__media {
+    order: 2;
+  }
+
+  /* Every frame shares one grid cell, stacked. */
+  .kf-js .kf-story__frame {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transition: opacity var(--kf-motion-slow) var(--kf-ease-smooth);
+  }
+
+  /* Liquid marks the first frame `data-active`, so if the element never boots
+     the opening image still shows rather than an empty column. No :first-child
+     fallback is needed — and one would out-rank this rule on source order and
+     leave frame 1 visible through every other frame. */
+  .kf-js .kf-story__frame[data-active] {
+    opacity: 1;
+  }
+
+  /* The inline image is the fallback copy; the pinned stack replaces it. */
+  .kf-js .kf-story__step-media {
+    display: none;
+  }
+
+  /* Each step needs its own stretch of scroll, or several would cross the
+     activation band at once and the media would flicker between them. */
+  .kf-js .kf-story__step {
+    min-height: 68svh;
+    justify-content: center;
+    padding-block: var(--kf-space-md);
+  }
+
+  .kf-js .kf-story__steps {
+    gap: 0;
+  }
+
+  /* Dimming reads as focus, not decoration — but it is still an opacity
+     change tied to scrolling, so reduced motion opts out below. */
+  .kf-js .kf-story--dim .kf-story__step {
+    opacity: 0.35;
+    transition: opacity var(--kf-motion-normal) var(--kf-ease-standard);
+  }
+
+  .kf-js .kf-story--dim .kf-story__step[data-active] {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-story--dim .kf-story__step,
+  .kf-story--dim .kf-story__step[data-active] {
+    opacity: 1;
+  }
+}

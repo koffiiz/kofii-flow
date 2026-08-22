@@ -1,0 +1,362 @@
+{%- comment -%}
+  Kofii Flow — Collection product grid
+  ---------------------------------------------------------------------------
+  The collection listing: native storefront filtering, sorting, product count,
+  responsive grid and pagination.
+
+  Filtering is Shopify's, not the theme's. `collection.filters` decides which
+  filters exist, which values are available and what each one counts. This
+  section only renders them. There is no client-side filtering anywhere — a
+  theme that filtered products itself would disagree with the server as soon as
+  inventory or pagination changed.
+
+  <kf-facets> re-renders this whole section through the Section Rendering API
+  and swaps the `[data-kf-facet-region]` blocks. With scripting disabled the
+  filter form submits normally and the page reloads, which produces exactly the
+  same URLs.
+
+  Products render through the shared product card — the same one used by search
+  and by cart recommendations.
+{%- endcomment -%}
+
+{{ 'section-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+{{ 'component-variant-picker.css' | asset_url | stylesheet_tag }}
+{{ 'component-buy-buttons.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-quick-add.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-product-form.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-facets.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+
+  assign has_filters = false
+  if s.enable_filtering and collection.filters.size > 0
+    assign has_filters = true
+  endif
+
+  assign show_toolbar = false
+  if has_filters or s.enable_sorting
+    assign show_toolbar = true
+  endif
+
+  assign grid_class = 'kf-collection'
+  if has_filters and s.filter_layout == 'sidebar'
+    assign grid_class = grid_class | append: ' kf-collection--sidebar'
+  endif
+
+  assign card_sizes = '(min-width: 990px) 25vw, (min-width: 768px) 33vw, 50vw'
+  assign filters_label = 'collections.filters.title' | t
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: grid_class %}>
+  <div class="kf-container">
+    {%- paginate collection.products by s.products_per_page -%}
+      <kf-facets data-section-id="{{ section.id }}" class="kf-collection__inner">
+        {%- if show_toolbar -%}
+          <div class="kf-collection__toolbar">
+            {%- if has_filters -%}
+              <button
+                type="button"
+                class="kf-button kf-button--secondary kf-button--sm kf-collection__filter-toggle"
+                data-kf-facet-toggle
+                aria-expanded="false"
+                aria-controls="KfFacetPanel-{{ section.id }}"
+              >
+                <span class="kf-button__label">{{ filters_label }}</span>
+              </button>
+            {%- endif -%}
+
+            {%- comment -%}
+              Marked as a swap region: the count changes with every filter, and
+              the toolbar itself is not re-rendered.
+            {%- endcomment -%}
+            <p
+              class="kf-collection__count kf-text-sm kf-text-muted"
+              data-kf-facet-region="count"
+              data-kf-facet-count
+              role="status"
+            >
+              {{ 'collections.product_count' | t: count: collection.products_count }}
+            </p>
+
+            {%- if s.enable_sorting -%}
+              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+
+              {%- comment -%}
+                The sort control binds to the filter form with the `form`
+                attribute so there is one form and one serialisation path. When
+                filtering is off that form does not exist, so an empty one is
+                rendered here to own the sort field.
+              {%- endcomment -%}
+              {%- unless has_filters -%}
+                <form
+                  id="KfFacetForm-{{ section.id }}"
+                  data-kf-facet-form
+                  action="{{ collection.url }}"
+                  method="get"
+                  class="kf-visually-hidden"
+                ></form>
+              {%- endunless -%}
+
+              <div class="kf-field kf-collection__sort">
+                <label class="kf-visually-hidden" for="KfSort-{{ section.id }}">
+                  {{ 'collections.sort_by' | t }}
+                </label>
+                <select
+                  class="kf-select kf-select--compact"
+                  id="KfSort-{{ section.id }}"
+                  name="sort_by"
+                  form="KfFacetForm-{{ section.id }}"
+                >
+                  {%- for option in collection.sort_options -%}
+                    <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
+                      {{ option.name }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} ---------------------------------------------- Filters {%- endcomment -%}
+        {%- if has_filters -%}
+          <div
+            class="kf-collection__filters"
+            id="KfFacetPanel-{{ section.id }}"
+            data-kf-facet-panel
+          >
+            <div class="kf-collection__filters-header">
+              <h2 class="kf-h6">{{ filters_label }}</h2>
+              <button type="button" class="kf-icon-button" data-kf-facet-close>
+                {%- render 'kf-icon', name: 'close' -%}
+                <span class="kf-visually-hidden">{{ 'general.accessibility.close' | t }}</span>
+              </button>
+            </div>
+
+            <div data-kf-facet-region="filters">
+              <form
+                id="KfFacetForm-{{ section.id }}"
+                data-kf-facet-form
+                action="{{ collection.url }}"
+                method="get"
+                class="kf-facets"
+              >
+                {%- render 'kf-active-filters', filters: collection.filters, clear_url: collection.url -%}
+
+                {%- for filter in collection.filters -%}
+                  {%- render 'kf-facet', filter: filter -%}
+                {%- endfor -%}
+
+                {%- comment -%}
+                  Hidden once JavaScript is available — the form applies on
+                  change instead. Without it, this is how filters are applied.
+                {%- endcomment -%}
+                <button type="submit" class="kf-button kf-button--full kf-facets__submit">
+                  <span class="kf-button__label">{{ 'collections.filters.apply' | t }}</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="kf-collection__scrim" data-kf-facet-close aria-hidden="true"></div>
+        {%- endif -%}
+
+        {%- comment -%} ---------------------------------------------- Results {%- endcomment -%}
+        <div class="kf-collection__results" data-kf-facet-region="results">
+          {%- if collection.products.size > 0 -%}
+            {%- comment -%}
+              Stagger contract: the LIST carries data-kf-stagger and each ITEM
+              carries data-kf-animate. The engine only sequences animated
+              descendants of a stagger container — putting the animation on the
+              list instead animates the whole grid as one block and makes the
+              stagger setting silently do nothing.
+            {%- endcomment -%}
+            <ul
+              class="kf-grid kf-collection__grid"
+              role="list"
+              style="--kf-grid-cols: {{ s.columns_desktop }}; --kf-grid-cols-tablet: 3; --kf-grid-cols-mobile: {{ s.columns_mobile }};"
+              {% render 'kf-motion-attrs',
+                stagger: s.animation_stagger,
+                stagger_delay: s.animation_stagger_delay %}
+            >
+              {%- for product in collection.products -%}
+                <li
+                  class="kf-collection__item"
+                  {% render 'kf-motion-attrs', animation: s.animation %}
+                >
+                  {%- render 'kf-product-card',
+                    product: product,
+                    heading_tag: 'h3',
+                    sizes: card_sizes,
+                    loading: 'lazy'
+                  -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+
+            {%- render 'kf-pagination', paginate: paginate, anchor: '#MainContent' -%}
+          {%- else -%}
+            <div class="kf-empty kf-collection__empty">
+              <p class="kf-text-lg">{{ 'collections.empty' | t }}</p>
+              {%- if has_filters -%}
+                <p>{{ 'collections.empty_filters' | t }}</p>
+                {%- assign clear_label = 'collections.filters.clear_all' | t -%}
+                {%- render 'kf-button',
+                  label: clear_label,
+                  href: collection.url,
+                  style: 'secondary',
+                  attributes: 'data-kf-facet-remove'
+                -%}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </kf-facets>
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "tag": "section",
+  "class": "kf-collection-section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Filtering and sorting"
+    },
+    {
+      "type": "paragraph",
+      "content": "Filters come from Shopify. Add and configure them in Search & Discovery, then they appear here automatically."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "filter_layout",
+      "label": "Filter layout on desktop",
+      "options": [
+        { "value": "sidebar", "label": "Sidebar" },
+        { "value": "drawer", "label": "Slide-out panel" }
+      ],
+      "default": "sidebar"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sorting",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "Stagger products",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

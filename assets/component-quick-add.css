@@ -1,0 +1,144 @@
+/* ==========================================================================
+   Kofii Flow — Quick add
+   Loaded by every section that renders a product card with quick add enabled,
+   and by the quick add panel section itself.
+   ========================================================================== */
+
+kf-quick-add {
+  display: block;
+}
+
+/* The button ---------------------------------------------------------------
+   Sits over the media, revealed on hover on pointer devices. On touch it is
+   always visible, because there is no hover to reveal it with. */
+
+.kf-quick-add-button {
+  position: absolute;
+  inset-inline: var(--kf-space-2xs);
+  inset-block-end: var(--kf-space-2xs);
+  z-index: 2;
+  justify-content: center;
+
+  /* The insets define the width. `width: 100%` — which `.kf-button--full`
+     sets — would be measured against the whole media frame while the element
+     is already offset from the left, pushing it past the right edge. */
+  width: auto;
+}
+
+@media (hover: hover) {
+  .kf-quick-add-button {
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition: opacity var(--kf-motion-fast) var(--kf-ease-standard),
+                transform var(--kf-motion-fast) var(--kf-ease-out);
+  }
+
+  .kf-product-card:hover .kf-quick-add-button,
+  .kf-product-card:focus-within .kf-quick-add-button {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Keyboard users must be able to reach it without a hover state. */
+.kf-quick-add-button:focus-visible {
+  opacity: 1;
+  transform: none;
+}
+
+kf-quick-add[data-loading] .kf-quick-add-button {
+  opacity: 1;
+  transform: none;
+  pointer-events: none;
+}
+
+kf-quick-add[data-loading] .kf-button__label {
+  opacity: 0.4;
+}
+
+/* Momentary confirmation when no cart drawer opens to acknowledge the add. */
+kf-quick-add[data-added] .kf-quick-add-button {
+  opacity: 1;
+  transform: none;
+}
+
+kf-quick-add[data-added] .kf-quick-add-button .kf-button__label {
+  visibility: hidden;
+}
+
+kf-quick-add[data-added] .kf-quick-add-button::before {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 3;
+  font-size: var(--kf-text-md);
+}
+
+/* The panel --------------------------------------------------------------- */
+
+.kf-quick-add-panel {
+  width: min(46rem, calc(100vw - 2rem));
+  max-width: none;
+  max-height: min(90svh, 44rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--kf-radius-lg);
+  background-color: var(--kf-color-background);
+  color: var(--kf-color-text);
+  overflow: visible;
+}
+
+.kf-quick-add-panel::backdrop {
+  background-color: color-mix(in oklab, #000 55%, transparent);
+}
+
+.kf-quick-add-panel__body {
+  max-height: min(90svh, 44rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--kf-space-md);
+  border-radius: inherit;
+}
+
+.kf-quick-add-panel__close {
+  position: absolute;
+  inset-block-start: var(--kf-space-3xs);
+  inset-inline-end: var(--kf-space-3xs);
+  z-index: 2;
+  background-color: var(--kf-color-background);
+}
+
+.kf-quick-add {
+  display: grid;
+  gap: var(--kf-space-md);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 750px) {
+  .kf-quick-add {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.kf-quick-add__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  min-width: 0;
+}
+
+.kf-quick-add__title {
+  font-family: var(--kf-font-heading);
+  font-size: var(--kf-h4);
+  line-height: var(--kf-heading-leading);
+  letter-spacing: var(--kf-heading-spacing);
+  color: var(--kf-color-heading);
+}
+
+.kf-quick-add__full {
+  align-self: flex-start;
+  font-size: var(--kf-text-sm);
+}

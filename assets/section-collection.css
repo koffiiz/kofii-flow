@@ -1,0 +1,462 @@
+/* ==========================================================================
+   Kofii Flow — Collection
+   Loaded by main-collection-product-grid, main-collection-banner and
+   main-list-collections.
+   ========================================================================== */
+
+/* ==========================================================================
+   Banner
+   ========================================================================== */
+
+.kf-collection-banner__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--kf-space-md);
+}
+
+.kf-collection-banner__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  max-width: var(--kf-content-width);
+}
+
+.kf-collection-banner__description {
+  max-width: 60ch;
+}
+
+.kf-collection-banner__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.kf-collection-banner__backdrop .kf-media,
+.kf-collection-banner__media {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+.kf-collection-banner--overlay {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: 34svh;
+}
+
+@media (min-width: 990px) {
+  .kf-collection-banner--split .kf-collection-banner__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.65fr);
+    align-items: center;
+    gap: var(--kf-space-xl);
+  }
+}
+
+/* Breadcrumb -------------------------------------------------------------- */
+
+.kf-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-muted);
+}
+
+.kf-breadcrumb__list li + li::before {
+  content: "/";
+  margin-inline-end: 0.4rem;
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   Collection layout
+   ========================================================================== */
+
+/* Auto-placement in the base case, on purpose. Everywhere except the desktop
+   sidebar the filter panel is `position: fixed`, so it is not a grid item at
+   all — declaring an explicit "filters" row here would reserve an empty track
+   and leave a stray gap between the toolbar and the products. */
+.kf-collection__inner {
+  display: grid;
+  gap: var(--kf-space-md);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 990px) {
+  /* Sidebar layout: the panel becomes static, so it is a real grid item and
+     named areas apply. The rail spans both rows so the first product aligns
+     with the first filter. */
+  .kf-collection--sidebar .kf-collection__inner {
+    grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+    grid-template-areas:
+      "filters toolbar"
+      "filters results";
+    gap: var(--kf-space-md) var(--kf-space-lg);
+  }
+
+  .kf-collection--sidebar .kf-collection__toolbar { grid-area: toolbar; }
+  .kf-collection--sidebar .kf-collection__filters { grid-area: filters; }
+  .kf-collection--sidebar .kf-collection__results { grid-area: results; }
+}
+
+.kf-collection__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kf-space-2xs) var(--kf-space-sm);
+  padding-bottom: var(--kf-space-2xs);
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-collection__count {
+  margin-inline-end: auto;
+}
+
+.kf-collection__sort {
+  min-width: 11rem;
+}
+
+.kf-collection__grid {
+  --kf-grid-gap: var(--kf-space-md);
+  list-style: none;
+}
+
+.kf-collection__empty {
+  gap: var(--kf-space-xs);
+}
+
+/* Dim results while a filtered re-render is in flight, so what is on screen
+   is visibly out of date rather than silently wrong. */
+kf-facets[data-loading] .kf-collection__results {
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+/* ==========================================================================
+   Filter panel
+   --------------------------------------------------------------------------
+   One form, two presentations. Below 990px (and in the drawer layout) it is a
+   slide-over; at desktop widths in sidebar layout it is simply in the flow.
+   The markup is never duplicated between the two.
+   ========================================================================== */
+
+.kf-collection__filters {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: var(--kf-z-drawer);
+  width: min(22rem, 88vw);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-lg);
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out),
+              visibility var(--kf-motion-normal) linear;
+}
+
+kf-facets[data-panel-open] .kf-collection__filters {
+  transform: none;
+  visibility: visible;
+}
+
+.kf-collection__filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kf-space-sm);
+  padding: var(--kf-space-sm) var(--kf-space-md);
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-collection__filters > [data-kf-facet-region] {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--kf-space-sm) var(--kf-space-md);
+}
+
+.kf-collection__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--kf-z-overlay);
+  background-color: color-mix(in oklab, #000 45%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--kf-motion-normal) var(--kf-ease-standard),
+              visibility var(--kf-motion-normal) linear;
+}
+
+kf-facets[data-panel-open] .kf-collection__scrim {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 990px) {
+  .kf-collection--sidebar .kf-collection__filters {
+    position: static;
+    width: auto;
+    transform: none;
+    visibility: visible;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .kf-collection--sidebar .kf-collection__filters-header,
+  .kf-collection--sidebar .kf-collection__filter-toggle,
+  .kf-collection--sidebar .kf-collection__scrim {
+    display: none;
+  }
+
+  .kf-collection--sidebar .kf-collection__filters > [data-kf-facet-region] {
+    overflow: visible;
+    padding: 0;
+  }
+}
+
+/* The Apply button only exists for visitors without JavaScript. */
+.kf-js .kf-facets__submit {
+  display: none;
+}
+
+/* ==========================================================================
+   Filter groups
+   ========================================================================== */
+
+.kf-facet {
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-facet__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kf-space-2xs);
+  padding-block: var(--kf-space-xs);
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-heading);
+}
+
+.kf-facet__active-count {
+  color: var(--kf-color-accent);
+}
+
+.kf-facet__icon {
+  color: var(--kf-color-muted);
+  transition: transform var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+.kf-facet[open] .kf-facet__icon {
+  transform: rotate(180deg);
+}
+
+.kf-facet__body {
+  padding-bottom: var(--kf-space-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-facet__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  list-style: none;
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+.kf-facet__item--disabled {
+  opacity: 0.4;
+}
+
+/* The checkbox stays in the accessibility tree and keeps keyboard focus; the
+   label is the visible control, styled from the input's state. */
+.kf-facet__checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.kf-facet__value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: var(--kf-radius-sm);
+  font-size: var(--kf-text-sm);
+  cursor: pointer;
+  transition: background-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-facet__value::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+  border-radius: var(--kf-radius-xs);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 0.7rem;
+  transition: background-color var(--kf-motion-fast) var(--kf-ease-standard),
+              border-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+.kf-facet__checkbox:checked + .kf-facet__value::before {
+  background-color: var(--kf-color-heading);
+  border-color: var(--kf-color-heading);
+  /* Inline check mark, so a filter tick needs no extra request. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12.5l5 5 10-11'/%3E%3C/svg%3E");
+}
+
+.kf-facet__checkbox:focus-visible + .kf-facet__value {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: var(--kf-focus-offset);
+}
+
+.kf-facet__checkbox:disabled + .kf-facet__value {
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .kf-facet__checkbox:not(:disabled) + .kf-facet__value:hover {
+    background-color: var(--kf-color-surface-strong);
+  }
+}
+
+.kf-facet__value-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.kf-facet__count {
+  color: var(--kf-color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.kf-facet__swatch {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: var(--kf-radius-circle);
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+  background-color: var(--kf-swatch-color, var(--kf-color-surface));
+  background-image: var(--kf-swatch-image, none);
+  background-size: cover;
+  background-position: center;
+  flex: 0 0 auto;
+}
+
+.kf-facet__image {
+  width: 1.6rem;
+  flex: 0 0 auto;
+}
+
+.kf-facet__price {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-facet__price-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.kf-facet__clear {
+  align-self: flex-start;
+  font-size: var(--kf-text-sm);
+}
+
+/* ==========================================================================
+   Active filter chips
+   ========================================================================== */
+
+.kf-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kf-space-3xs) var(--kf-space-2xs);
+  padding-bottom: var(--kf-space-xs);
+}
+
+.kf-active-filters__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  list-style: none;
+}
+
+.kf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.3rem 0.6rem;
+  border: var(--kf-border-width) solid var(--kf-color-border-strong);
+  border-radius: var(--kf-radius-pill);
+  font-size: var(--kf-text-xs);
+  color: var(--kf-color-heading);
+  transition: border-color var(--kf-motion-fast) var(--kf-ease-standard),
+              background-color var(--kf-motion-fast) var(--kf-ease-standard);
+}
+
+@media (hover: hover) {
+  .kf-chip:hover {
+    background-color: var(--kf-color-surface-strong);
+    border-color: var(--kf-color-heading);
+  }
+}
+
+.kf-active-filters__clear {
+  font-size: var(--kf-text-sm);
+}
+
+/* ==========================================================================
+   Collections list
+   ========================================================================== */
+
+.kf-collection-list__grid {
+  --kf-grid-gap: var(--kf-space-md);
+  list-style: none;
+}
+
+.kf-collection-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-collection-card__title {
+  font-family: var(--kf-font-body);
+  font-size: var(--kf-text-md);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.kf-collection-card:has(.kf-card__link:focus-visible) {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: var(--kf-focus-offset);
+  border-radius: var(--kf-radius-md);
+}
+
+@media (hover: hover) {
+  .kf-motion-hover .kf-collection-card:hover .kf-media--zoom .kf-media__img {
+    transform: scale(1.045);
+  }
+
+  .kf-motion-hover .kf-collection-card:hover .kf-collection-card__title a {
+    color: var(--kf-color-accent);
+  }
+}

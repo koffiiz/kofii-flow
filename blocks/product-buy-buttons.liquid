@@ -1,94 +1,27 @@
 {%- comment -%}
   Kofii Flow — Buy buttons block
   ---------------------------------------------------------------------------
-  The only product form on the page. Its id is `KfProductForm-<product.id>`,
-  which the variant picker, the quantity input and the sticky bar all bind to
-  with the HTML `form` attribute — one form, one variant input, one add-to-cart
-  path.
+  A thin wrapper over `snippets/kf-buy-buttons.liquid`, which is also rendered
+  by the quick add panel.
 
-  Wrapped in `[data-kf-variant-region="buy-buttons"]` so the sold-out state and
-  button label are re-rendered by Liquid when the variant changes.
-
-  <kf-product-form> intercepts the submit for an AJAX add. With scripting
-  disabled the form posts normally to /cart/add and the shopper lands on the
-  cart page — still a complete purchase path.
+  The form is `KfProductForm-<product.id>`. The variant picker, the quantity
+  block and the sticky bar all bind to it with the HTML `form` attribute rather
+  than duplicating it — one form, one variant input, one add-to-cart path.
 {%- endcomment -%}
 
 {%- liquid
   assign target = closest.product
-  assign variant = target.selected_or_first_available_variant
   assign form_id = 'KfProductForm-' | append: target.id
-
-  assign is_available = false
-  if variant.available
-    assign is_available = true
-  endif
-
-  assign button_label = 'products.product.add_to_cart' | t
-  if is_available == false
-    if variant == blank
-      assign button_label = 'products.product.unavailable' | t
-    else
-      assign button_label = 'products.product.sold_out' | t
-    endif
-  endif
-
-  assign unavailable_text = 'products.product.unavailable' | t
-
-  comment
-    Neither filters nor expressions are allowed on `render` arguments, so the
-    disabled flag and the attribute string are both built here first.
-  endcomment
-  assign is_disabled = true
-  if is_available
-    assign is_disabled = false
-  endif
-
-  assign add_button_attrs = 'data-kf-add-button data-unavailable-text="' | append: unavailable_text | append: '"'
 -%}
 
 {%- if target != blank -%}
-  <div class="kf-buy-buttons" data-kf-variant-region="buy-buttons" {{ block.shopify_attributes }}>
-    <kf-product-form>
-      {%- form 'product',
-        target,
-        id: form_id,
-        class: 'kf-product-form',
-        novalidate: 'novalidate',
-        data-type: 'add-to-cart-form'
-      -%}
-        <input
-          type="hidden"
-          name="id"
-          value="{{ variant.id }}"
-          {% unless is_available %}disabled{% endunless %}
-        >
-
-        <div class="kf-buy-buttons__row" id="{{ form_id }}-actions">
-          {%- render 'kf-button',
-            label: button_label,
-            type: 'submit',
-            style: 'primary',
-            size: 'lg',
-            full: true,
-            disabled: is_disabled,
-            attributes: add_button_attrs
-          -%}
-        </div>
-
-        {%- if block.settings.show_dynamic_checkout and is_available -%}
-          {{ form | payment_button }}
-        {%- endif -%}
-
-        <p class="kf-form-message kf-form-message--error" data-kf-form-error role="alert" hidden></p>
-
-        <p class="kf-form-status" data-kf-form-status hidden>
-          {%- render 'kf-icon', name: 'check', size: 'sm' -%}
-          <span>{{ 'products.product.added_to_cart' | t }}</span>
-          <a class="kf-link" href="{{ routes.cart_url }}">{{ 'products.product.view_cart' | t }}</a>
-        </p>
-      {%- endform -%}
-    </kf-product-form>
+  <div {{ block.shopify_attributes }}>
+    {%- render 'kf-buy-buttons',
+      product: target,
+      form_id: form_id,
+      scope: 'Product',
+      show_dynamic_checkout: block.settings.show_dynamic_checkout
+    -%}
   </div>
 {%- endif -%}
 

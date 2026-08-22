@@ -1,0 +1,360 @@
+{%- comment -%}
+  Kofii Flow — Timeline
+  ---------------------------------------------------------------------------
+  A sequence of moments on a spine: founding dates, a process, a roadmap.
+
+  Two layouts:
+    vertical      spine on the left, entries stacked beside it
+    alternating   spine down the centre, entries zig-zagging either side on
+                  desktop, collapsing to the vertical layout below 990px
+
+  The spine draws itself in as each entry arrives. That uses no new JavaScript:
+  Kofii Motion already puts `data-kf-inview` on an entry when it enters, so the
+  spine segment is a child styled from that state. It also means the drawing
+  inherits the whole safety model — no JS, reduced motion or Flow Mode off and
+  the spine is simply drawn already.
+
+  Blocks are section-local: a timeline entry has a fixed shape (date, heading,
+  text) and is not a content primitive worth exposing to other sections.
+{%- endcomment -%}
+
+{{ 'section-timeline.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign timeline_class = 'kf-timeline kf-timeline--' | append: s.layout
+  assign timeline_class = timeline_class | append: ' kf-timeline--marker-' | append: s.marker
+
+  assign media_sizes = '(min-width: 990px) 40vw, 100vw'
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: timeline_class %}>
+  <div class="kf-container">
+    {%- if s.heading != blank or s.eyebrow != blank -%}
+      <header class="kf-section-header kf-timeline__header{% if s.layout == 'alternating' %} kf-section-header--center{% endif %}">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      {%- comment -%}
+        Stagger contract: the LIST carries data-kf-stagger, each ITEM carries
+        data-kf-animate. Putting the animation on the list would animate the
+        whole timeline as one block and the entries would never sequence.
+      {%- endcomment -%}
+      <ol
+        class="kf-timeline__list"
+        role="list"
+        {% render 'kf-motion-attrs',
+          stagger: true,
+          stagger_delay: s.animation_stagger_delay,
+          trigger: s.animation_trigger %}
+      >
+        {%- for block in section.blocks -%}
+          <li
+            class="kf-timeline__item"
+            {{ block.shopify_attributes }}
+            {% render 'kf-motion-attrs',
+              animation: s.animation,
+              duration: s.animation_duration,
+              easing: s.animation_easing %}
+          >
+            <div class="kf-timeline__marker" aria-hidden="true">
+              <span class="kf-timeline__dot">
+                {%- if s.marker == 'number' -%}
+                  {{- forloop.index -}}
+                {%- endif -%}
+              </span>
+              {%- unless forloop.last -%}
+                <span class="kf-timeline__spine">
+                  <span class="kf-timeline__spine-fill"></span>
+                </span>
+              {%- endunless -%}
+            </div>
+
+            <div class="kf-timeline__body">
+              {%- if block.settings.date != blank -%}
+                <p class="kf-label kf-timeline__date">{{ block.settings.date | escape }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.heading != blank -%}
+                <h3 class="kf-timeline__heading {{ s.item_heading_size }}">{{ block.settings.heading }}</h3>
+              {%- endif -%}
+
+              {%- if block.settings.image != blank -%}
+                <div class="kf-timeline__media">
+                  {%- render 'kf-media',
+                    image: block.settings.image,
+                    ratio: s.media_ratio,
+                    sizes: media_sizes
+                  -%}
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.text != blank -%}
+                <div class="kf-rte kf-timeline__text">{{ block.settings.text }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.link_label != blank -%}
+                {%- render 'kf-button',
+                  label: block.settings.link_label,
+                  href: block.settings.link,
+                  style: 'plain',
+                  icon: 'arrow'
+                -%}
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Timeline",
+  "tag": "section",
+  "class": "kf-timeline-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our story so far"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "select",
+      "id": "item_heading_size",
+      "label": "Entry heading size",
+      "options": [
+        { "value": "kf-h5", "label": "Small" },
+        { "value": "kf-h4", "label": "Medium" },
+        { "value": "kf-h3", "label": "Large" }
+      ],
+      "default": "kf-h4"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "vertical", "label": "Spine on the left" },
+        { "value": "alternating", "label": "Alternating sides" }
+      ],
+      "default": "vertical",
+      "info": "Alternating applies from 990px up and collapses to the left-spine layout on smaller screens."
+    },
+    {
+      "type": "select",
+      "id": "marker",
+      "label": "Marker",
+      "options": [
+        { "value": "dot", "label": "Dot" },
+        { "value": "number", "label": "Number" }
+      ],
+      "default": "dot"
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "info": "Only entries with an image show one.",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Entry animation",
+      "info": "The spine draws itself in alongside whichever animation you choose.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "fade-right", "label": "Fade in from the left" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 80
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "Duration",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "fast", "label": "Fast" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "slow", "label": "Slow" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Easing",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "smooth", "label": "Smooth" },
+        { "value": "out", "label": "Ease out" },
+        { "value": "spring", "label": "Spring-like" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "scroll", "label": "On scroll" },
+        { "value": "load", "label": "On load" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Entry",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date or label",
+          "default": "2019"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Where it began"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>A sentence or two on what happened, and why it mattered.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Timeline",
+      "blocks": [
+        { "type": "item", "settings": { "date": "2019", "heading": "Where it began" } },
+        { "type": "item", "settings": { "date": "2022", "heading": "The first workshop" } },
+        { "type": "item", "settings": { "date": "Today", "heading": "What comes next" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

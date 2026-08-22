@@ -20,6 +20,27 @@
   justify-content: center;
 }
 
+/* Equal heights ------------------------------------------------------------
+   Grid already stretches the cell; what it cannot do is stretch the content
+   inside the card. Without this, a two-line title pushes its price lower than
+   the one beside it and the row reads as misaligned.
+
+   The card fills its cell, the body takes the leftover space, and the price is
+   pushed to the bottom — so prices (and the swatches after them) line up
+   across the row no matter how long each title is. */
+
+.kf-product-card--fill {
+  height: 100%;
+}
+
+.kf-product-card--fill .kf-card__body {
+  flex: 1;
+}
+
+.kf-product-card--fill .kf-price {
+  margin-top: auto;
+}
+
 .kf-product-card__media-wrap {
   position: relative;
 }

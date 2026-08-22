@@ -1,0 +1,339 @@
+{%- comment -%}
+  Kofii Flow — Scrolling story
+  ---------------------------------------------------------------------------
+  Editorial storytelling: a media column pinned with `position: sticky` while
+  the text steps scroll past it, the image cross-fading to match whichever step
+  is being read.
+
+  Blocks are section-local, not theme blocks, and that is the deciding
+  constraint: the steps have to be iterated TWICE — once to build the pinned
+  media stack, once for the text column — and `{% content_for 'blocks' %}`
+  renders blocks without letting the section read their settings.
+
+  Each step's media is therefore output in two places. Only one is ever
+  displayed (the other is `display: none`, which browsers do not fetch), so
+  this costs markup, not requests. The inline copy is what makes the section
+  degrade honestly.
+
+  Degradation, in order of severity:
+    no JavaScript   the pinned layout is never applied; steps render as a
+                    plain stacked sequence, each with its own image
+    small screens   same stacked sequence — sticky side-by-side has nowhere
+                    to go in a narrow column
+    reduced motion  layout is unchanged; the cross-fade becomes instant via
+                    the global reduced-motion rule
+
+  No scroll-jacking anywhere. See assets/kf-scroll-story.js.
+{%- endcomment -%}
+
+{{ 'section-scrolling-story.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-scroll-story.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+
+  assign story_class = 'kf-story kf-story--' | append: s.layout
+  if s.dim_inactive
+    assign story_class = story_class | append: ' kf-story--dim'
+  endif
+
+  case s.media_width
+    when 'small'
+      assign media_track = '0.8fr'
+    when 'large'
+      assign media_track = '1.25fr'
+    else
+      assign media_track = '1fr'
+  endcase
+
+  assign root_style = '--kf-story-media: ' | append: media_track | append: ';'
+  assign media_sizes = '(min-width: 990px) 50vw, 100vw'
+-%}
+
+<div
+  {% render 'kf-section-attrs',
+    s: section.settings,
+    extra_class: story_class,
+    style: root_style %}
+>
+  <div class="kf-container">
+    {%- if s.heading != blank or s.eyebrow != blank -%}
+      <header class="kf-section-header kf-story__header">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <kf-scroll-story class="kf-story__inner">
+        {%- comment -%}
+          The pinned media stack. Every frame occupies the same grid cell and
+          only the active one is opaque. Hidden from assistive technology: it
+          is a visual echo of the media already inside each step.
+        {%- endcomment -%}
+        <div class="kf-story__media" aria-hidden="true">
+          {%- for block in section.blocks -%}
+            <div
+              class="kf-story__frame"
+              data-kf-story-frame
+              {% if forloop.first %}data-active{% endif %}
+            >
+              {%- render 'kf-media',
+                image: block.settings.image,
+                ratio: s.media_ratio,
+                sizes: media_sizes,
+                placeholder: 'lifestyle-1'
+              -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <ol class="kf-story__steps" role="list">
+          {%- for block in section.blocks -%}
+            <li
+              class="kf-story__step"
+              data-kf-story-step
+              {% if forloop.first %}data-active{% endif %}
+              {{ block.shopify_attributes }}
+            >
+              {%- comment -%}
+                Shown only when the pinned layout is not in play — small
+                screens and no JavaScript.
+              {%- endcomment -%}
+              <div class="kf-story__step-media">
+                {%- render 'kf-media',
+                  image: block.settings.image,
+                  ratio: s.media_ratio,
+                  sizes: '100vw',
+                  placeholder: 'lifestyle-1'
+                -%}
+              </div>
+
+              <div class="kf-story__step-body">
+                {%- if s.show_numbers -%}
+                  {%- assign step_number = forloop.index | prepend: '0' | slice: -2, 2 -%}
+                  <span class="kf-story__number kf-label" aria-hidden="true">{{ step_number }}</span>
+                {%- endif -%}
+
+                {%- if block.settings.eyebrow != blank -%}
+                  <p class="kf-label kf-story__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="kf-story__heading {{ s.step_heading_size }}">{{ block.settings.heading }}</h3>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <div class="kf-rte kf-story__text">{{ block.settings.text }}</div>
+                {%- endif -%}
+
+                {%- if block.settings.link_label != blank -%}
+                  {%- render 'kf-button',
+                    label: block.settings.link_label,
+                    href: block.settings.link,
+                    style: 'plain',
+                    icon: 'arrow'
+                  -%}
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </kf-scroll-story>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Scrolling story",
+  "tag": "section",
+  "class": "kf-story-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How it is made"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "select",
+      "id": "step_heading_size",
+      "label": "Step heading size",
+      "options": [
+        { "value": "kf-h4", "label": "Small" },
+        { "value": "kf-h3", "label": "Medium" },
+        { "value": "kf-h2", "label": "Large" }
+      ],
+      "default": "kf-h3"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Media position on desktop",
+      "options": [
+        { "value": "media-left", "label": "Left" },
+        { "value": "media-right", "label": "Right" }
+      ],
+      "default": "media-left"
+    },
+    {
+      "type": "select",
+      "id": "media_width",
+      "label": "Media width",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Media ratio",
+      "options": [
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" },
+        { "value": "landscape", "label": "Landscape (4:3)" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Number the steps",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "dim_inactive",
+      "label": "Dim the steps you are not reading",
+      "default": true,
+      "info": "Fades text that is not the current step. Turned off automatically for visitors who prefer reduced motion."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "The first step"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>One paragraph on this stage of the story. Keep it to something a reader can take in while the image is on screen.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling story",
+      "blocks": [
+        { "type": "step", "settings": { "heading": "It starts with the fibre" } },
+        { "type": "step", "settings": { "heading": "Then the loom" } },
+        { "type": "step", "settings": { "heading": "And finally, the finish" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

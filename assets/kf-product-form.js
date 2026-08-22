@@ -45,37 +45,24 @@
       }
 
       event.preventDefault();
+
+      if (!KF.cart) {
+        // kf-cart.js owns the single add-to-cart implementation. Without it,
+        // let the browser submit the form normally rather than silently doing
+        // nothing — the shopper still reaches the cart.
+        this.form.submit();
+        return;
+      }
+
       this.setLoading(true);
       this.clearError();
 
-      var body = new FormData(this.form);
       var self = this;
 
-      // Ask for the cart sections in the same request, so the drawer is
-      // already rendered by the time it opens.
-      var sections = (KF.cart && KF.cart.sectionIds()) || [];
-      if (sections.length) {
-        body.append('sections', sections.join(','));
-        body.append('sections_url', window.location.pathname);
-      }
-
-      fetch(window.routes.cart_add_url + '.js', {
-        method: 'POST',
-        headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-        body: body
-      })
-        .then(function (response) {
-          return response.json().then(function (data) {
-            return { ok: response.ok, data: data };
-          });
-        })
+      KF.cart
+        .add(new FormData(this.form))
         .then(function (result) {
-          if (!result.ok) {
-            // Shopify returns a human-readable `description` for things like
-            // exceeding available stock. Surface it rather than a generic error.
-            throw new Error(result.data.description || result.data.message || 'Add to cart failed');
-          }
-          return self.refreshCart(result.data);
+          self.announceSuccess(result.added, result.cart, result.opensDrawer);
         })
         .catch(function (error) {
           self.showError(error.message);
@@ -83,36 +70,6 @@
         })
         .finally(function () {
           self.setLoading(false);
-        });
-    }
-
-    /**
-     * Applies the re-rendered cart sections, then fetches the cart itself.
-     * The second request is needed because /cart/add.js returns only the added
-     * line item, and the header count needs cart-level totals.
-     */
-    refreshCart(addedItem) {
-      var self = this;
-
-      if (KF.cart) KF.cart.applySections(addedItem.sections);
-
-      return fetch(window.routes.cart_url + '.js', {
-        headers: { Accept: 'application/json' }
-      })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (cart) {
-          var opensDrawer = document.documentElement.dataset.kfCartType === 'drawer';
-
-          KF.emit(KF.events.cartUpdate, {
-            cart: cart,
-            sections: addedItem.sections,
-            added: addedItem,
-            open: opensDrawer
-          });
-
-          self.announceSuccess(addedItem, cart, opensDrawer);
         });
     }
 
