@@ -1,0 +1,262 @@
+{%- comment -%}
+  Kofii Flow — Before / after
+  ---------------------------------------------------------------------------
+  Two images stacked, with a divider the visitor drags to compare them.
+
+  The control is a native <input type="range"> stretched invisibly across the
+  whole frame. That is the entire accessibility story in one decision: mouse
+  drag, touch drag, click-to-jump, arrow keys, Home and End, an accessible name
+  and an announced percentage, all from the browser. A div with pointer
+  handlers would need every one of those written by hand.
+
+  <kf-compare> only copies the range's value into a custom property; the CSS
+  does the rest. With no JavaScript the range is hidden rather than left as a
+  dead control, and the section settles at the merchant's start position —
+  still two images, still legible, just not draggable.
+
+  Not blocks: a comparison is exactly two images. Making them blocks would
+  invite a third, which the section has no meaning for.
+{%- endcomment -%}
+
+{{ 'section-compare.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-compare.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+
+  assign has_header = false
+  if s.heading != blank or s.eyebrow != blank or s.text != blank
+    assign has_header = true
+  endif
+
+  comment
+    Filters are not allowed on render arguments, and this is an attribute
+    value anyway — resolve it once.
+  endcomment
+  assign range_label = 'general.accessibility.compare_images' | t
+
+  assign media_sizes = '(min-width: 990px) 70vw, 100vw'
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-compare' %}>
+  <div class="kf-container">
+    {%- if has_header -%}
+      <header class="kf-section-header kf-compare__header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="kf-section-header__text kf-rte">{{ s.text }}</div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <kf-compare style="--kf-compare-pos: {{ s.start_position }}%;">
+      <div class="kf-compare__frame">
+        {%- comment -%}
+          The first image is in normal flow and sets the frame's height. The
+          second is laid over it and clipped, so two images with different
+          proportions still line up instead of one dictating a crop the other
+          does not share.
+        {%- endcomment -%}
+        {%- render 'kf-media',
+          image: s.image_before,
+          ratio: s.media_ratio,
+          sizes: media_sizes,
+          placeholder: 'lifestyle-1',
+          flush: true,
+          class: 'kf-compare__media'
+        -%}
+
+        <div class="kf-compare__after">
+          {%- render 'kf-media',
+            image: s.image_after,
+            ratio: s.media_ratio,
+            sizes: media_sizes,
+            placeholder: 'lifestyle-2',
+            flush: true,
+            class: 'kf-compare__media'
+          -%}
+        </div>
+
+        {%- if s.label_before != blank -%}
+          <span class="kf-compare__label kf-compare__label--before">{{ s.label_before | escape }}</span>
+        {%- endif -%}
+        {%- if s.label_after != blank -%}
+          <span class="kf-compare__label kf-compare__label--after">{{ s.label_after | escape }}</span>
+        {%- endif -%}
+
+        <div class="kf-compare__divider" aria-hidden="true">
+          <span class="kf-compare__handle"></span>
+        </div>
+
+        <input
+          class="kf-compare__range"
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          value="{{ s.start_position }}"
+          aria-label="{{ range_label | escape }}"
+          data-kf-compare-range
+        >
+      </div>
+    </kf-compare>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Before and after",
+  "tag": "section",
+  "class": "kf-compare-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "See the difference"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_before",
+      "label": "Before image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_after",
+      "label": "After image",
+      "info": "Shoot both from the same position and at the same size, or the divider will look like it is moving the subject."
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to the before image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "text",
+      "id": "label_before",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "label_after",
+      "label": "After label",
+      "default": "After"
+    },
+    {
+      "type": "header",
+      "content": "Behaviour"
+    },
+    {
+      "type": "range",
+      "id": "start_position",
+      "label": "Starting position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50,
+      "info": "Where the divider sits before anyone touches it. This is also what visitors without JavaScript see."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Before and after"
+    }
+  ]
+}
+{% endschema %}

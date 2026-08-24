@@ -1,0 +1,632 @@
+{%- comment -%}
+  Kofii Flow — Bento grid
+  ---------------------------------------------------------------------------
+  A grid of tiles at mixed sizes. Each tile says how many columns and rows it
+  spans and CSS grid places them in order.
+
+  Three tile types, each reusing what the theme already has rather than
+  restating it: an image tile through kf-media, a text tile through kf-button,
+  and a product tile through the shared product card — so a product here looks
+  identical to the same product in a collection grid.
+
+  Mobile spans are computed HERE, not in CSS. A tile spanning four of six
+  columns has to become "the whole row" on a two column grid, and clamping an
+  integer span in CSS is not reliably supported. Liquid knows both numbers, so
+  it does the arithmetic once and emits the answer.
+
+  Blocks are section-local: a tile is a span plus a scrap of content, which
+  means nothing outside this grid.
+{%- endcomment -%}
+
+{{ 'section-bento.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign has_header = false
+  if s.heading != blank or s.eyebrow != blank or s.text != blank
+    assign has_header = true
+  endif
+
+  assign grid_style = '--kf-bento-cols: ' | append: s.columns | append: ';'
+  assign grid_style = grid_style | append: ' --kf-bento-row: ' | append: s.row_height | append: 'px;'
+  assign grid_style = grid_style | append: ' --kf-bento-row-mobile: ' | append: s.row_height_mobile | append: 'px;'
+  assign grid_style = grid_style | append: ' --kf-bento-gap: ' | append: s.gap | append: 'px;'
+  assign grid_style = grid_style | append: ' --kf-bento-cols-mobile: ' | append: s.columns_mobile | append: ';'
+
+  comment
+    Stagger only means something when the tiles actually animate — the engine
+    claims children that carry data-kf-animate, and with no animation there is
+    nothing to sequence.
+  endcomment
+  assign use_stagger = false
+  if s.animation != 'none'
+    assign use_stagger = true
+  endif
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-bento' %}>
+  <div class="kf-container">
+    {%- if has_header -%}
+      <header class="kf-section-header kf-bento__header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="kf-section-header__text kf-rte">{{ s.text }}</div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      {%- comment -%}
+        Stagger contract: the LIST carries data-kf-stagger, each TILE carries
+        data-kf-animate. Giving the list an animation as well would animate the
+        grid as one block and swallow the sequencing entirely.
+
+        The grid's custom properties go THROUGH the snippet rather than beside
+        it. kf-motion-attrs emits its own `style` attribute, and a second one
+        on the same element is simply ignored by the parser — the column count
+        and row height would vanish the moment an animation was chosen.
+      {%- endcomment -%}
+      <ul
+        class="kf-bento__grid"
+        role="list"
+        {% render 'kf-motion-attrs',
+          stagger: use_stagger,
+          stagger_delay: s.animation_stagger_delay,
+          trigger: s.animation_trigger,
+          style: grid_style %}
+      >
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+
+            comment
+              A span wider than the grid would silently overflow the row, so it
+              is clamped to the column count first.
+            endcomment
+            assign span_cols = b.column_span
+            if span_cols > s.columns
+              assign span_cols = s.columns
+            endif
+
+            comment
+              On the mobile grid anything wider than one column becomes the
+              full row. Two columns is too few for a middle ground.
+            endcomment
+            assign span_cols_mobile = 1
+            if span_cols > 1
+              assign span_cols_mobile = s.columns_mobile
+            endif
+
+            assign tile_class = 'kf-bento__tile kf-bento__tile--' | append: block.type
+            assign tile_scheme = b.color_scheme
+            if block.type != 'image' and tile_scheme.id != blank
+              assign tile_class = tile_class | append: ' kf-scheme kf-scheme--' | append: tile_scheme.id
+            endif
+
+            assign tile_style = '--kf-tile-cols: ' | append: span_cols | append: ';'
+            assign tile_style = tile_style | append: ' --kf-tile-rows: ' | append: b.row_span | append: ';'
+            assign tile_style = tile_style | append: ' --kf-tile-cols-mobile: ' | append: span_cols_mobile | append: ';'
+            if b.text_position == 'top'
+              assign tile_style = tile_style | append: ' --kf-tile-justify: flex-start;'
+            endif
+
+            comment
+              Image tiles are sized by their span, so the browser needs a hint
+              of the rendered width rather than a guess of 100vw.
+            endcomment
+            assign tile_fraction = span_cols | times: 100 | divided_by: s.columns
+            assign tile_sizes = '(min-width: 750px) ' | append: tile_fraction | append: 'vw, 100vw'
+          -%}
+
+          <li
+            class="{{ tile_class }}"
+            {% render 'kf-motion-attrs',
+              animation: s.animation,
+              duration: s.animation_duration,
+              easing: s.animation_easing,
+              style: tile_style %}
+            {{ block.shopify_attributes }}
+          >
+            {%- case block.type -%}
+              {%- when 'image' -%}
+                <div class="kf-bento__media">
+                  {%- render 'kf-media',
+                    image: b.image,
+                    ratio: 'square',
+                    sizes: tile_sizes,
+                    placeholder: 'lifestyle-1',
+                    flush: true,
+                    overlay_opacity: b.overlay_opacity,
+                    overlay_style: b.overlay_style
+                  -%}
+                </div>
+
+                {%- if b.heading != blank or b.text != blank -%}
+                  <div class="kf-bento__overlay-text">
+                    {%- if b.heading != blank -%}
+                      <h3 class="{{ s.tile_heading_size }}">{{ b.heading }}</h3>
+                    {%- endif -%}
+                    {%- if b.text != blank -%}
+                      <p class="kf-text-sm">{{ b.text | escape }}</p>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+
+                {%- if b.link != blank and b.link_label != blank -%}
+                  <a class="kf-bento__cover" href="{{ b.link }}">{{ b.link_label | escape }}</a>
+                {%- endif -%}
+
+              {%- when 'product' -%}
+                {%- if b.product != blank -%}
+                  {%- render 'kf-product-card',
+                    product: b.product,
+                    heading_tag: 'h3',
+                    sizes: tile_sizes
+                  -%}
+                {%- endif -%}
+
+              {%- else -%}
+                <div class="kf-bento__body">
+                  {%- if b.eyebrow != blank -%}
+                    <p class="kf-label">{{ b.eyebrow | escape }}</p>
+                  {%- endif -%}
+                  {%- if b.heading != blank -%}
+                    <h3 class="{{ s.tile_heading_size }}">{{ b.heading }}</h3>
+                  {%- endif -%}
+                  {%- if b.text != blank -%}
+                    <div class="kf-rte kf-text-sm kf-bento__text">{{ b.text }}</div>
+                  {%- endif -%}
+                  {%- if b.link_label != blank -%}
+                    {%- render 'kf-button',
+                      label: b.link_label,
+                      href: b.link,
+                      style: b.link_style,
+                      icon: 'arrow'
+                    -%}
+                  {%- endif -%}
+                </div>
+            {%- endcase -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bento grid",
+  "tag": "section",
+  "class": "kf-bento-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everything in one place"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "tile_heading_size",
+      "label": "Tile heading size",
+      "options": [
+        { "value": "kf-h6", "label": "Small" },
+        { "value": "kf-h5", "label": "Medium" },
+        { "value": "kf-h4", "label": "Large" }
+      ],
+      "default": "kf-h5"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "info": "A tile set wider than this is trimmed to fit."
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2",
+      "info": "Any tile wider than one column fills the row here."
+    },
+    {
+      "type": "range",
+      "id": "row_height",
+      "label": "Row height on desktop",
+      "min": 120,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 220,
+      "info": "A minimum, not a cap. A tile with a lot of text grows rather than clipping it."
+    },
+    {
+      "type": "range",
+      "id": "row_height_mobile",
+      "label": "Row height on mobile",
+      "min": 100,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "default": 170
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between tiles",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Tile animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" },
+        { "value": "blur-in", "label": "Blur" }
+      ],
+      "default": "fade-up",
+      "info": "Tiles arrive one after another in the order they are listed."
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 60,
+      "info": "Gap between each tile arriving. A large grid at a high value takes a long time to finish."
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "Duration",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "fast", "label": "Fast" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "slow", "label": "Slow" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Easing",
+      "options": [
+        { "value": "theme", "label": "Theme default" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "smooth", "label": "Smooth" },
+        { "value": "out", "label": "Ease out" },
+        { "value": "spring", "label": "Spring-like" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "Trigger",
+      "options": [
+        { "value": "scroll", "label": "On scroll" },
+        { "value": "load", "label": "On load" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image tile",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "bottom", "label": "Bottom" }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay",
+          "min": 0,
+          "max": 90,
+          "step": 5,
+          "unit": "%",
+          "default": 25,
+          "info": "Needed behind any text on the image, and harmless without it."
+        },
+        {
+          "type": "select",
+          "id": "overlay_style",
+          "label": "Overlay style",
+          "options": [
+            { "value": "solid", "label": "Solid" },
+            { "value": "gradient", "label": "Gradient" }
+          ],
+          "default": "gradient"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link description",
+          "info": "Not shown. Read out in place of the tile when someone uses a screen reader, so describe where the link goes.",
+          "default": "Shop the collection"
+        },
+        {
+          "type": "range",
+          "id": "column_span",
+          "label": "Columns wide",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "type": "range",
+          "id": "row_span",
+          "label": "Rows tall",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text tile",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Made to last"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "bottom", "label": "Bottom" }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "link_style",
+          "label": "Link style",
+          "options": [
+            { "value": "plain", "label": "Text link" },
+            { "value": "secondary", "label": "Outlined button" },
+            { "value": "primary", "label": "Solid button" }
+          ],
+          "default": "plain"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "Tile color scheme",
+          "default": "scheme-2"
+        },
+        {
+          "type": "range",
+          "id": "column_span",
+          "label": "Columns wide",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "row_span",
+          "label": "Rows tall",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Product tile",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "Tile color scheme",
+          "default": "scheme-1"
+        },
+        {
+          "type": "range",
+          "id": "column_span",
+          "label": "Columns wide",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "row_span",
+          "label": "Rows tall",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 2
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bento grid",
+      "blocks": [
+        { "type": "image", "settings": { "column_span": 2, "row_span": 2 } },
+        { "type": "text", "settings": { "column_span": 2, "row_span": 1 } },
+        { "type": "image", "settings": { "column_span": 1, "row_span": 1 } },
+        { "type": "image", "settings": { "column_span": 1, "row_span": 1 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

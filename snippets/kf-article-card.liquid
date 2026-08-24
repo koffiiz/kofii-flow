@@ -1,0 +1,116 @@
+{%- comment -%}
+  Kofii Flow — Article card
+  ---------------------------------------------------------------------------
+  The blog equivalent of kf-product-card: every section that lists articles
+  renders this one, so an article looks the same on the blog page, in search
+  and in any future "latest posts" section.
+
+  The whole card is clickable through `.kf-card__link` on the title anchor —
+  one link with the title as its accessible name, rather than a wrapper that
+  would read the entire card out loud.
+
+  Usage:
+    {% render 'kf-article-card', article: article, sizes: '(min-width: 990px) 33vw, 100vw' %}
+
+  Parameters:
+    article       (object, required)
+    heading_tag   (string)   h2 (default) | h3 | h4
+    ratio         (string)   media ratio; defaults to landscape
+    sizes         (string)   sizes attribute for the image
+    show_image    (boolean)  default true
+    show_tag      (boolean)  first tag as an eyebrow; default true
+    show_date     (boolean)  default true
+    show_author   (boolean)  default false
+    show_excerpt  (boolean)  default true
+    show_comments (boolean)  default false
+    excerpt_limit (number)   words; defaults to 22
+    class         (string)   extra classes on the card
+{%- endcomment -%}
+
+{%- liquid
+  assign heading = heading_tag | default: 'h2'
+  assign media_ratio = ratio | default: 'landscape'
+  assign image_sizes = sizes | default: '(min-width: 990px) 33vw, 100vw'
+  assign words = excerpt_limit | default: 22
+
+  assign card_class = 'kf-article-card kf-card'
+  if class != blank
+    assign card_class = card_class | append: ' ' | append: class
+  endif
+
+  comment
+    Each flag is only false when explicitly passed as false — an omitted
+    parameter is nil, which must not read as "hide it".
+  endcomment
+  assign image_visible = true
+  if show_image == false
+    assign image_visible = false
+  endif
+  assign tag_visible = true
+  if show_tag == false
+    assign tag_visible = false
+  endif
+  assign date_visible = true
+  if show_date == false
+    assign date_visible = false
+  endif
+  assign excerpt_visible = true
+  if show_excerpt == false
+    assign excerpt_visible = false
+  endif
+
+  comment
+    `excerpt_or_content` falls back to the body when no excerpt is set, so it
+    is always stripped of markup before being truncated — otherwise a half
+    tag could be cut open mid-attribute.
+  endcomment
+  assign article_summary = article.excerpt_or_content | strip_html | truncatewords: words
+-%}
+
+<article class="{{ card_class }}">
+  {%- if image_visible -%}
+    <div class="kf-article-card__media">
+      {%- render 'kf-media',
+        image: article.image,
+        ratio: media_ratio,
+        sizes: image_sizes,
+        placeholder: 'image',
+        zoom: true
+      -%}
+    </div>
+  {%- endif -%}
+
+  <div class="kf-card__body kf-article-card__body">
+    {%- if tag_visible and article.tags.size > 0 -%}
+      <p class="kf-label kf-article-card__tag">{{ article.tags.first | escape }}</p>
+    {%- endif -%}
+
+    <{{ heading }} class="kf-article-card__title">
+      <a class="kf-card__link" href="{{ article.url }}">{{ article.title | escape }}</a>
+    </{{ heading }}>
+
+    {%- if date_visible or show_author or show_comments -%}
+      <p class="kf-article-card__meta kf-text-sm kf-text-muted">
+        {%- if date_visible -%}
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+            {{- article.published_at | date: format: 'abbreviated_date' -}}
+          </time>
+        {%- endif -%}
+
+        {%- if show_author and article.author != blank -%}
+          {%- assign author_line = 'blog.meta_author' | t: author: article.author -%}
+          <span class="kf-article-card__author">{{ author_line }}</span>
+        {%- endif -%}
+
+        {%- if show_comments and blog.comments_enabled? -%}
+          {%- assign comment_line = 'blog.comment_count' | t: count: article.comments_count -%}
+          <span class="kf-article-card__comments">{{ comment_line }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    {%- if excerpt_visible and article_summary != blank -%}
+      <p class="kf-article-card__excerpt kf-text-sm">{{ article_summary }}</p>
+    {%- endif -%}
+  </div>
+</article>

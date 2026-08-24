@@ -1,0 +1,457 @@
+{%- comment -%}
+  Kofii Flow — Testimonials
+  ---------------------------------------------------------------------------
+  Customer quotes in a grid, with an optional star rating, avatar and
+  attribution on each.
+
+  A grid and not a carousel, on purpose. Social proof works by volume: three
+  quotes visible at once say more than one quote behind a control most
+  visitors never touch. On a phone, where three cards will not fit, the row
+  scrolls with CSS scroll-snap rather than a slider element — so nothing is
+  duplicated from the sections that do carry one.
+
+  Ratings render through `snippets/kf-stars.liquid`, the same one the product
+  card and the rating block use.
+
+  Blocks are section-local: a testimonial is a quote plus an attribution, which
+  has no meaning outside this section.
+{%- endcomment -%}
+
+{{ 'section-testimonials.css' | asset_url | stylesheet_tag }}
+{%- if section.settings.layout == 'carousel' -%}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {%- comment -%}
+    Only when something needs driving. A carousel with no arrows and no
+    pagination is a plain scroll-snap row and stays JavaScript-free.
+  {%- endcomment -%}
+  {%- if section.settings.show_arrows or section.settings.pagination != 'none' -%}
+    <script src="{{ 'kf-slider.js' | asset_url }}" defer></script>
+  {%- endif -%}
+{%- endif -%}
+
+{%- liquid
+  assign s = section.settings
+  assign is_carousel = false
+  if s.layout == 'carousel'
+    assign is_carousel = true
+  endif
+
+  assign needs_slider = false
+  if is_carousel and s.show_arrows
+    assign needs_slider = true
+  endif
+  if is_carousel and s.pagination != 'none'
+    assign needs_slider = true
+  endif
+
+  assign has_header = false
+  if s.heading != blank or s.eyebrow != blank or s.text != blank
+    assign has_header = true
+  endif
+
+  assign list_class = 'kf-testimonials'
+  if s.mobile_layout == 'scroll'
+    assign list_class = list_class | append: ' kf-testimonials--scroll-mobile'
+  endif
+
+  comment
+    The carousel sizes its slides from --kf-slide-count, the grid from its own
+    column count. Same number, two different properties.
+  endcomment
+  assign list_style = '--kf-slide-count: ' | append: s.columns_desktop | append: ';'
+  assign list_style = list_style | append: ' --kf-testimonials-cols: ' | append: s.columns_desktop | append: ';'
+  assign list_style = list_style | append: ' --kf-testimonials-cols-tablet: ' | append: s.columns_tablet | append: ';'
+  assign list_style = list_style | append: ' --kf-testimonials-cols-mobile: ' | append: s.columns_mobile | append: ';'
+  assign list_style = list_style | append: ' --kf-testimonials-avatar: ' | append: s.avatar_size | append: 'px;'
+
+  comment
+    Stagger only means anything when the cards actually animate — the engine
+    claims children carrying data-kf-animate, and there are none otherwise.
+  endcomment
+  assign use_stagger = false
+  if s.animation != 'none'
+    assign use_stagger = true
+  endif
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: list_class %}>
+  <div class="kf-container">
+    {%- if has_header -%}
+      <header class="kf-section-header kf-testimonials__header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="kf-section-header__text kf-rte">{{ s.text }}</div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      {%- comment -%}
+        Stagger contract: the LIST carries data-kf-stagger, each ITEM carries
+        data-kf-animate. The grid's custom properties go through the same
+        snippet — it emits its own `style` attribute, and a second one on the
+        element would simply be ignored, taking the column counts with it.
+      {%- endcomment -%}
+      {%- liquid
+        assign list_classes = 'kf-testimonials__list'
+        assign item_classes = 'kf-testimonials__item'
+        if is_carousel
+          comment
+            In carousel mode the track and slides are the slider's own classes,
+            so the scroll-snap behaviour comes from component-slider.css rather
+            than being restated here.
+          endcomment
+          assign list_classes = 'kf-slider__track kf-testimonials__track'
+          assign item_classes = 'kf-slider__slide kf-testimonials__item'
+        endif
+        assign track_label = s.heading | default: 'Testimonials'
+      -%}
+
+      {%- if needs_slider -%}<kf-slider class="kf-testimonials__slider">{%- endif -%}
+
+      {%- comment -%}
+        The arrows MUST be inside <kf-slider>, and it is not a styling choice.
+        The element finds them with `this.querySelector`, so arrows outside it
+        are simply never wired up — and component-slider.css hides the track's
+        scrollbar with `kf-slider:has([data-kf-slider-next])`, so that fails
+        too and the bar stays on screen. One misplacement, two symptoms.
+
+        Safe to render here unconditionally: `show_arrows` is one of the two
+        things that make `needs_slider` true, so the wrapper always exists.
+      {%- endcomment -%}
+      {%- if is_carousel and s.show_arrows -%}
+        {%- render 'kf-slider-controls', class: 'kf-testimonials__arrows' -%}
+      {%- endif -%}
+
+      <ul
+        class="{{ list_classes }}"
+        role="list"
+        {% if is_carousel %}data-kf-slider-track tabindex="0" aria-label="{{ track_label | escape }}"{% endif %}
+        {% render 'kf-motion-attrs',
+          stagger: use_stagger,
+          stagger_delay: s.animation_stagger_delay,
+          style: list_style %}
+      >
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign quote_label = b.author | default: 'Customer'
+          -%}
+          <li
+            class="{{ item_classes }}"
+            {% if is_carousel %}data-kf-slider-slide{% endif %}
+            {% render 'kf-motion-attrs', animation: s.animation %}
+            {{ block.shopify_attributes }}
+          >
+            <figure class="kf-testimonials__card">
+              {%- if b.rating > 0 -%}
+                {%- comment -%}
+                  Not a product review, so the announced sentence is written
+                  here rather than borrowing the product one.
+                {%- endcomment -%}
+                {%- assign rating_label = b.rating | append: ' out of 5 stars' -%}
+                <div class="kf-testimonials__rating">
+                  {%- render 'kf-stars', rating: b.rating, scale_max: 5, label: rating_label -%}
+                </div>
+              {%- endif -%}
+
+              {%- if b.quote != blank -%}
+                <blockquote class="kf-rte kf-testimonials__quote">{{ b.quote }}</blockquote>
+              {%- endif -%}
+
+              {%- if b.author != blank or b.image != blank -%}
+                <figcaption class="kf-testimonials__author">
+                  {%- if b.image != blank -%}
+                    <div class="kf-testimonials__avatar">
+                      {%- render 'kf-media',
+                        image: b.image,
+                        ratio: 'square',
+                        sizes: '80px',
+                        alt: quote_label
+                      -%}
+                    </div>
+                  {%- endif -%}
+
+                  <div>
+                    {%- if b.author != blank -%}
+                      <p class="kf-testimonials__name kf-text-sm">{{ b.author | escape }}</p>
+                    {%- endif -%}
+                    {%- if b.meta != blank -%}
+                      <p class="kf-testimonials__meta kf-text-xs">{{ b.meta | escape }}</p>
+                    {%- endif -%}
+                  </div>
+                </figcaption>
+              {%- endif -%}
+            </figure>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- if is_carousel -%}
+        {%- render 'kf-slider-pagination', style: s.pagination, count: section.blocks.size -%}
+      {%- endif -%}
+
+      {%- if needs_slider -%}</kf-slider>{%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "kf-testimonials-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What people say"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Carousel" }
+      ],
+      "default": "grid",
+      "info": "A grid shows more quotes at once, which is what makes social proof work. A carousel suits a long list of them."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true,
+      "info": "Carousel only."
+    },
+    {
+      "type": "select",
+      "id": "pagination",
+      "label": "Pagination",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "dots", "label": "Dots" },
+        { "value": "progress", "label": "Progress bar" }
+      ],
+      "default": "dots",
+      "info": "Carousel only. With no arrows and no pagination the carousel is a plain swipeable row and loads no JavaScript."
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Columns on tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Below 990px",
+      "options": [
+        { "value": "grid", "label": "Stacked" },
+        { "value": "scroll", "label": "Scrolling row" }
+      ],
+      "default": "scroll",
+      "info": "The scrolling row runs on tablets as well as phones, showing about two cards at tablet size and one on a phone."
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1",
+      "info": "Used when the layout above is stacked. Tablet uses its own column count."
+    },
+    {
+      "type": "range",
+      "id": "avatar_size",
+      "label": "Avatar size",
+      "min": 32,
+      "max": 72,
+      "step": 4,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Card animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 70
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "Quote",
+          "default": "<p>Genuinely the best thing I have bought this year. It arrived faster than I expected and it has not left my side since.</p>"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Name",
+          "default": "Sam R."
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Detail",
+          "info": "A location, a job title, or which product they bought."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "info": "Set to 0 to leave the stars off this card."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial", "settings": { "author": "Alex M." } },
+        { "type": "testimonial", "settings": { "author": "Jordan P." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

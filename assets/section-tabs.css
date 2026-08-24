@@ -1,0 +1,55 @@
+/* ==========================================================================
+   Kofii Flow — Tabs section
+   Loaded by sections/kf-tabs.liquid.
+
+   The tabs mechanism itself is component-tabs.css. Only the layout inside a
+   panel belongs here.
+   ========================================================================== */
+
+.kf-tabs-band__header {
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-tabs-band__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-md);
+}
+
+.kf-tabs-band__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+}
+
+.kf-tabs-band__text {
+  max-width: 60ch;
+}
+
+.kf-tabs-band__media {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Image beside the text
+   ========================================================================== */
+
+@media (min-width: 750px) {
+  .kf-tabs-band__content--split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--kf-space-xl);
+    align-items: center;
+  }
+
+  .kf-tabs-band__content--media-end .kf-tabs-band__media {
+    order: 2;
+  }
+
+  /* Text has a comfortable measure of its own once it shares the row. */
+  .kf-tabs-band__content--split .kf-tabs-band__text {
+    max-width: 46ch;
+  }
+}

@@ -1,0 +1,54 @@
+{%- comment -%}
+  Kofii Flow — Slider pagination
+  ---------------------------------------------------------------------------
+  Dots or a progress bar for <kf-slider>.
+
+  One dot is rendered per slide, which is deliberately more than the slider
+  usually shows: <kf-slider> works in PAGES, not slides — four slides visible
+  three at a time is two pages — so it hides the surplus once it has measured
+  the track. Rendering per page in Liquid is not possible, because how many
+  slides fit is a browser measurement, not a setting.
+
+  Usage:
+    {% render 'kf-slider-pagination', style: 'dots', count: products.size %}
+
+  Parameters:
+    style (string)  none (default) | dots | progress
+    count (number)  slide count; only used by dots
+{%- endcomment -%}
+
+{%- liquid
+  assign pagination_style = style | default: 'none'
+  assign pagination_count = count | default: 0
+  assign pagination_label = 'general.slider.pagination' | t
+-%}
+
+{%- if pagination_style == 'dots' and pagination_count > 0 -%}
+  <ul class="kf-slider__dots" role="list">
+    {%- for i in (1..pagination_count) -%}
+      <li>
+        <button
+          type="button"
+          class="kf-slider__dot-button"
+          data-kf-slider-dot
+          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+        >
+          <span class="kf-slider__dot" aria-hidden="true"></span>
+          <span class="kf-visually-hidden">
+            {{- 'general.slider.go_to' | t: index: forloop.index -}}
+          </span>
+        </button>
+      </li>
+    {%- endfor -%}
+  </ul>
+
+{%- elsif pagination_style == 'progress' -%}
+  <div
+    class="kf-slider__progress"
+    data-kf-slider-progress
+    aria-hidden="true"
+    title="{{ pagination_label | escape }}"
+  >
+    <span class="kf-slider__progress-thumb"></span>
+  </div>
+{%- endif -%}

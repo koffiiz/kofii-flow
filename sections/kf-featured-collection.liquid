@@ -86,37 +86,11 @@
     assign view_all_label = 'collections.view_all' | t
   endif
 
-  assign pagination_label = 'general.slider.pagination' | t
 -%}
 
 {%- capture slider_pagination -%}
-  {%- if is_track and s.pagination == 'dots' -%}
-    <ul class="kf-slider__dots" role="list">
-      {%- for i in (1..product_count) -%}
-        <li>
-          <button
-            type="button"
-            class="kf-slider__dot-button"
-            data-kf-slider-dot
-            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
-          >
-            <span class="kf-slider__dot" aria-hidden="true"></span>
-            <span class="kf-visually-hidden">
-              {{- 'general.slider.go_to' | t: index: forloop.index -}}
-            </span>
-          </button>
-        </li>
-      {%- endfor -%}
-    </ul>
-  {%- elsif is_track and s.pagination == 'progress' -%}
-    <div
-      class="kf-slider__progress"
-      data-kf-slider-progress
-      aria-hidden="true"
-      title="{{ pagination_label | escape }}"
-    >
-      <span class="kf-slider__progress-thumb"></span>
-    </div>
+  {%- if is_track -%}
+    {%- render 'kf-slider-pagination', style: s.pagination, count: product_count -%}
   {%- endif -%}
 {%- endcapture -%}
 
@@ -137,16 +111,7 @@
 
       <div class="kf-featured__actions">
         {%- if is_track and s.show_arrows -%}
-          <div class="kf-slider__controls">
-            <button type="button" class="kf-icon-button kf-slider__prev" data-kf-slider-prev>
-              {%- render 'kf-icon', name: 'arrow' -%}
-              <span class="kf-visually-hidden">{{ 'general.slider.previous' | t }}</span>
-            </button>
-            <button type="button" class="kf-icon-button kf-slider__next" data-kf-slider-next>
-              {%- render 'kf-icon', name: 'arrow' -%}
-              <span class="kf-visually-hidden">{{ 'general.slider.next' | t }}</span>
-            </button>
-          </div>
+          {%- render 'kf-slider-controls' -%}
         {%- endif -%}
 
         {%- if s.show_view_all and target != blank -%}

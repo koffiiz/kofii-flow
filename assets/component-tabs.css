@@ -1,0 +1,100 @@
+/* ==========================================================================
+   Kofii Flow — Tabs
+   --------------------------------------------------------------------------
+   The tabs mechanism, kept apart from any one section's panel layout so a
+   second section can render <kf-tabs> without dragging that layout along —
+   the same split every other custom element in this theme uses.
+
+   The whole file turns on one attribute. <kf-tabs> adds `data-kf-tabs-ready`
+   once it is running, and until then the tablist is hidden and every panel is
+   visible under its own heading. Nothing here can hide content that a working
+   control is not present to bring back.
+   ========================================================================== */
+
+kf-tabs {
+  display: block;
+}
+
+/* ==========================================================================
+   Tablist
+   ========================================================================== */
+
+.kf-tabs__list {
+  display: none;
+}
+
+kf-tabs[data-kf-tabs-ready] .kf-tabs__list {
+  display: flex;
+  gap: var(--kf-space-2xs);
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+  /* More tabs than fit is a scroll, not a wrap: a wrapped tablist changes
+     height as you move through it and shoves the panel down the page. */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.kf-tabs__list::-webkit-scrollbar {
+  display: none;
+}
+
+.kf-tabs__tab {
+  flex: 0 0 auto;
+  padding: var(--kf-space-2xs) var(--kf-space-xs);
+  border: 0;
+  background: transparent;
+  color: var(--kf-color-muted);
+  font: inherit;
+  font-size: var(--kf-text-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  /* Sits over the list's border so the active underline replaces it rather
+     than stacking a second line under it. */
+  border-bottom: var(--kf-border-width-thick) solid transparent;
+  margin-bottom: calc(var(--kf-border-width) * -1);
+  transition: color var(--kf-motion-fast) var(--kf-ease-out),
+              border-color var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+.kf-tabs__tab:hover {
+  color: var(--kf-color-heading);
+}
+
+.kf-tabs__tab[aria-selected="true"] {
+  color: var(--kf-color-heading);
+  border-bottom-color: var(--kf-color-accent);
+}
+
+.kf-tabs__tab:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: calc(var(--kf-focus-width) * -1);
+  border-radius: var(--kf-radius-xs);
+}
+
+/* ==========================================================================
+   Panels
+   ========================================================================== */
+
+.kf-tabs__panel {
+  padding-top: var(--kf-space-md);
+}
+
+/* A panel is focusable so the keyboard can reach its content directly from the
+   tablist, which also gives it a focus ring worth seeing. */
+.kf-tabs__panel:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+  border-radius: var(--kf-radius-md);
+}
+
+/* Each panel carries its tab's label as a heading. That heading is the only
+   thing separating the panels in the stacked fallback, and it is redundant
+   the moment the tab above says the same word — so it goes when tabs run. */
+kf-tabs[data-kf-tabs-ready] .kf-tabs__panel-heading {
+  display: none;
+}
+
+/* Stacked fallback spacing: without tabs the panels are one continuous
+   document and need separating from each other. */
+kf-tabs:not([data-kf-tabs-ready]) .kf-tabs__panel + .kf-tabs__panel {
+  margin-top: var(--kf-space-lg);
+}

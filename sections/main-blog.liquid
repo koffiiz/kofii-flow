@@ -1,0 +1,361 @@
+{%- comment -%}
+  Kofii Flow — Blog
+  ---------------------------------------------------------------------------
+  The article listing for a blog. Canonical Shopify section name, so it keeps
+  `main-blog` rather than the theme's `kf-` prefix.
+
+  Articles render through snippets/kf-article-card.liquid, the same card any
+  other section listing articles uses.
+
+  Topic filtering is Shopify's own: `blog.all_tags` decides which topics exist
+  and each link is a plain `/blogs/<handle>/<tag>` URL, so it works with no
+  JavaScript and cannot disagree with what the server would return. Nothing is
+  filtered in Liquid.
+
+  The empty state is a real message, not placeholder cards. Fake articles on a
+  live blog are worse than an honest "nothing here yet".
+{%- endcomment -%}
+
+{{ 'section-blog.css' | asset_url | stylesheet_tag }}
+{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign layout_class = 'kf-blog kf-blog--' | append: s.layout
+
+  assign grid_style = '--kf-blog-cols: ' | append: s.columns_desktop | append: ';'
+  assign grid_style = grid_style | append: ' --kf-blog-cols-mobile: ' | append: s.columns_mobile | append: ';'
+
+  comment
+    The first article is only featured on page one — on page two the "first"
+    article is an arbitrary one, and blowing it up would be meaningless.
+  endcomment
+  assign feature_first = false
+  if s.feature_first and current_tags == empty
+    assign feature_first = true
+  endif
+
+  assign all_topics_label = 'blog.all_topics' | t
+  assign filter_label = 'blog.filter_label' | t
+  assign empty_title = 'blog.empty_title' | t
+  assign empty_text = 'blog.empty_text' | t
+
+  assign card_sizes = '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw'
+  assign feature_sizes = '(min-width: 750px) 66vw, 100vw'
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: layout_class %}>
+  <div class="kf-container">
+    {%- if s.show_heading -%}
+      <header class="kf-section-header kf-blog__header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+        <h1 class="{{ s.heading_size }}">{{ blog.title | escape }}</h1>
+        {%- if s.text != blank -%}
+          <div class="kf-section-header__text kf-rte">{{ s.text }}</div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if s.show_topics and blog.all_tags.size > 0 -%}
+      <nav class="kf-blog__topics" aria-label="{{ filter_label | escape }}">
+        <ul class="kf-blog__topic-list" role="list">
+          <li>
+            <a
+              class="kf-blog__topic"
+              href="{{ blog.url }}"
+              {% if current_tags == empty %}aria-current="page"{% endif %}
+            >
+              {{- all_topics_label -}}
+            </a>
+          </li>
+          {%- for tag in blog.all_tags -%}
+            <li>
+              <a
+                class="kf-blog__topic"
+                href="{{ blog.url }}/tagged/{{ tag | handleize }}"
+                {% if current_tags contains tag %}aria-current="page"{% endif %}
+              >
+                {{- tag | escape -}}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {%- paginate blog.articles by s.posts_per_page -%}
+      {%- if blog.articles.size > 0 -%}
+        {%- comment -%}
+          Stagger contract: the LIST carries data-kf-stagger, each ITEM carries
+          data-kf-animate. The grid's own custom properties go through the same
+          snippet, because it emits its own `style` attribute and a second one
+          on the element would be ignored.
+        {%- endcomment -%}
+        <ul
+          class="kf-blog__list"
+          role="list"
+          {% render 'kf-motion-attrs',
+            stagger: true,
+            stagger_delay: s.animation_stagger_delay,
+            style: grid_style %}
+        >
+          {%- for article in blog.articles -%}
+            {%- liquid
+              assign item_class = 'kf-blog__item'
+              assign card_class = ''
+              assign this_ratio = s.media_ratio
+              assign this_sizes = card_sizes
+
+              if feature_first and forloop.first and paginate.current_page == 1
+                assign item_class = 'kf-blog__item kf-blog__item--feature'
+                assign card_class = 'kf-article-card--feature'
+                assign this_sizes = feature_sizes
+              elsif s.layout == 'list'
+                assign card_class = 'kf-article-card--row'
+              endif
+            -%}
+            <li class="{{ item_class }}" {% render 'kf-motion-attrs', animation: s.animation %}>
+              {%- render 'kf-article-card',
+                article: article,
+                heading_tag: 'h2',
+                ratio: this_ratio,
+                sizes: this_sizes,
+                show_image: s.show_image,
+                show_tag: s.show_tag,
+                show_date: s.show_date,
+                show_author: s.show_author,
+                show_excerpt: s.show_excerpt,
+                excerpt_limit: s.excerpt_limit,
+                class: card_class
+              -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- render 'kf-pagination', paginate: paginate, anchor: '#kf-BlogList' -%}
+
+      {%- else -%}
+        <div class="kf-blog__empty">
+          <p class="kf-h4">{{ empty_title }}</p>
+          <p class="kf-text-muted">{{ empty_text }}</p>
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "tag": "section",
+  "class": "kf-blog-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show the blog title",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h2", "label": "Small" },
+        { "value": "kf-h1", "label": "Medium" },
+        { "value": "kf-display", "label": "Large" }
+      ],
+      "default": "kf-h1"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text under the title"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Title alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_topics",
+      "label": "Show topic filters",
+      "default": true,
+      "info": "Lists the tags used across this blog. Plain links, so they work without JavaScript."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "list", "label": "List" }
+      ],
+      "default": "grid",
+      "info": "List puts the image beside each article from 750px up."
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_first",
+      "label": "Feature the newest article",
+      "default": true,
+      "info": "Gives it the full width of the grid. Only on the first page, and not while a topic filter is applied."
+    },
+    {
+      "type": "range",
+      "id": "posts_per_page",
+      "label": "Articles per page",
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 9
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "info": "Applies to the grid layout."
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show the featured image",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tag",
+      "label": "Show the first topic",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show the date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show the author",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show an excerpt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "excerpt_limit",
+      "label": "Excerpt length",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "wd",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Card animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "scale-up", "label": "Scale" }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "Stagger delay",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ]
+}
+{% endschema %}

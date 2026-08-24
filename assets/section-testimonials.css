@@ -1,0 +1,147 @@
+/* ==========================================================================
+   Kofii Flow — Testimonials
+   Loaded by sections/kf-testimonials.liquid.
+
+   A grid rather than a carousel, deliberately. Social proof works by volume —
+   three quotes visible at once say more than one quote you have to click
+   through, and a carousel hides the rest behind an interaction most visitors
+   never perform.
+   ========================================================================== */
+
+.kf-testimonials__header {
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-testimonials__list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(var(--kf-testimonials-cols, 3), minmax(0, 1fr));
+  gap: var(--kf-space-md);
+}
+
+@media (max-width: 989px) {
+  .kf-testimonials__list {
+    grid-template-columns: repeat(var(--kf-testimonials-cols-tablet, 2), minmax(0, 1fr));
+  }
+}
+
+.kf-testimonials__item {
+  display: flex;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Carousel
+   --------------------------------------------------------------------------
+   The track, slides, arrows and pagination all come from component-slider.css
+   and the two slider snippets. Only the spacing around them is here — none of
+   the mechanism is restated, so a fix to the slider reaches this section too.
+   ========================================================================== */
+
+.kf-testimonials__arrows {
+  justify-content: flex-end;
+  margin-bottom: var(--kf-space-2xs);
+}
+
+/* The card fills its slide, so quotes of different lengths still produce
+   cards of one height across the visible row. */
+.kf-testimonials__track .kf-testimonials__item {
+  height: auto;
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.kf-testimonials__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  width: 100%;
+  padding: var(--kf-space-md);
+  border-radius: var(--kf-radius-lg);
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-sm);
+}
+
+.kf-testimonials__quote {
+  margin: 0;
+  /* The quote is the point of the card, so it takes the space and pushes the
+     attribution to the bottom — which keeps the author lines level across a
+     row of cards whose quotes differ in length. */
+  flex: 1;
+}
+
+.kf-testimonials__author {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+}
+
+.kf-testimonials__avatar {
+  flex: 0 0 auto;
+  width: var(--kf-testimonials-avatar, 2.75rem);
+}
+
+.kf-testimonials__avatar .kf-media {
+  border-radius: var(--kf-radius-circle);
+}
+
+.kf-testimonials__name {
+  font-weight: 600;
+}
+
+.kf-testimonials__meta {
+  color: var(--kf-color-muted);
+}
+
+/* ==========================================================================
+   Scrolling row on small screens
+   --------------------------------------------------------------------------
+   Three cards do not fit across a phone and shrinking them makes every quote
+   unreadable. CSS scroll-snap only — no slider element, so nothing is
+   duplicated from the sections that do carry one.
+   ========================================================================== */
+
+@media (max-width: 749px) {
+  .kf-testimonials__list {
+    grid-template-columns: repeat(var(--kf-testimonials-cols-mobile, 1), minmax(0, 1fr));
+  }
+}
+
+/* The row runs everywhere below the desktop grid, not only on phones.
+   Scoping it to 749px meant a merchant who chose "Scrolling row" still got a
+   grid at every tablet width and in most Theme Editor previews, which reads as
+   the setting being broken rather than as a breakpoint. The tablet column
+   count now applies only to the stacked choice, which is the one it describes. */
+@media (max-width: 989px) {
+  .kf-testimonials--scroll-mobile .kf-testimonials__list {
+    display: flex;
+    /* Full bleed to the screen edge so the row reads as continuing past it
+       rather than stopping short inside the page gutter. */
+    margin-inline: calc(var(--kf-page-gutter) * -1);
+    padding-inline: var(--kf-page-gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: var(--kf-page-gutter);
+    scrollbar-width: none;
+  }
+
+  .kf-testimonials--scroll-mobile .kf-testimonials__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kf-testimonials--scroll-mobile .kf-testimonials__item {
+    flex: 0 0 var(--kf-testimonials-mobile-width, 78vw);
+    scroll-snap-align: start;
+  }
+}
+
+/* A share of the screen wide enough to read on a phone is far too wide on a
+   tablet — 78vw of 900px is a 700px card. Two at a time instead. */
+@media (min-width: 750px) and (max-width: 989px) {
+  .kf-testimonials--scroll-mobile .kf-testimonials__item {
+    flex-basis: var(--kf-testimonials-tablet-width, 46vw);
+  }
+}

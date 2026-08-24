@@ -1,0 +1,40 @@
+{%- comment -%}
+  Kofii Flow — Slider arrows
+  ---------------------------------------------------------------------------
+  The previous/next pair for <kf-slider>. Extracted because a second section
+  needed it and copying the markup is how two sliders quietly drift apart —
+  one gains a focus fix or a label correction and the other does not.
+
+  Only the buttons, not the surrounding layout: sections place these very
+  differently. The featured collection tucks them into its header beside a
+  "view all" button; testimonials sits them under the heading. A snippet that
+  owned that placement would fit neither.
+
+  Usage:
+    {% render 'kf-slider-controls' %}
+    {% render 'kf-slider-controls', class: 'kf-featured__arrows' %}
+
+  Parameters:
+    class (string)  extra classes on the wrapper
+{%- endcomment -%}
+
+{%- liquid
+  assign controls_class = 'kf-slider__controls'
+  if class != blank
+    assign controls_class = controls_class | append: ' ' | append: class
+  endif
+
+  assign previous_label = 'general.slider.previous' | t
+  assign next_label = 'general.slider.next' | t
+-%}
+
+<div class="{{ controls_class }}">
+  <button type="button" class="kf-icon-button kf-slider__prev" data-kf-slider-prev>
+    {%- render 'kf-icon', name: 'arrow' -%}
+    <span class="kf-visually-hidden">{{ previous_label }}</span>
+  </button>
+  <button type="button" class="kf-icon-button kf-slider__next" data-kf-slider-next>
+    {%- render 'kf-icon', name: 'arrow' -%}
+    <span class="kf-visually-hidden">{{ next_label }}</span>
+  </button>
+</div>

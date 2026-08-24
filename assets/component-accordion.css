@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Kofii Flow — Accordion
+   --------------------------------------------------------------------------
+   Loaded by everything that renders accordion markup: the `accordion` theme
+   block and the FAQ section.
+
+   These styles lived in the block's own {% stylesheet %}, which was right for
+   as long as the block was the only thing that drew them. The moment a section
+   rendered the same markup it became the failure the CSS-location rule in
+   CLAUDE.md describes — correct on the block, silently unstyled in the
+   section — so they moved here.
+
+   The open/close animation is <kf-accordion>. Everything below works without
+   it: the panel simply appears and disappears, because the browser owns the
+   state through <details>.
+   ========================================================================== */
+
+kf-accordion {
+  display: block;
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-accordion__item {
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kf-space-2xs);
+  padding-block: var(--kf-space-xs);
+  font-size: var(--kf-text-md);
+  color: var(--kf-color-heading);
+  cursor: pointer;
+}
+
+/* `display: flex` already drops the default disclosure triangle in most
+   engines, since it replaces `display: list-item`. These two cover the ones
+   where it does not, and cost nothing where it does. */
+.kf-accordion__summary {
+  list-style: none;
+}
+
+.kf-accordion__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A summary is focusable by default, so it needs a visible ring — without one
+   a keyboard visitor tabbing a long FAQ has no idea where they are. */
+.kf-accordion__summary:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: calc(var(--kf-focus-width) * -1);
+  border-radius: var(--kf-radius-xs);
+}
+
+.kf-accordion__icon {
+  flex: 0 0 auto;
+  transition: transform var(--kf-motion-fast) var(--kf-ease-out);
+  color: var(--kf-color-muted);
+}
+
+.kf-accordion__item[open] .kf-accordion__icon {
+  transform: rotate(180deg);
+}
+
+/* The element animates this box's height, so it must clip. */
+.kf-accordion__panel {
+  overflow: hidden;
+}
+
+.kf-accordion__panel-inner {
+  padding-bottom: var(--kf-space-xs);
+}

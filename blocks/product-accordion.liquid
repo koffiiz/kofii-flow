@@ -9,6 +9,8 @@
   theme blocks are accepted.
 {%- endcomment -%}
 
+{{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+
 {%- if block.blocks.size > 0 -%}
   <kf-accordion
     class="kf-product__accordion"
@@ -20,45 +22,6 @@
   </kf-accordion>
 {%- endif -%}
 
-{% stylesheet %}
-/* Carried by the block itself, not by a section stylesheet: this is a generic
-   @theme block and can be placed in any section that accepts theme blocks. */
-kf-accordion {
-  display: block;
-  border-top: var(--kf-border-width) solid var(--kf-color-border);
-}
-
-.kf-accordion__item {
-  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
-}
-
-.kf-accordion__summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--kf-space-2xs);
-  padding-block: var(--kf-space-xs);
-  font-size: var(--kf-text-md);
-  color: var(--kf-color-heading);
-}
-
-.kf-accordion__icon {
-  transition: transform var(--kf-motion-fast) var(--kf-ease-out);
-  color: var(--kf-color-muted);
-}
-
-.kf-accordion__item[open] .kf-accordion__icon {
-  transform: rotate(180deg);
-}
-
-.kf-accordion__panel {
-  overflow: hidden;
-}
-
-.kf-accordion__panel-inner {
-  padding-bottom: var(--kf-space-xs);
-}
-{% endstylesheet %}
 
 {% schema %}
 {

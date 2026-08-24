@@ -1,0 +1,82 @@
+/* ==========================================================================
+   Kofii Flow — Article card
+   --------------------------------------------------------------------------
+   Loaded by every section that renders snippets/kf-article-card.liquid.
+
+   The card shell, the stretched link and the hover lift all come from
+   `.kf-card` in kf-components.css. Only what is specific to an article
+   belongs here.
+   ========================================================================== */
+
+.kf-article-card__media {
+  overflow: hidden;
+  border-radius: var(--kf-radius-md);
+}
+
+.kf-article-card__tag {
+  color: var(--kf-color-accent);
+}
+
+.kf-article-card__title {
+  margin: 0;
+  font-size: var(--kf-h6);
+  line-height: 1.25;
+  color: var(--kf-color-heading);
+}
+
+/* The title anchor carries `.kf-card__link`, whose ::after covers the card.
+   It must stay a plain inline box: give it overflow or a clip and the
+   stretched area collapses and the card stops being clickable. */
+.kf-article-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kf-article-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-3xs) var(--kf-space-2xs);
+  margin: 0;
+}
+
+.kf-article-card__excerpt {
+  margin: 0;
+  /* Long enough to judge whether the article is worth opening, short enough
+     that a row of cards stays scannable. */
+  max-width: 52ch;
+}
+
+/* ==========================================================================
+   Horizontal variant
+   --------------------------------------------------------------------------
+   Used by the blog's list layout, where the image sits beside the text rather
+   than above it.
+   ========================================================================== */
+
+@media (min-width: 750px) {
+  .kf-article-card--row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--kf-space-md);
+    align-items: center;
+  }
+
+  .kf-article-card--row .kf-article-card__title {
+    font-size: var(--kf-h5);
+  }
+}
+
+/* ==========================================================================
+   Featured variant
+   --------------------------------------------------------------------------
+   The first article on the blog, given a larger image and heading.
+   ========================================================================== */
+
+.kf-article-card--feature .kf-article-card__title {
+  font-size: var(--kf-h4);
+}
+
+.kf-article-card--feature .kf-article-card__excerpt {
+  font-size: var(--kf-text-md);
+  max-width: 60ch;
+}

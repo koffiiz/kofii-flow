@@ -1,0 +1,213 @@
+{%- comment -%}
+  Kofii Flow — Newsletter
+  ---------------------------------------------------------------------------
+  A signup band. The form itself is `snippets/kf-newsletter-form.liquid`, the
+  same one the footer renders — Shopify's native customer form, so subscribers
+  land in Customers tagged `newsletter` with no app involved, and the error and
+  success states are already handled there.
+
+  This section is the layout around it and nothing more. Nothing about the
+  input, the button, the validation or the messages is re-implemented here.
+
+  The form id is scoped to the section, because the footer's signup is on the
+  same page on most stores and two forms sharing an id would break the
+  label/input pairing for both.
+{%- endcomment -%}
+
+{{ 'section-newsletter.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign newsletter_class = 'kf-newsletter-band kf-newsletter-band--' | append: s.layout
+  if s.background_image != blank
+    assign newsletter_class = newsletter_class | append: ' kf-newsletter-band--has-image'
+  endif
+
+  comment
+    Filters are not allowed on render arguments, so the id is built first.
+  endcomment
+  assign form_id = 'Newsletter-' | append: section.id
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: newsletter_class %}>
+  {%- if s.background_image != blank -%}
+    <div class="kf-newsletter-band__backdrop" aria-hidden="true">
+      {%- render 'kf-media',
+        image: s.background_image,
+        ratio: 'wide',
+        sizes: '100vw',
+        flush: true,
+        overlay_opacity: s.overlay_opacity,
+        overlay_style: s.overlay_style,
+        class: 'kf-newsletter-band__media'
+      -%}
+    </div>
+  {%- endif -%}
+
+  <div class="kf-container">
+    <div class="kf-newsletter-band__inner">
+      <div class="kf-newsletter-band__text">
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="kf-rte kf-newsletter-band__body">{{ s.text }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="kf-newsletter-band__form">
+        {%- render 'kf-newsletter-form', id: form_id -%}
+
+        {%- if s.small_print != blank -%}
+          <div class="kf-rte kf-text-sm kf-text-muted kf-newsletter-band__small-print">
+            {{ s.small_print }}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "class": "kf-newsletter-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get the good stuff first"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>New arrivals, restocks and the occasional letter. No noise.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "small_print",
+      "label": "Small print",
+      "info": "Sits under the form. Some regions require you to say how you will use the address."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "center", "label": "Centered" },
+        { "value": "split", "label": "Text beside the form" }
+      ],
+      "default": "center",
+      "info": "Beside applies from 750px up and stacks below that."
+    },
+    {
+      "type": "header",
+      "content": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Image",
+      "info": "Optional. Pick a color scheme with enough contrast against it, and use the overlay below to keep the text readable."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "gradient", "label": "Gradient" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

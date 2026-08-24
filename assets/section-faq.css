@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Kofii Flow — FAQ
+   Loaded by sections/kf-faq.liquid.
+
+   The rows themselves are component-accordion.css, shared with the accordion
+   theme block. Only the section's own layout belongs here.
+   ========================================================================== */
+
+.kf-faq__header {
+  margin-bottom: var(--kf-space-lg);
+}
+
+/* An FAQ is read one line at a time, so the answers are capped rather than
+   running the full page width — long measure is where a list of questions
+   becomes tiring. */
+.kf-faq__inner {
+  max-width: var(--kf-content-width);
+  margin-inline: auto;
+}
+
+/* The question is a real <h3> for screen reader navigation, which brings
+   heading margins and a block display it does not want inside a flex summary. */
+.kf-faq__question {
+  margin: 0;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Heading beside the questions
+   ========================================================================== */
+
+@media (min-width: 990px) {
+  .kf-faq--side .kf-faq__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: var(--kf-space-xl);
+    align-items: start;
+    /* The two-column form earns the full page width; the single column above
+       does not. */
+    max-width: none;
+  }
+
+  .kf-faq--side .kf-faq__header {
+    margin-bottom: 0;
+  }
+}

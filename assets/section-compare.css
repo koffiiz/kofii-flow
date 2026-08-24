@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Kofii Flow — Before / after
+   Loaded by sections/kf-compare.liquid.
+
+   One image sits on top of the other and is clipped at the divider. Everything
+   below reads a single custom property, --kf-compare-pos, which <kf-compare>
+   copies from the range input.
+   ========================================================================== */
+
+.kf-compare__header {
+  margin-bottom: var(--kf-space-lg);
+}
+
+kf-compare {
+  display: block;
+}
+
+.kf-compare__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--kf-media-radius);
+  /* Nothing here selects text; a drag across the image should move the divider
+     rather than start a selection. */
+  user-select: none;
+}
+
+.kf-compare__media {
+  display: block;
+  width: 100%;
+}
+
+/* The top layer. `inset: 0` rather than its own ratio box, so it matches
+   whatever height the layer underneath establishes even if the two images
+   have different proportions. */
+.kf-compare__after {
+  position: absolute;
+  inset: 0;
+  /* Clipped from the left edge to the divider, so the right-hand side of the
+     frame shows the after image and the left shows what is beneath it.
+
+     `clip-path` is correct here, despite the Kofii Motion rule against it.
+     That rule is about hiding an element that the motion engine has to observe
+     — a clipped box reports zero intersection and never plays. Nothing here is
+     observed or animated; this is the mechanism itself, not a reveal. */
+  clip-path: inset(0 0 0 var(--kf-compare-pos, 50%));
+}
+
+.kf-compare__after .kf-media {
+  height: 100%;
+}
+
+/* Divider ------------------------------------------------------------------ */
+
+.kf-compare__divider {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--kf-compare-pos, 50%);
+  width: var(--kf-border-width-thick);
+  margin-inline-start: calc(var(--kf-border-width-thick) / -2);
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-md);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.kf-compare__handle {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--kf-radius-circle);
+  background-color: var(--kf-color-background);
+  box-shadow: var(--kf-shadow-md);
+  color: var(--kf-color-heading);
+}
+
+/* Two chevrons drawn as borders — no icon request for a decorative grip. */
+.kf-compare__handle::before,
+.kf-compare__handle::after {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-top: var(--kf-border-width-thick) solid currentColor;
+  border-right: var(--kf-border-width-thick) solid currentColor;
+  position: absolute;
+}
+
+.kf-compare__handle::before {
+  transform: rotate(-135deg);
+  inset-inline-start: 0.6rem;
+}
+
+.kf-compare__handle::after {
+  transform: rotate(45deg);
+  inset-inline-end: 0.6rem;
+}
+
+/* Labels ------------------------------------------------------------------- */
+
+.kf-compare__label {
+  position: absolute;
+  inset-block-end: var(--kf-space-2xs);
+  z-index: 2;
+  padding: 0.35em 0.7em;
+  border-radius: var(--kf-radius-pill);
+  background-color: var(--kf-color-background);
+  color: var(--kf-color-heading);
+  font-size: var(--kf-text-xs);
+  pointer-events: none;
+}
+
+.kf-compare__label--before {
+  inset-inline-start: var(--kf-space-2xs);
+}
+
+.kf-compare__label--after {
+  inset-inline-end: var(--kf-space-2xs);
+}
+
+/* Range -------------------------------------------------------------------- */
+
+/* Invisible but fully interactive, stretched over the whole frame so a drag or
+   a click anywhere moves the divider. `opacity: 0` and not `visibility` or
+   `display`, both of which would take it out of the focus order. */
+.kf-compare__range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  z-index: 3;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+.kf-compare__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  /* Tall enough that a touch drag anywhere down the divider is caught. */
+  width: 2.5rem;
+  height: 100vh;
+}
+
+.kf-compare__range::-moz-range-thumb {
+  width: 2.5rem;
+  height: 100vh;
+  border: 0;
+  background: transparent;
+}
+
+/* The input itself cannot show a focus ring — it is transparent — so the
+   handle wears it instead. */
+.kf-compare__frame:has(.kf-compare__range:focus-visible) .kf-compare__handle {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+}
+
+/* Without the element running the range cannot move anything, so it is removed
+   rather than left as an invisible focus stop that does nothing. The divider
+   stays: a fixed split of two images is a perfectly good static image. */
+html:not(.kf-js) .kf-compare__range {
+  display: none;
+}

@@ -1,0 +1,321 @@
+{%- comment -%}
+  Kofii Flow — FAQ
+  ---------------------------------------------------------------------------
+  Questions and answers on native <details>, so they open and close with no
+  JavaScript at all. <kf-accordion> only adds the height animation and the
+  optional one-at-a-time behaviour on top.
+
+  Blocks are SECTION-LOCAL, not the existing accordion theme block, and that is
+  the whole reason this section exists rather than being an accordion dropped
+  into a rich text section: `{% content_for 'blocks' %}` cannot be introspected,
+  so a theme block's contents are unreachable from Liquid. The FAQPage graph
+  below has to read every question and answer, which means the section has to
+  own them.
+
+  The question sits inside <summary> as a real heading. A <summary> may contain
+  one heading element, and on a page of twenty questions that is the difference
+  between a screen reader user being able to jump between them and having to
+  walk the whole list.
+{%- endcomment -%}
+
+{{ 'section-faq.css' | asset_url | stylesheet_tag }}
+{{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-accordion.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+
+  assign faq_class = 'kf-faq kf-faq--' | append: s.layout
+
+  assign has_header = false
+  if s.heading != blank or s.eyebrow != blank or s.text != blank
+    assign has_header = true
+  endif
+
+  comment
+    Only rows with both a question and an answer are rendered, and the same
+    test gates the structured data — a graph describing an empty answer is
+    worse than no graph.
+  endcomment
+  assign answered = 0
+  for block in section.blocks
+    assign answer_body = block.settings.answer
+    if block.settings.page != blank
+      assign answer_body = block.settings.page.content
+    endif
+    if block.settings.question != blank and answer_body != blank
+      assign answered = answered | plus: 1
+    endif
+  endfor
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: faq_class %}>
+  <div class="kf-container">
+    <div class="kf-faq__inner">
+      {%- if has_header -%}
+        <header class="kf-section-header kf-faq__header{% if s.alignment == 'center' %} kf-section-header--center{% endif %}">
+          {%- if s.eyebrow != blank -%}
+            <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if s.heading != blank -%}
+            <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+          {%- endif -%}
+          {%- if s.text != blank -%}
+            <div class="kf-section-header__text kf-rte">{{ s.text }}</div>
+          {%- endif -%}
+        </header>
+      {%- endif -%}
+
+      {%- if answered > 0 -%}
+        <kf-accordion class="kf-faq__list" data-single="{{ s.single }}">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign answer_body = block.settings.answer
+              if block.settings.page != blank
+                assign answer_body = block.settings.page.content
+              endif
+            -%}
+            {%- if block.settings.question != blank and answer_body != blank -%}
+              <details
+                class="kf-accordion__item kf-faq__item"
+                {% if s.open_first and forloop.first %}open{% endif %}
+                {{ block.shopify_attributes }}
+              >
+                <summary class="kf-accordion__summary">
+                  <h3 class="kf-faq__question {{ s.question_size }}">{{ block.settings.question | escape }}</h3>
+                  {%- render 'kf-icon', name: 'chevron', class: 'kf-accordion__icon', size: 'sm' -%}
+                </summary>
+
+                <div class="kf-accordion__panel">
+                  <div class="kf-accordion__panel-inner kf-rte">
+                    {{ answer_body }}
+                  </div>
+                </div>
+              </details>
+            {%- endif -%}
+          {%- endfor -%}
+        </kf-accordion>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- comment -%}
+  FAQPage structured data. Emitted last so it never sits between the visible
+  rows, and only when there is something to describe.
+
+  Answers keep their HTML rather than being stripped: schema.org accepts a
+  limited set of tags inside acceptedAnswer, and a stripped answer loses its
+  lists and links for no benefit. `| json` handles the escaping.
+{%- endcomment -%}
+{%- if s.show_schema and answered > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- assign printed = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign answer_body = block.settings.answer
+            if block.settings.page != blank
+              assign answer_body = block.settings.page.content
+            endif
+          -%}
+          {%- if block.settings.question != blank and answer_body != blank -%}
+            {%- if printed > 0 -%},{%- endif -%}
+            {
+              "@type": "Question",
+              "name": {{ block.settings.question | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ answer_body | strip_newlines | json }}
+              }
+            }
+            {%- assign printed = printed | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "kf-faq-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start",
+      "info": "Only applies when the heading sits above the questions."
+    },
+    {
+      "type": "select",
+      "id": "question_size",
+      "label": "Question size",
+      "options": [
+        { "value": "kf-h6", "label": "Small" },
+        { "value": "kf-h5", "label": "Medium" },
+        { "value": "kf-h4", "label": "Large" }
+      ],
+      "default": "kf-h5"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "stacked", "label": "Heading above the questions" },
+        { "value": "side", "label": "Heading beside the questions" }
+      ],
+      "default": "stacked",
+      "info": "Beside applies from 990px up and stacks below that."
+    },
+    {
+      "type": "header",
+      "content": "Behaviour"
+    },
+    {
+      "type": "checkbox",
+      "id": "single",
+      "label": "Open one answer at a time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Start with the first answer open",
+      "default": false,
+      "info": "Shows visitors that the rows open, at the cost of a longer section on arrival."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_schema",
+      "label": "Add FAQ structured data",
+      "default": true,
+      "info": "Lets search engines show these questions directly in results. Turn it off if another section on the same page already publishes an FAQ."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "Transition into the next section",
+      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "round", "label": "Round the next section over this one" },
+        { "value": "overlap", "label": "Overlap the next section" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How long does delivery take?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Answer the question plainly, in a sentence or two.</p>"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Or use a page",
+          "info": "When set, the page content replaces the answer above. Useful for a policy you keep in one place."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "question", "settings": { "question": "How long does delivery take?" } },
+        { "type": "question", "settings": { "question": "What is your returns policy?" } },
+        { "type": "question", "settings": { "question": "Do you ship internationally?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

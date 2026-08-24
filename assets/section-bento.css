@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Kofii Flow — Bento grid
+   Loaded by sections/kf-bento.liquid.
+
+   An asymmetric tile grid. Each tile declares how many columns and rows it
+   spans; CSS grid places them in order.
+
+   `grid-auto-flow` is deliberately NOT `dense`. Dense packing back-fills holes
+   by pulling later tiles earlier, which means the visual order stops matching
+   the DOM order — so a keyboard or screen reader visitor meets the tiles in a
+   different sequence to everyone else. A merchant fixes a hole by changing a
+   span, which is predictable; dense packing rearranging their layout when they
+   edit an unrelated tile is not.
+   ========================================================================== */
+
+.kf-bento__header {
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-bento__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--kf-bento-cols, 4), minmax(0, 1fr));
+  /* `minmax(row, auto)` rather than a fixed row height: a tile whose text runs
+     long grows instead of clipping it. The trade is that one tall tile can
+     stretch its row — which is visible and fixable, unlike hidden text. */
+  grid-auto-rows: minmax(var(--kf-bento-row, 14rem), auto);
+  gap: var(--kf-bento-gap, var(--kf-space-sm));
+  list-style: none;
+}
+
+.kf-bento__tile {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--kf-radius-lg);
+  grid-column: span var(--kf-tile-cols, 1);
+  grid-row: span var(--kf-tile-rows, 1);
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Image tile
+   ========================================================================== */
+
+.kf-bento__media {
+  position: absolute;
+  inset: 0;
+}
+
+/* The frame carries a ratio it does not want here — the tile's grid span
+   decides the height instead. */
+.kf-bento__media .kf-media {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+.kf-bento__overlay-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  align-self: flex-end;
+  padding: var(--kf-space-sm);
+  width: 100%;
+  color: var(--kf-color-on-media, #fff);
+}
+
+/* ==========================================================================
+   Text tile
+   ========================================================================== */
+
+.kf-bento__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+  justify-content: var(--kf-tile-justify, flex-end);
+  padding: var(--kf-space-sm);
+  width: 100%;
+  min-width: 0;
+}
+
+.kf-bento__text {
+  max-width: 40ch;
+}
+
+/* ==========================================================================
+   Product tile
+   --------------------------------------------------------------------------
+   The shared product card, so a product in a bento tile looks like the same
+   product anywhere else in the theme.
+   ========================================================================== */
+
+.kf-bento__tile--product {
+  overflow: visible;
+}
+
+.kf-bento__tile--product .kf-product-card {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Whole-tile link
+   --------------------------------------------------------------------------
+   One anchor stretched over the tile rather than a wrapper around everything:
+   it keeps the accessible name to the link's own text instead of reading out
+   the whole tile, and it cannot end up nesting interactive elements.
+
+   The anchor IS the cover. The obvious alternative — a `.kf-visually-hidden`
+   link with an `::after { inset: 0 }` — does not work in this theme: that
+   utility sets `width: 1px`, `overflow: hidden` AND `clip-path: inset(50%)`,
+   so the pseudo-element is clipped out of existence and the tile ends up with
+   no click target at all. Hiding the label with `font-size` instead leaves the
+   box its full size and the accessible name intact.
+   ========================================================================== */
+
+.kf-bento__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  font-size: 0;
+  color: transparent;
+}
+
+.kf-bento__tile:has(.kf-bento__cover:focus-visible) {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Small screens
+   --------------------------------------------------------------------------
+   Two columns, and every span is recomputed in Liquid rather than here: a tile
+   set to span four of six columns has to become "all of them" on a two column
+   grid, and CSS cannot clamp an integer span reliably across engines.
+   ========================================================================== */
+
+@media (max-width: 749px) {
+  .kf-bento__grid {
+    grid-template-columns: repeat(var(--kf-bento-cols-mobile, 2), minmax(0, 1fr));
+    grid-auto-rows: minmax(var(--kf-bento-row-mobile, 11rem), auto);
+  }
+
+  .kf-bento__tile {
+    grid-column: span var(--kf-tile-cols-mobile, 1);
+  }
+}

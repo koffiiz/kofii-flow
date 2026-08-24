@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Kofii Flow — Newsletter
+   Loaded by sections/kf-newsletter.liquid.
+
+   The form's own styling — input, button, error and success messages — is
+   global in kf-components.css, because the footer renders the same snippet.
+   Only the band's layout belongs here.
+   ========================================================================== */
+
+.kf-newsletter-band__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-md);
+}
+
+.kf-newsletter-band__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+}
+
+.kf-newsletter-band__body {
+  max-width: 46ch;
+}
+
+.kf-newsletter-band__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  min-width: 0;
+}
+
+.kf-newsletter-band__small-print {
+  max-width: 46ch;
+}
+
+/* ==========================================================================
+   Centered
+   ========================================================================== */
+
+.kf-newsletter-band--center .kf-newsletter-band__inner {
+  align-items: center;
+  text-align: center;
+  /* An email field wants to be a comfortable line, not a page wide. */
+  max-width: var(--kf-content-width);
+  margin-inline: auto;
+}
+
+.kf-newsletter-band--center .kf-newsletter-band__text {
+  align-items: center;
+}
+
+.kf-newsletter-band--center .kf-newsletter-band__form {
+  align-items: center;
+  width: 100%;
+  max-width: 30rem;
+}
+
+.kf-newsletter-band--center .kf-newsletter-band__small-print {
+  text-align: center;
+}
+
+/* ==========================================================================
+   Text beside the form
+   ========================================================================== */
+
+@media (min-width: 750px) {
+  .kf-newsletter-band--split .kf-newsletter-band__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--kf-space-xl);
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   Background image
+   --------------------------------------------------------------------------
+   The backdrop covers the section's padding box, not just its content, so the
+   band reads as one surface rather than an image with a border of scheme
+   color around it.
+   ========================================================================== */
+
+.kf-newsletter-band--has-image {
+  position: relative;
+  isolation: isolate;
+}
+
+.kf-newsletter-band__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* The media frame carries its own ratio, which is meaningless for a backdrop —
+   it has to take the height of the band instead. */
+.kf-newsletter-band__backdrop .kf-media {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+}

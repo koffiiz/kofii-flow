@@ -179,18 +179,7 @@
 
       {%- if rating_visible and rating.rating != blank -%}
         <div class="kf-product-card__rating">
-          {%- assign rating_percent = rating.rating | times: 100.0 | divided_by: rating.scale_max -%}
-          <span class="kf-stars" aria-hidden="true" style="--kf-rating: {{ rating_percent }}%;">
-            <span class="kf-stars__row">
-              {%- for i in (1..5) -%}{%- render 'kf-icon', name: 'star', size: 'sm' -%}{%- endfor -%}
-            </span>
-            <span class="kf-stars__row kf-stars__row--fill">
-              {%- for i in (1..5) -%}{%- render 'kf-icon', name: 'star', size: 'sm' -%}{%- endfor -%}
-            </span>
-          </span>
-          <span class="kf-visually-hidden">
-            {{- 'products.product.rating_value' | t: rating: rating.rating, max: rating.scale_max -}}
-          </span>
+          {%- render 'kf-stars', rating: rating.rating, scale_max: rating.scale_max -%}
           {%- if product.metafields.reviews.rating_count.value > 0 -%}
             <span class="kf-product-card__rating-count kf-muted">({{ product.metafields.reviews.rating_count.value }})</span>
           {%- endif -%}

@@ -6,7 +6,8 @@
       "opens_new_window": "Opens in a new window",
       "image_link": "Open link",
       "pause_animation": "Pause animation",
-      "play_animation": "Play animation"
+      "play_animation": "Play animation",
+      "compare_images": "Drag to compare the two images"
     },
     "meta": {
       "tagged_html": "Tagged {{ tags }}",
@@ -66,12 +67,10 @@
       "page": "Page"
     }
   },
-
   "customer": {
     "account": "Account",
     "log_in": "Log in"
   },
-
   "products": {
     "product": {
       "sold_out": "Sold out",
@@ -87,7 +86,6 @@
         "one": "{{ count }} review",
         "other": "{{ count }} reviews"
       },
-
       "add_to_cart": "Add to cart",
       "quick_add": "Quick add",
       "choose_options": "Choose options",
@@ -96,16 +94,13 @@
       "view_cart": "View cart",
       "choose_variant": "Choose an option",
       "tax_and_shipping_html": "Taxes included. <a href=\"{{ link }}policies/shipping-policy\">Shipping</a> calculated at checkout.",
-
       "quantity": "Quantity",
       "quantity_increase": "Increase quantity",
       "quantity_decrease": "Decrease quantity",
       "quantity_rule": "Sold in multiples of {{ increment }}, minimum {{ min }}.",
-
       "sku": "SKU",
       "barcode": "Barcode",
       "read_more": "Read more",
-
       "inventory_in": "In stock",
       "inventory_low": "Low stock",
       "inventory_out": "Out of stock",
@@ -118,16 +113,13 @@
         "other": "Only {{ count }} left"
       },
       "inventory_incoming": "More on the way, expected {{ date }}",
-
       "media_gallery": "Product media",
       "media_item": "Show image {{ index }}",
       "previous_media": "Previous image",
       "next_media": "Next image",
-
       "share": "Share",
       "share_copied": "Link copied",
       "share_failed": "Could not copy the link",
-
       "pickup_available": "Pickup available at {{ location }}",
       "pickup_unavailable": "Pickup currently unavailable at {{ location }}",
       "pickup_in_stock": "In stock",
@@ -138,7 +130,6 @@
       }
     }
   },
-
   "collections": {
     "all_title": "Collections",
     "none": "There are no collections to show yet.",
@@ -163,7 +154,6 @@
       "price_to": "To"
     }
   },
-
   "cart": {
     "title": "Cart",
     "empty": "Your cart is empty",
@@ -183,24 +173,40 @@
     "shipping_remaining_html": "You are {{ amount }} away from free shipping",
     "shipping_progress": "Progress towards free shipping"
   },
-
   "newsletter": {
     "label": "Email",
     "placeholder": "Your email address",
     "button": "Subscribe",
     "success": "Thanks for subscribing."
   },
-
   "sections": {
-    "footer": {
-      "rights": "All rights reserved.",
-      "menu_empty": "Choose a menu for this column."
-    },
     "404": {
       "code": "Error 404",
       "title": "This page has moved on",
       "text": "The page you were looking for is not here. Search for it, or head back to the homepage.",
       "back_home": "Back to home"
+    },
+    "footer": {
+      "rights": "All rights reserved.",
+      "menu_empty": "Choose a menu for this column."
     }
+  },
+  "date_formats": {
+    "abbreviated_date": "%b %d, %Y",
+    "month_day_year": "%B %d, %Y"
+  },
+  "blog": {
+    "all_topics": "All topics",
+    "filter_label": "Filter articles by topic",
+    "read_more": "Read more",
+    "read_article_html": "Read \"{{ title }}\"",
+    "meta_author": "by {{ author }}",
+    "comment_count": {
+      "one": "{{ count }} comment",
+      "other": "{{ count }} comments"
+    },
+    "empty_title": "Nothing here yet",
+    "empty_text": "Once an article is published it will show up here.",
+    "articles": "Articles"
   }
 }

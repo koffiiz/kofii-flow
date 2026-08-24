@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "show_heading": true,
+        "heading_size": "kf-h1",
+        "show_topics": true,
+        "layout": "grid",
+        "feature_first": true,
+        "posts_per_page": 9,
+        "columns_desktop": 3,
+        "columns_mobile": "1",
+        "media_ratio": "landscape",
+        "show_excerpt": true,
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": ["main"]
+}
