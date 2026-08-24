@@ -1,0 +1,163 @@
+{%- comment -%}
+  Kofii Flow — Register
+  ---------------------------------------------------------------------------
+  Shopify's `create_customer` form. Account creation, validation and the
+  duplicate-email case are all the platform's; this section only renders it.
+
+  `autocomplete="new-password"` rather than `current-password`, so a password
+  manager offers to generate one instead of filling in an existing login.
+{%- endcomment -%}
+
+{{ 'section-customer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign page_title = 'customer.register.title' | t
+  assign submit_label = 'customer.register.submit' | t
+  assign have_account = 'customer.register.have_account' | t
+  assign log_in_label = 'customer.register.log_in' | t
+
+  assign first_name_label = 'customer.first_name' | t
+  assign last_name_label = 'customer.last_name' | t
+  assign email_label = 'customer.email' | t
+  assign password_label = 'customer.password' | t
+  assign errors_title = 'customer.errors_title' | t
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-account-section' %}>
+  <div class="kf-container">
+    <div class="kf-account">
+      <header class="kf-account__header">
+        <h1 class="kf-account__title {{ s.heading_size }}">{{ page_title }}</h1>
+      </header>
+
+      {%- form 'create_customer', class: 'kf-account__form' -%}
+        {%- if form.errors -%}
+          <div class="kf-form-message kf-form-message--error kf-account__errors" role="alert">
+            {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+            <div>
+              <p>{{ errors_title }}</p>
+              {{ form.errors | default_errors }}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if s.show_name_fields -%}
+          <div class="kf-field">
+            <label class="kf-field__label" for="RegisterFirstName">{{ first_name_label }}</label>
+            <input
+              class="kf-input"
+              type="text"
+              id="RegisterFirstName"
+              name="customer[first_name]"
+              value="{{ form.first_name }}"
+              autocomplete="given-name"
+            >
+          </div>
+
+          <div class="kf-field">
+            <label class="kf-field__label" for="RegisterLastName">{{ last_name_label }}</label>
+            <input
+              class="kf-input"
+              type="text"
+              id="RegisterLastName"
+              name="customer[last_name]"
+              value="{{ form.last_name }}"
+              autocomplete="family-name"
+            >
+          </div>
+        {%- endif -%}
+
+        <div class="kf-field">
+          <label class="kf-field__label" for="RegisterEmail">{{ email_label }}</label>
+          <input
+            class="kf-input"
+            type="email"
+            id="RegisterEmail"
+            name="customer[email]"
+            value="{{ form.email }}"
+            autocomplete="email"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            required
+          >
+        </div>
+
+        <div class="kf-field">
+          <label class="kf-field__label" for="RegisterPassword">{{ password_label }}</label>
+          <input
+            class="kf-input"
+            type="password"
+            id="RegisterPassword"
+            name="customer[password]"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        {%- render 'kf-button', label: submit_label, type: 'submit', style: 'primary' -%}
+      {%- endform -%}
+
+      <p class="kf-account__aside">
+        <span>{{ have_account }}</span>
+        <a href="{{ routes.account_login_url }}">{{ log_in_label }}</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Register",
+  "tag": "section",
+  "class": "kf-account-page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name_fields",
+      "label": "Ask for a name",
+      "default": true,
+      "info": "Turn off to ask only for an email and password. Shopify does not require a name."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ]
+}
+{% endschema %}

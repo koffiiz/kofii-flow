@@ -1,0 +1,223 @@
+{%- comment -%}
+  Kofii Flow — Order
+  ---------------------------------------------------------------------------
+  One order, as the customer sees it.
+
+  Every figure comes straight from Shopify's order object and is printed with
+  `| money`. Nothing is added up here — the same rule the cart follows. A total
+  the theme worked out itself will eventually disagree with what was charged,
+  and on an order page that is a receipt that lies.
+
+  Line items are a <table> for the same reason the order list is: it is tabular
+  data, and a screen reader needs the column headings to make sense of the
+  numbers. Discounts, refunds and tax lines only render when the order has
+  them, so a plain order does not show a column of zeroes.
+{%- endcomment -%}
+
+{{ 'section-customer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign page_title = 'customer.order.title' | t: number: order.name
+  assign placed_on = 'customer.order.placed_on' | t: date: order.created_at
+  assign back_label = 'customer.order.back' | t
+
+  assign col_product = 'customer.order.product' | t
+  assign col_sku = 'customer.order.sku' | t
+  assign col_price = 'customer.order.price' | t
+  assign col_quantity = 'customer.order.quantity' | t
+  assign col_total = 'customer.order.line_total' | t
+
+  assign subtotal_label = 'customer.order.subtotal' | t
+  assign shipping_label = 'customer.order.shipping' | t
+  assign tax_label = 'customer.order.tax' | t
+  assign total_label = 'customer.order.total' | t
+  assign refunded_label = 'customer.order.refunded' | t
+  assign discount_label = 'customer.order.discount' | t
+
+  assign billing_label = 'customer.order.billing_address' | t
+  assign shipping_address_label = 'customer.order.shipping_address' | t
+  assign payment_status_label = 'customer.order.payment_status' | t
+  assign fulfillment_status_label = 'customer.order.fulfillment_status' | t
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-account-page' %}>
+  <div class="kf-container">
+    <header class="kf-account__page-header">
+      <div>
+        <a class="kf-account__back kf-text-sm" href="{{ routes.account_url }}">{{ back_label }}</a>
+        <h1 class="{{ s.heading_size }}">{{ page_title }}</h1>
+        <p class="kf-text-sm kf-text-muted">
+          <time datetime="{{ order.created_at | date: '%Y-%m-%d' }}">
+            {{- placed_on -}}
+          </time>
+        </p>
+      </div>
+    </header>
+
+    {%- if order.cancelled -%}
+      {%- liquid
+        assign cancelled_on = 'customer.order.cancelled_on' | t: date: order.cancelled_at
+        assign cancelled_reason = 'customer.order.cancelled_reason' | t: reason: order.cancel_reason_label
+      -%}
+      <div class="kf-form-message kf-form-message--error" role="status">
+        {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+        <div>
+          <p>{{ cancelled_on }}</p>
+          {%- if order.cancel_reason -%}<p>{{ cancelled_reason }}</p>{%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="kf-account__table-scroll">
+      <table class="kf-account__table">
+        <thead>
+          <tr>
+            <th scope="col">{{ col_product }}</th>
+            <th scope="col">{{ col_sku }}</th>
+            <th scope="col" class="kf-account__cell--end">{{ col_price }}</th>
+            <th scope="col" class="kf-account__cell--end">{{ col_quantity }}</th>
+            <th scope="col" class="kf-account__cell--end">{{ col_total }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for line_item in order.line_items -%}
+            <tr>
+              <th scope="row">
+                <a class="kf-link" href="{{ line_item.product.url }}">{{ line_item.title | escape }}</a>
+                {%- if line_item.fulfillment -%}
+                  {%- assign fulfilled_on = 'customer.order.fulfilled_on' | t: date: line_item.fulfillment.created_at -%}
+                  <span class="kf-account__note kf-text-xs kf-text-muted">{{ fulfilled_on }}</span>
+                  {%- if line_item.fulfillment.tracking_url -%}
+                    {%- assign tracking_label = 'customer.order.tracking' | t -%}
+                    <a class="kf-link kf-text-xs" href="{{ line_item.fulfillment.tracking_url }}">{{ tracking_label }}</a>
+                  {%- endif -%}
+                {%- endif -%}
+              </th>
+              <td>{{ line_item.sku }}</td>
+              <td class="kf-account__cell--end">{{ line_item.final_price | money }}</td>
+              <td class="kf-account__cell--end">{{ line_item.quantity }}</td>
+              <td class="kf-account__cell--end">{{ line_item.final_line_price | money }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="4">{{ subtotal_label }}</th>
+            <td class="kf-account__cell--end">{{ order.line_items_subtotal_price | money }}</td>
+          </tr>
+
+          {%- for discount_application in order.cart_level_discount_applications -%}
+            <tr>
+              <th scope="row" colspan="4">
+                {{ discount_label }}
+                <span class="kf-text-muted">({{ discount_application.title }})</span>
+              </th>
+              <td class="kf-account__cell--end">-{{ discount_application.total_allocated_amount | money }}</td>
+            </tr>
+          {%- endfor -%}
+
+          {%- for shipping_method in order.shipping_methods -%}
+            <tr>
+              <th scope="row" colspan="4">
+                {{ shipping_label }}
+                <span class="kf-text-muted">({{ shipping_method.title }})</span>
+              </th>
+              <td class="kf-account__cell--end">{{ shipping_method.price | money }}</td>
+            </tr>
+          {%- endfor -%}
+
+          {%- for tax_line in order.tax_lines -%}
+            <tr>
+              <th scope="row" colspan="4">
+                {{ tax_label }}
+                <span class="kf-text-muted">({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%)</span>
+              </th>
+              <td class="kf-account__cell--end">{{ tax_line.price | money }}</td>
+            </tr>
+          {%- endfor -%}
+
+          <tr class="kf-account__total-row">
+            <th scope="row" colspan="4">{{ total_label }}</th>
+            <td class="kf-account__cell--end">{{ order.total_price | money }}</td>
+          </tr>
+
+          {%- if order.total_refunded_amount > 0 -%}
+            <tr>
+              <th scope="row" colspan="4">{{ refunded_label }}</th>
+              <td class="kf-account__cell--end">-{{ order.total_refunded_amount | money }}</td>
+            </tr>
+          {%- endif -%}
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="kf-account__order-details">
+      <section>
+        <h2 class="kf-h6">{{ billing_label }}</h2>
+        <address class="kf-text-sm">{{ order.billing_address | format_address }}</address>
+        <p class="kf-text-sm">
+          <span class="kf-text-muted">{{ payment_status_label }}:</span>
+          {{ order.financial_status_label }}
+        </p>
+      </section>
+
+      <section>
+        <h2 class="kf-h6">{{ shipping_address_label }}</h2>
+        <address class="kf-text-sm">{{ order.shipping_address | format_address }}</address>
+        <p class="kf-text-sm">
+          <span class="kf-text-muted">{{ fulfillment_status_label }}:</span>
+          {{ order.fulfillment_status_label }}
+        </p>
+      </section>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Order",
+  "tag": "section",
+  "class": "kf-account-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "heading_size": "kf-h1",
+        "alignment": "start",
+        "show_back_link": true,
+        "show_tag": true,
+        "show_date": true,
+        "show_author": true,
+        "width": "narrow",
+        "show_image": true,
+        "media_ratio": "wide",
+        "show_tags": true,
+        "show_share": true,
+        "show_comments": true,
+        "show_adjacent": true,
+        "show_schema": true,
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": ["main"]
+}

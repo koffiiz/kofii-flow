@@ -1,0 +1,100 @@
+/* ==========================================================================
+   Kofii Flow — Gift card
+   Loaded by templates/gift_card.liquid, which is a standalone document.
+   ========================================================================== */
+
+.kf-giftcard-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: var(--kf-space-lg) var(--kf-page-gutter);
+  background-color: var(--kf-color-background);
+  color: var(--kf-color-text);
+}
+
+.kf-giftcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kf-space-2xs);
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--kf-space-xl) var(--kf-space-lg);
+  border-radius: var(--kf-radius-xl);
+  box-shadow: var(--kf-shadow-lg);
+  text-align: center;
+}
+
+.kf-giftcard__shop {
+  color: var(--kf-color-muted);
+}
+
+.kf-giftcard__title,
+.kf-giftcard__subtitle {
+  margin: 0;
+}
+
+.kf-giftcard__balance {
+  margin: var(--kf-space-sm) 0 0;
+  font-size: var(--kf-h1);
+  line-height: 1;
+  color: var(--kf-color-heading);
+}
+
+.kf-giftcard__balance-label {
+  margin: 0;
+}
+
+.kf-giftcard__code-block {
+  width: 100%;
+  margin-top: var(--kf-space-md);
+  padding: var(--kf-space-sm);
+  border: var(--kf-border-width-thick) dashed var(--kf-color-border);
+  border-radius: var(--kf-radius-md);
+}
+
+/* The one string on the page someone reads aloud or types into a till, so it
+   is monospaced for unambiguous characters and spaced for grouping. */
+.kf-giftcard__code {
+  margin: var(--kf-space-3xs) 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--kf-text-lg);
+  letter-spacing: 0.08em;
+  color: var(--kf-color-heading);
+  word-break: break-all;
+  user-select: all;
+}
+
+.kf-giftcard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--kf-space-2xs);
+  margin-top: var(--kf-space-md);
+}
+
+/* ==========================================================================
+   Print
+   --------------------------------------------------------------------------
+   A printed gift card is the code and the balance. Everything that only works
+   on screen comes off the page, and the card loses its shadow so it does not
+   render as a grey box on paper.
+   ========================================================================== */
+
+@media print {
+  .kf-giftcard-layout {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .kf-giftcard {
+    box-shadow: none;
+    max-width: none;
+  }
+
+  .kf-giftcard__actions,
+  .kf-giftcard__print {
+    display: none;
+  }
+}

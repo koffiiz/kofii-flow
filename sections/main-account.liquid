@@ -1,0 +1,166 @@
+{%- comment -%}
+  Kofii Flow — Account
+  ---------------------------------------------------------------------------
+  The signed-in landing page: order history, the default address, and the way
+  out.
+
+  Order history is a real <table>. An order list is tabular data — five columns
+  where the meaning of each cell comes from its column heading — and a grid of
+  divs would leave a screen reader announcing the values with no idea which is
+  the total and which is the date. The table stays a table and scrolls
+  sideways on a phone rather than being rebuilt as cards.
+
+  Every status string comes from Shopify (`financial_status_label`,
+  `fulfillment_status_label`) so it is already translated and always matches
+  what the admin shows.
+{%- endcomment -%}
+
+{{ 'section-customer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign page_title = 'customer.overview.title' | t
+  assign greeting = 'customer.overview.greeting' | t: email: customer.email
+  assign orders_title = 'customer.overview.orders_title' | t
+  assign addresses_link = 'customer.overview.addresses_link' | t
+  assign address_title = 'customer.overview.address_title' | t
+  assign no_address = 'customer.overview.no_address' | t
+  assign none_label = 'customer.overview.none' | t
+  assign start_shopping = 'customer.overview.start_shopping' | t
+  assign log_out = 'customer.log_out' | t
+
+  assign col_order = 'customer.orders.order_number' | t
+  assign col_date = 'customer.orders.date' | t
+  assign col_payment = 'customer.orders.payment' | t
+  assign col_fulfillment = 'customer.orders.fulfillment' | t
+  assign col_total = 'customer.orders.total' | t
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-account-page' %}>
+  <div class="kf-container">
+    <header class="kf-account__page-header">
+      <div>
+        <h1 class="{{ s.heading_size }}">{{ page_title }}</h1>
+        <p class="kf-text-sm kf-text-muted">{{ greeting }}</p>
+      </div>
+      <a class="kf-link kf-account__logout" href="{{ routes.account_logout_url }}">{{ log_out }}</a>
+    </header>
+
+    <div class="kf-account__layout">
+      <section class="kf-account__orders">
+        <h2 class="kf-h4">{{ orders_title }}</h2>
+
+        {%- paginate customer.orders by 20 -%}
+          {%- if customer.orders.size > 0 -%}
+            <div class="kf-account__table-scroll">
+              <table class="kf-account__table">
+                <thead>
+                  <tr>
+                    <th scope="col">{{ col_order }}</th>
+                    <th scope="col">{{ col_date }}</th>
+                    <th scope="col">{{ col_payment }}</th>
+                    <th scope="col">{{ col_fulfillment }}</th>
+                    <th scope="col" class="kf-account__cell--end">{{ col_total }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for order in customer.orders -%}
+                    {%- assign view_label = 'customer.orders.view' | t: number: order.name -%}
+                    <tr>
+                      {%- comment -%}
+                        The order number is the row's header cell, so a screen
+                        reader can announce which order each value belongs to
+                        rather than reading five loose figures.
+                      {%- endcomment -%}
+                      <th scope="row">
+                        <a class="kf-link" href="{{ order.customer_url }}" aria-label="{{ view_label | escape }}">
+                          {{- order.name -}}
+                        </a>
+                      </th>
+                      <td>
+                        <time datetime="{{ order.created_at | date: '%Y-%m-%d' }}">
+                          {{- order.created_at | date: format: 'abbreviated_date' -}}
+                        </time>
+                      </td>
+                      <td>{{ order.financial_status_label }}</td>
+                      <td>{{ order.fulfillment_status_label }}</td>
+                      <td class="kf-account__cell--end">{{ order.total_net_amount | money }}</td>
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+
+            {%- render 'kf-pagination', paginate: paginate -%}
+          {%- else -%}
+            <div class="kf-account__empty">
+              <p class="kf-text-muted">{{ none_label }}</p>
+              {%- render 'kf-button', label: start_shopping, href: routes.all_products_collection_url, style: 'secondary' -%}
+            </div>
+          {%- endif -%}
+        {%- endpaginate -%}
+      </section>
+
+      <aside class="kf-account__sidebar">
+        <h2 class="kf-h5">{{ address_title }}</h2>
+        {%- if customer.default_address -%}
+          <address class="kf-account__address kf-text-sm">
+            {{ customer.default_address | format_address }}
+          </address>
+        {%- else -%}
+          <p class="kf-text-sm kf-text-muted">{{ no_address }}</p>
+        {%- endif -%}
+
+        <a class="kf-link" href="{{ routes.account_addresses_url }}">{{ addresses_link }}</a>
+      </aside>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Account",
+  "tag": "section",
+  "class": "kf-account-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,387 @@
+/* ==========================================================================
+   Kofii Flow — Customer accounts
+   --------------------------------------------------------------------------
+   Shared by every customer section: login, register, activate, reset, and the
+   account pages that follow.
+
+   The form controls themselves are the global `.kf-field`, `.kf-input` and
+   `.kf-form-message` from kf-components.css — an account form is the same form
+   as any other, and none of it is restated here.
+   ========================================================================== */
+
+/* A single column, narrow. An auth form is one task with nothing beside it,
+   so the page is centred rather than filling a wide container. */
+.kf-account {
+  width: 100%;
+  max-width: 26rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-md);
+}
+
+.kf-account__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  text-align: center;
+}
+
+.kf-account__title {
+  margin: 0;
+}
+
+.kf-account__subtitle {
+  color: var(--kf-color-muted);
+}
+
+.kf-account__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+}
+
+/* Buttons go full width here, unlike everywhere else in the theme: there is
+   exactly one action on the page and a narrow button in a narrow column reads
+   as unfinished. */
+.kf-account__form .kf-button {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Secondary links
+   ========================================================================== */
+
+.kf-account__aside {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--kf-space-3xs);
+  text-align: center;
+  color: var(--kf-color-muted);
+  font-size: var(--kf-text-sm);
+}
+
+.kf-account__aside a {
+  color: var(--kf-color-heading);
+}
+
+/* ==========================================================================
+   Password recovery
+   --------------------------------------------------------------------------
+   A native <details>, so the second form on the login page opens and closes
+   with no JavaScript. Liquid forces it open when the recovery has just been
+   submitted or come back with errors — otherwise the reader would land on the
+   login page with their result hidden inside a closed disclosure.
+   ========================================================================== */
+
+.kf-account__recover {
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+  padding-top: var(--kf-space-sm);
+}
+
+.kf-account__recover-summary {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  list-style: none;
+  color: var(--kf-color-heading);
+  font-size: var(--kf-text-sm);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.kf-account__recover-summary::-webkit-details-marker {
+  display: none;
+}
+
+.kf-account__recover-summary:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+  border-radius: var(--kf-radius-xs);
+}
+
+.kf-account__recover-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  padding-top: var(--kf-space-sm);
+}
+
+/* ==========================================================================
+   Errors
+   --------------------------------------------------------------------------
+   `form.errors | default_errors` emits a plain list; this gives it the same
+   look as the theme's own messages without rewriting Shopify's markup.
+   ========================================================================== */
+
+.kf-account__errors ul {
+  margin: 0;
+  padding-inline-start: var(--kf-space-sm);
+}
+
+.kf-account__errors a {
+  color: inherit;
+}
+
+/* ==========================================================================
+   Account pages
+   --------------------------------------------------------------------------
+   The signed-in pages are wider than the auth forms — an order history needs
+   the room — so they opt out of the narrow `.kf-account` column.
+   ========================================================================== */
+
+.kf-account__page-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--kf-space-sm);
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-account__page-header h1 {
+  margin: 0;
+}
+
+.kf-account__back {
+  display: inline-block;
+  margin-bottom: var(--kf-space-3xs);
+  color: var(--kf-color-muted);
+}
+
+.kf-account__layout {
+  display: grid;
+  gap: var(--kf-space-xl);
+}
+
+@media (min-width: 990px) {
+  .kf-account__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
+    align-items: start;
+  }
+}
+
+.kf-account__sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+  padding: var(--kf-space-md);
+  border: var(--kf-border-width) solid var(--kf-color-border);
+  border-radius: var(--kf-radius-md);
+}
+
+.kf-account__address {
+  font-style: normal;
+}
+
+.kf-account__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-sm);
+  padding-block: var(--kf-space-lg);
+}
+
+/* ==========================================================================
+   Tables
+   --------------------------------------------------------------------------
+   Order history and order line items stay real tables. The scroll wrapper is
+   what makes that work on a phone: the table keeps its columns and headings
+   and the wrapper scrolls, rather than the table being rebuilt as cards and
+   losing the association between each value and its heading.
+   ========================================================================== */
+
+.kf-account__table-scroll {
+  overflow-x: auto;
+  margin-bottom: var(--kf-space-lg);
+}
+
+.kf-account__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--kf-text-sm);
+  /* Without this the scroll wrapper would shrink the columns instead of
+     scrolling, which is the failure that makes a table unreadable. */
+  min-width: 34rem;
+}
+
+.kf-account__table th,
+.kf-account__table td {
+  padding: var(--kf-space-2xs);
+  text-align: start;
+  vertical-align: top;
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-account__table thead th {
+  color: var(--kf-color-muted);
+  font-size: var(--kf-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--kf-label-spacing);
+  text-transform: var(--kf-label-transform);
+  white-space: nowrap;
+}
+
+.kf-account__table tbody th,
+.kf-account__table tfoot th {
+  font-weight: 600;
+  color: var(--kf-color-heading);
+}
+
+.kf-account__cell--end {
+  text-align: end;
+}
+
+.kf-account__note {
+  display: block;
+}
+
+.kf-account__total-row th,
+.kf-account__total-row td {
+  border-top: var(--kf-border-width-thick) solid var(--kf-color-border);
+  font-size: var(--kf-text-md);
+}
+
+/* ==========================================================================
+   Order details
+   ========================================================================== */
+
+.kf-account__order-details {
+  display: grid;
+  gap: var(--kf-space-lg);
+}
+
+@media (min-width: 750px) {
+  .kf-account__order-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.kf-account__order-details address {
+  font-style: normal;
+  margin-block: var(--kf-space-3xs) var(--kf-space-2xs);
+}
+
+/* ==========================================================================
+   Addresses
+   ========================================================================== */
+
+.kf-address__new {
+  margin-bottom: var(--kf-space-lg);
+  padding-bottom: var(--kf-space-lg);
+  border-bottom: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-address__new-summary,
+.kf-address__action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--kf-color-heading);
+  font-size: var(--kf-text-sm);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.kf-address__new-summary::-webkit-details-marker,
+.kf-address__action::-webkit-details-marker {
+  display: none;
+}
+
+.kf-address__new-summary:focus-visible,
+.kf-address__action:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+  border-radius: var(--kf-radius-xs);
+}
+
+.kf-address__action--danger {
+  color: var(--kf-color-error, #b3261e);
+}
+
+.kf-address__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  align-items: flex-start;
+  padding-top: var(--kf-space-sm);
+  max-width: 40rem;
+}
+
+.kf-address__fields {
+  display: grid;
+  gap: var(--kf-space-sm);
+  width: 100%;
+}
+
+@media (min-width: 750px) {
+  .kf-address__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Street lines and phone read better across the full width than squeezed
+     into half of it. */
+  .kf-address__field--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.kf-address__default {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-3xs);
+  font-size: var(--kf-text-sm);
+}
+
+.kf-address__list {
+  display: grid;
+  gap: var(--kf-space-md);
+  list-style: none;
+  margin-bottom: var(--kf-space-lg);
+}
+
+@media (min-width: 750px) {
+  .kf-address__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.kf-address__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  padding: var(--kf-space-md);
+  border: var(--kf-border-width) solid var(--kf-color-border);
+  border-radius: var(--kf-radius-md);
+}
+
+.kf-address__badge {
+  color: var(--kf-color-accent);
+}
+
+.kf-address__value {
+  font-style: normal;
+  margin: 0;
+}
+
+.kf-address__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-sm);
+}
+
+.kf-address__delete-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+  padding-top: var(--kf-space-2xs);
+}
+
+.kf-address__empty {
+  padding-block: var(--kf-space-lg);
+}

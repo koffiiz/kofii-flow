@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-addresses",
+      "settings": { "heading_size": "kf-h2", "color_scheme": "scheme-1" }
+    }
+  },
+  "order": ["main"]
+}

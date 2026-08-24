@@ -1,0 +1,165 @@
+{%- comment -%}
+  Kofii Flow — Addresses
+  ---------------------------------------------------------------------------
+  The customer's address book: a list, an editor for each entry, and a form for
+  adding one.
+
+  Every form here is Shopify's `customer_address`, and every one of them works
+  without JavaScript:
+
+    add      a normal form, revealed by a native <details>
+    edit     one <details> per address, each holding its own form
+    delete   a plain POST to the address URL with `_method=delete`, wrapped in
+             a second <details> so the destructive button takes two deliberate
+             actions to reach rather than firing on a stray tap
+
+  Field ids are prefixed per form. Several address forms are on the page at
+  once, and duplicate ids would point every label at the first form's fields.
+
+  <kf-address-form> only upgrades the province input to a select; see that file.
+{%- endcomment -%}
+
+{{ 'section-customer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-address-form.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+
+  assign page_title = 'customer.addresses.title' | t
+  assign back_label = 'customer.order.back' | t
+  assign add_title = 'customer.addresses.add_title' | t
+  assign add_submit = 'customer.addresses.add_submit' | t
+  assign edit_label = 'customer.addresses.edit' | t
+  assign edit_submit = 'customer.addresses.edit_submit' | t
+  assign delete_label = 'customer.addresses.delete' | t
+  assign delete_confirm = 'customer.addresses.delete_confirm' | t
+  assign delete_submit = 'customer.addresses.delete_submit' | t
+  assign default_badge = 'customer.addresses.default' | t
+  assign none_label = 'customer.addresses.none' | t
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-account-page' %}>
+  <div class="kf-container">
+    <header class="kf-account__page-header">
+      <div>
+        <a class="kf-account__back kf-text-sm" href="{{ routes.account_url }}">{{ back_label }}</a>
+        <h1 class="{{ s.heading_size }}">{{ page_title }}</h1>
+      </div>
+    </header>
+
+    <details class="kf-address__new">
+      <summary class="kf-address__new-summary">{{ add_title }}</summary>
+
+      <kf-address-form>
+        {%- form 'customer_address', customer.new_address, class: 'kf-address__form' -%}
+          {%- if form.errors -%}
+            <div class="kf-form-message kf-form-message--error kf-account__errors" role="alert">
+              {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+              <div>{{ form.errors | default_errors }}</div>
+            </div>
+          {%- endif -%}
+
+          {%- render 'kf-address-fields', scope: 'AddressNew' -%}
+          {%- render 'kf-button', label: add_submit, type: 'submit', style: 'primary' -%}
+        {%- endform -%}
+      </kf-address-form>
+    </details>
+
+    {%- if customer.addresses.size > 0 -%}
+      <ul class="kf-address__list" role="list">
+        {%- for address in customer.addresses -%}
+          {%- assign scope = 'Address' | append: address.id -%}
+          <li class="kf-address__item">
+            {%- if address.id == customer.default_address.id -%}
+              <p class="kf-label kf-address__badge">{{ default_badge }}</p>
+            {%- endif -%}
+
+            <address class="kf-address__value kf-text-sm">
+              {{ address | format_address }}
+            </address>
+
+            <div class="kf-address__actions">
+              <details class="kf-address__edit">
+                <summary class="kf-address__action">{{ edit_label }}</summary>
+
+                <kf-address-form>
+                  {%- form 'customer_address', address, class: 'kf-address__form' -%}
+                    {%- render 'kf-address-fields', address: address, scope: scope -%}
+                    {%- render 'kf-button', label: edit_submit, type: 'submit', style: 'primary' -%}
+                  {%- endform -%}
+                </kf-address-form>
+              </details>
+
+              {%- comment -%}
+                Two steps to delete, both plain HTML. Shopify reads `_method`
+                to turn this POST into a delete, so no script is involved and
+                nothing is destroyed by a single mistaken tap.
+              {%- endcomment -%}
+              <details class="kf-address__delete">
+                <summary class="kf-address__action kf-address__action--danger">{{ delete_label }}</summary>
+                <form method="post" action="{{ routes.account_addresses_url }}/{{ address.id }}" class="kf-address__delete-form">
+                  <input type="hidden" name="_method" value="delete">
+                  <p class="kf-text-sm">{{ delete_confirm }}</p>
+                  {%- render 'kf-button', label: delete_submit, type: 'submit', style: 'secondary', size: 'sm' -%}
+                </form>
+              </details>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- paginate customer.addresses by 10 -%}
+        {%- render 'kf-pagination', paginate: paginate -%}
+      {%- endpaginate -%}
+    {%- else -%}
+      <p class="kf-text-muted kf-address__empty">{{ none_label }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Addresses",
+  "tag": "section",
+  "class": "kf-account-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ]
+}
+{% endschema %}

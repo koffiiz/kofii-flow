@@ -1,0 +1,204 @@
+{%- comment -%}
+  Kofii Flow — Login
+  ---------------------------------------------------------------------------
+  Two Shopify forms on one page: `customer_login` and, below it,
+  `recover_customer_password`.
+
+  The recovery form lives in a native <details> rather than behind a JavaScript
+  toggle, so it opens and closes with no script at all. Liquid forces it open
+  in the two cases where a closed disclosure would hide the outcome from the
+  reader: `recover_success` after Shopify has sent the email, and whenever the
+  recovery form comes back with errors.
+
+  `recover_success` is Shopify's own variable on this template. Theme Check
+  does not scope objects per template and flags it as unknown, which is what
+  the disable directive around the disclosure is for.
+
+  Shopify owns authentication entirely — this section renders its forms and
+  nothing else. There is no client-side validation beyond the browser's own,
+  because a second opinion about a password is a second thing to get wrong.
+{%- endcomment -%}
+
+{{ 'section-customer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign login_title = 'customer.login.title' | t
+  assign login_submit = 'customer.login.submit' | t
+  assign forgot_label = 'customer.login.forgot' | t
+  assign no_account = 'customer.login.no_account' | t
+  assign create_one = 'customer.login.create_one' | t
+
+  assign recover_subtitle = 'customer.recover.subtitle' | t
+  assign recover_submit = 'customer.recover.submit' | t
+  comment
+    NOT named recover_success: that is Shopify's own boolean on this template,
+    and assigning over it would leave the disclosure permanently open because
+    a non-empty string is always truthy.
+  endcomment
+  assign recover_message = 'customer.recover.success' | t
+
+  assign email_label = 'customer.email' | t
+  assign password_label = 'customer.password' | t
+  assign errors_title = 'customer.errors_title' | t
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-account-section' %}>
+  <div class="kf-container">
+    <div class="kf-account">
+      <header class="kf-account__header">
+        <h1 class="kf-account__title {{ s.heading_size }}">{{ login_title }}</h1>
+      </header>
+
+      {%- form 'customer_login', class: 'kf-account__form' -%}
+        {%- if form.errors -%}
+          <div class="kf-form-message kf-form-message--error kf-account__errors" role="alert">
+            {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+            <div>
+              <p>{{ errors_title }}</p>
+              {{ form.errors | default_errors }}
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="kf-field">
+          <label class="kf-field__label" for="LoginEmail">{{ email_label }}</label>
+          <input
+            class="kf-input"
+            type="email"
+            id="LoginEmail"
+            name="customer[email]"
+            autocomplete="email"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            required
+          >
+        </div>
+
+        <div class="kf-field">
+          <label class="kf-field__label" for="LoginPassword">{{ password_label }}</label>
+          <input
+            class="kf-input"
+            type="password"
+            id="LoginPassword"
+            name="customer[password]"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        {%- render 'kf-button', label: login_submit, type: 'submit', style: 'primary' -%}
+      {%- endform -%}
+
+      {%- comment -%}
+        `recover_success` is set by Shopify on this template after the recovery
+        email goes out. Without it the reader is returned to a login page with
+        the confirmation sealed inside a closed disclosure.
+      {%- endcomment -%}
+      {% # theme-check-disable UndefinedObject %}
+      <details class="kf-account__recover" {% if recover_success %}open{% endif %}>
+        <summary class="kf-account__recover-summary">{{ forgot_label }}</summary>
+
+        <div class="kf-account__recover-body">
+          {%- if recover_success -%}
+            <p class="kf-form-message kf-form-message--success" role="status">
+              {%- render 'kf-icon', name: 'check', size: 'sm' -%}
+              {{ recover_message }}
+            </p>
+          {%- endif -%}
+
+          <p class="kf-text-sm kf-text-muted">{{ recover_subtitle }}</p>
+
+          {%- form 'recover_customer_password', class: 'kf-account__form' -%}
+            {%- if form.errors -%}
+              <div class="kf-form-message kf-form-message--error kf-account__errors" role="alert">
+                {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+                <div>{{ form.errors | default_errors }}</div>
+              </div>
+            {%- endif -%}
+
+            <div class="kf-field">
+              <label class="kf-field__label" for="RecoverEmail">{{ email_label }}</label>
+              <input
+                class="kf-input"
+                type="email"
+                id="RecoverEmail"
+                name="email"
+                autocomplete="email"
+                autocapitalize="off"
+                autocorrect="off"
+                spellcheck="false"
+                required
+              >
+            </div>
+
+            {%- render 'kf-button', label: recover_submit, type: 'submit', style: 'secondary' -%}
+          {%- endform -%}
+        </div>
+      </details>
+      {% # theme-check-enable UndefinedObject %}
+
+      {%- if s.show_register_link -%}
+        <p class="kf-account__aside">
+          <span>{{ no_account }}</span>
+          <a href="{{ routes.account_register_url }}">{{ create_one }}</a>
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Login",
+  "tag": "section",
+  "class": "kf-account-page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_register_link",
+      "label": "Show a link to create an account",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ]
+}
+{% endschema %}

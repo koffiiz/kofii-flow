@@ -1,0 +1,134 @@
+{%- comment -%}
+  Kofii Flow — Activate account
+  ---------------------------------------------------------------------------
+  Reached from the invitation email Shopify sends when a merchant creates an
+  account for a customer.
+
+  The form has TWO submit buttons. Accepting posts normally; declining posts
+  with `name="decline"`, which is how Shopify tells the two apart — so the
+  decline control has to be a real submit button inside the same form, not a
+  link. It is rendered as a plain button so it never competes with the action
+  the customer is here to take.
+{%- endcomment -%}
+
+{{ 'section-customer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign page_title = 'customer.activate.title' | t
+  assign page_subtitle = 'customer.activate.subtitle' | t
+  assign submit_label = 'customer.activate.submit' | t
+  assign decline_label = 'customer.activate.decline' | t
+
+  assign password_label = 'customer.password' | t
+  assign confirm_label = 'customer.password_confirm' | t
+  assign errors_title = 'customer.errors_title' | t
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-account-section' %}>
+  <div class="kf-container">
+    <div class="kf-account">
+      <header class="kf-account__header">
+        <h1 class="kf-account__title {{ s.heading_size }}">{{ page_title }}</h1>
+        <p class="kf-account__subtitle kf-text-sm">{{ page_subtitle }}</p>
+      </header>
+
+      {%- form 'activate_customer_password', class: 'kf-account__form' -%}
+        {%- if form.errors -%}
+          <div class="kf-form-message kf-form-message--error kf-account__errors" role="alert">
+            {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+            <div>
+              <p>{{ errors_title }}</p>
+              {{ form.errors | default_errors }}
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="kf-field">
+          <label class="kf-field__label" for="ActivatePassword">{{ password_label }}</label>
+          <input
+            class="kf-input"
+            type="password"
+            id="ActivatePassword"
+            name="customer[password]"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <div class="kf-field">
+          <label class="kf-field__label" for="ActivatePasswordConfirm">{{ confirm_label }}</label>
+          <input
+            class="kf-input"
+            type="password"
+            id="ActivatePasswordConfirm"
+            name="customer[password_confirmation]"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        {%- render 'kf-button', label: submit_label, type: 'submit', style: 'primary' -%}
+
+        {%- comment -%}
+          `name="decline"` is what Shopify checks; a link here would simply
+          navigate and leave the invitation open.
+        {%- endcomment -%}
+        {%- render 'kf-button',
+          label: decline_label,
+          type: 'submit',
+          name: 'decline',
+          style: 'plain'
+        -%}
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Activate account",
+  "tag": "section",
+  "class": "kf-account-page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h3", "label": "Small" },
+        { "value": "kf-h2", "label": "Medium" },
+        { "value": "kf-h1", "label": "Large" }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,133 @@
+{% layout none %}
+<!doctype html>
+{%- comment -%}
+  Kofii Flow — Gift card
+  ---------------------------------------------------------------------------
+  A standalone page: `layout none`, because this is what a recipient opens from
+  an email and it should carry no navigation, no cart and nothing to click away
+  into. It is also frequently printed.
+
+  NO QR CODE. Every theme that shows one generates it in the browser with a
+  bundled QR library — Shopify does not render one server-side, and there is no
+  official image endpoint to point an <img> at. Adding a library would break
+  rule 8, and inventing a URL that might 404 would be worse than leaving it
+  out. The code is instead set large and selectable, which is what a cashier
+  keying it in actually needs. See the roadmap in CLAUDE.md.
+
+  The expired and disabled states come before the balance, because a recipient
+  needs to know the card is unusable before they read a number that suggests
+  otherwise.
+{%- endcomment -%}
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>{{ 'gift_card.title' | t }} &ndash; {{ shop.name }}</title>
+
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- render 'kf-fonts' -%}
+
+    {{ 'kf-tokens.css' | asset_url | stylesheet_tag }}
+    {{ 'kf-base.css' | asset_url | stylesheet_tag }}
+    {{ 'kf-components.css' | asset_url | stylesheet_tag }}
+    {{ 'section-gift-card.css' | asset_url | stylesheet_tag }}
+
+    {%- render 'kf-css-variables' -%}
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="kf-scheme kf-scheme--scheme-1 kf-giftcard-layout">
+    {%- liquid
+      assign subtitle = 'gift_card.subtitle' | t: shop: shop.name
+      assign code_label = 'gift_card.code_label' | t
+      assign initial_label = 'gift_card.initial_value' | t
+      assign balance_label = 'gift_card.balance' | t
+      assign shop_link = 'gift_card.shop_link' | t
+      assign print_label = 'gift_card.print' | t
+      assign wallet_label = 'gift_card.add_to_wallet' | t
+
+      comment
+        A partly spent card shows both figures; an untouched one would just be
+        the same number printed twice.
+      endcomment
+      assign show_initial = false
+      if gift_card.balance != gift_card.initial_value
+        assign show_initial = true
+      endif
+    -%}
+
+    <main class="kf-giftcard">
+      <p class="kf-label kf-giftcard__shop">{{ shop.name }}</p>
+      <h1 class="kf-giftcard__title kf-h2">{{ 'gift_card.title' | t }}</h1>
+      <p class="kf-giftcard__subtitle kf-text-muted">{{ subtitle }}</p>
+
+      {%- unless gift_card.enabled -%}
+        <p class="kf-form-message kf-form-message--error" role="status">
+          {{ 'gift_card.disabled' | t }}
+        </p>
+      {%- endunless -%}
+
+      {%- if gift_card.expired -%}
+        <p class="kf-form-message kf-form-message--error" role="status">
+          {{ 'gift_card.expired' | t }}
+        </p>
+      {%- endif -%}
+
+      <p class="kf-giftcard__balance">{{ gift_card.balance | money }}</p>
+      <p class="kf-giftcard__balance-label kf-text-sm kf-text-muted">{{ balance_label }}</p>
+
+      {%- if show_initial -%}
+        <p class="kf-text-sm kf-text-muted">
+          {{ initial_label }}: {{ gift_card.initial_value | money }}
+        </p>
+      {%- endif -%}
+
+      <div class="kf-giftcard__code-block">
+        <p class="kf-label kf-text-muted">{{ code_label }}</p>
+        {%- comment -%}
+          Rendered with Shopify's own formatting and left selectable — this is
+          the one string on the page someone will copy or read aloud.
+        {%- endcomment -%}
+        <p class="kf-giftcard__code">{{ gift_card.code | format_code }}</p>
+      </div>
+
+      {%- if gift_card.expires_on and gift_card.expired == false -%}
+        {%- assign expires = 'gift_card.expires_on' | t: date: gift_card.expires_on -%}
+        <p class="kf-text-sm kf-text-muted">{{ expires }}</p>
+      {%- endif -%}
+
+      <div class="kf-giftcard__actions">
+        {%- render 'kf-button', label: shop_link, href: shop.url, style: 'primary' -%}
+
+        {%- if gift_card.pass_url -%}
+          {%- render 'kf-button', label: wallet_label, href: gift_card.pass_url, style: 'secondary' -%}
+        {%- endif -%}
+      </div>
+
+      {%- comment -%}
+        Printing is a browser action with no Liquid equivalent, so this button
+        is the one piece of script on the page and it is added only if that
+        script runs. A dead "Print" button would be worse than none.
+      {%- endcomment -%}
+      <div class="kf-giftcard__print" hidden data-kf-print>
+        {%- render 'kf-button', label: print_label, style: 'plain' -%}
+      </div>
+
+      <script>
+        (function () {
+          var wrapper = document.querySelector('[data-kf-print]');
+          if (!wrapper) return;
+          wrapper.hidden = false;
+          wrapper.addEventListener('click', function () { window.print(); });
+        })();
+      </script>
+    </main>
+  </body>
+</html>

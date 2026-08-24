@@ -1,0 +1,242 @@
+/* ==========================================================================
+   Kofii Flow — Article
+   Loaded by sections/main-article.liquid.
+
+   Body copy is `.kf-rte` from kf-base.css, and the form controls are the
+   global `.kf-field` / `.kf-input` / `.kf-textarea`. Only the page's own
+   structure belongs here.
+   ========================================================================== */
+
+.kf-article__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-md);
+}
+
+/* A measure, not a container width. Long-form prose is unreadable at full page
+   width, but the featured image below is deliberately left outside this cap. */
+.kf-article--narrow .kf-article__header,
+.kf-article--narrow .kf-article__content,
+.kf-article--narrow .kf-article__tags,
+.kf-article--narrow .kf-article__share,
+.kf-article--narrow .kf-article__comments {
+  width: 100%;
+  max-width: var(--kf-content-width);
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.kf-article__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-article__header--center {
+  align-items: center;
+  text-align: center;
+}
+
+.kf-article__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kf-space-3xs);
+  color: var(--kf-color-muted);
+  font-size: var(--kf-text-sm);
+  text-decoration: none;
+}
+
+.kf-article__back:hover {
+  color: var(--kf-color-heading);
+}
+
+/* The icon is a right chevron turned around rather than a second asset. */
+.kf-article__back-icon {
+  transform: rotate(180deg);
+}
+
+.kf-article__eyebrow {
+  color: var(--kf-color-accent);
+}
+
+.kf-article__title {
+  margin: 0;
+}
+
+.kf-article__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-3xs) var(--kf-space-2xs);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Media and body
+   ========================================================================== */
+
+.kf-article__media {
+  margin-block: var(--kf-space-2xs);
+}
+
+.kf-article__content {
+  /* The one place in the theme where body copy is set slightly larger: an
+     article is read start to finish, not scanned. */
+  font-size: var(--kf-text-md);
+}
+
+/* ==========================================================================
+   Tags and share
+   ========================================================================== */
+
+.kf-article__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kf-space-2xs);
+  padding-top: var(--kf-space-md);
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-article__tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-3xs);
+  list-style: none;
+}
+
+.kf-article__tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding-inline: var(--kf-space-2xs);
+  border: var(--kf-border-width) solid var(--kf-color-border);
+  border-radius: var(--kf-radius-pill);
+  color: var(--kf-color-text);
+  font-size: var(--kf-text-sm);
+  text-decoration: none;
+}
+
+.kf-article__tag:hover {
+  border-color: var(--kf-color-heading);
+}
+
+.kf-article__tag:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Comments
+   ========================================================================== */
+
+.kf-article__comments {
+  margin-top: var(--kf-space-2xl);
+  padding-top: var(--kf-space-lg);
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+.kf-article__comments-title {
+  margin-bottom: var(--kf-space-md);
+}
+
+.kf-article__comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-md);
+  list-style: none;
+  margin-bottom: var(--kf-space-xl);
+}
+
+.kf-article__comment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-2xs);
+  margin: 0 0 var(--kf-space-3xs);
+}
+
+.kf-article__comment-author {
+  font-weight: 600;
+}
+
+.kf-article__comment-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kf-space-2xs);
+}
+
+/* Name and email share a row from 750px up; the message always takes its own. */
+.kf-article__comment-fields {
+  display: grid;
+  gap: var(--kf-space-2xs);
+  width: 100%;
+}
+
+@media (min-width: 750px) {
+  .kf-article__comment-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kf-space-sm);
+  }
+}
+
+.kf-article__comment-form .kf-field {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Previous and next
+   ========================================================================== */
+
+.kf-article__adjacent {
+  display: grid;
+  gap: var(--kf-space-sm);
+  margin-top: var(--kf-space-2xl);
+  padding-top: var(--kf-space-lg);
+  border-top: var(--kf-border-width) solid var(--kf-color-border);
+}
+
+@media (min-width: 750px) {
+  .kf-article__adjacent {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* An article with no previous link still puts its next link on the right,
+     where a reader expects to find it. */
+  .kf-article__adjacent-link--next:only-child {
+    grid-column: 2;
+  }
+}
+
+.kf-article__adjacent-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-3xs);
+  padding: var(--kf-space-sm);
+  border: var(--kf-border-width) solid var(--kf-color-border);
+  border-radius: var(--kf-radius-md);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--kf-motion-fast) var(--kf-ease-out);
+}
+
+.kf-article__adjacent-link:hover {
+  border-color: var(--kf-color-heading);
+}
+
+.kf-article__adjacent-link:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: 2px;
+}
+
+.kf-article__adjacent-link--next {
+  text-align: right;
+}
+
+.kf-article__adjacent-title {
+  color: var(--kf-color-heading);
+  font-size: var(--kf-text-md);
+}

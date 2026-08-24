@@ -1,0 +1,109 @@
+{%- comment -%}
+  Kofii Flow — Address fields
+  ---------------------------------------------------------------------------
+  The field set shared by the "add" form and every "edit" form on the addresses
+  page. One copy, so a fix to an autocomplete hint or a label reaches all of
+  them.
+
+  The province is a TEXT input here, not a select. <kf-address-form> upgrades
+  it once it knows the chosen country's provinces — see that file for why round
+  that way.
+
+  Parameters:
+    address (object)  the address being edited; omit for a new one
+    scope   (string, required)  unique id prefix, since several of these forms
+                                exist on the page at once and ids must not
+                                collide or the labels point at the wrong field
+{%- endcomment -%}
+
+{%- liquid
+  assign first_name_label = 'customer.addresses.first_name' | t
+  assign last_name_label = 'customer.addresses.last_name' | t
+  assign company_label = 'customer.addresses.company' | t
+  assign address1_label = 'customer.addresses.address1' | t
+  assign address2_label = 'customer.addresses.address2' | t
+  assign city_label = 'customer.addresses.city' | t
+  assign country_label = 'customer.addresses.country' | t
+  assign province_label = 'customer.addresses.province' | t
+  assign zip_label = 'customer.addresses.zip' | t
+  assign phone_label = 'customer.addresses.phone' | t
+  assign default_label = 'customer.addresses.set_default' | t
+-%}
+
+<div class="kf-address__fields">
+  <div class="kf-field">
+    <label class="kf-field__label" for="{{ scope }}FirstName">{{ first_name_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}FirstName" name="address[first_name]"
+      value="{{ address.first_name }}" autocomplete="given-name">
+  </div>
+
+  <div class="kf-field">
+    <label class="kf-field__label" for="{{ scope }}LastName">{{ last_name_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}LastName" name="address[last_name]"
+      value="{{ address.last_name }}" autocomplete="family-name">
+  </div>
+
+  <div class="kf-field kf-address__field--wide">
+    <label class="kf-field__label" for="{{ scope }}Company">{{ company_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}Company" name="address[company]"
+      value="{{ address.company }}" autocomplete="organization">
+  </div>
+
+  <div class="kf-field kf-address__field--wide">
+    <label class="kf-field__label" for="{{ scope }}Address1">{{ address1_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}Address1" name="address[address1]"
+      value="{{ address.address1 }}" autocomplete="address-line1">
+  </div>
+
+  <div class="kf-field kf-address__field--wide">
+    <label class="kf-field__label" for="{{ scope }}Address2">{{ address2_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}Address2" name="address[address2]"
+      value="{{ address.address2 }}" autocomplete="address-line2">
+  </div>
+
+  <div class="kf-field">
+    <label class="kf-field__label" for="{{ scope }}City">{{ city_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}City" name="address[city]"
+      value="{{ address.city }}" autocomplete="address-level2">
+  </div>
+
+  <div class="kf-field">
+    <label class="kf-field__label" for="{{ scope }}Zip">{{ zip_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}Zip" name="address[zip]"
+      value="{{ address.zip }}" autocomplete="postal-code" autocapitalize="characters">
+  </div>
+
+  <div class="kf-field">
+    <label class="kf-field__label" for="{{ scope }}Country">{{ country_label }}</label>
+    {%- comment -%}
+      `country_option_tags` is a variable, not a filter — it cannot be piped a
+      value, and it always preselects the SHOP's country. The saved country
+      therefore travels on data-default for <kf-address-form> to apply.
+
+      Each option also carries that country's provinces as a JSON blob, which
+      is the only place Liquid exposes them at all.
+    {%- endcomment -%}
+    <select class="kf-select" id="{{ scope }}Country" name="address[country]"
+      data-kf-country data-default="{{ address.country | escape }}" autocomplete="country">
+      {{ country_option_tags }}
+    </select>
+  </div>
+
+  <div class="kf-field" data-kf-province-field>
+    <label class="kf-field__label" for="{{ scope }}Province">{{ province_label }}</label>
+    <input class="kf-input" type="text" id="{{ scope }}Province" name="address[province]"
+      value="{{ address.province }}" data-kf-province autocomplete="address-level1">
+  </div>
+
+  <div class="kf-field kf-address__field--wide">
+    <label class="kf-field__label" for="{{ scope }}Phone">{{ phone_label }}</label>
+    <input class="kf-input" type="tel" id="{{ scope }}Phone" name="address[phone]"
+      value="{{ address.phone }}" autocomplete="tel">
+  </div>
+</div>
+
+<label class="kf-checkbox kf-address__default">
+  <input type="checkbox" id="{{ scope }}Default" name="address[default]" value="1"
+    {% if address.id == customer.default_address.id and address.id != blank %}checked{% endif %}>
+  <span>{{ default_label }}</span>
+</label>

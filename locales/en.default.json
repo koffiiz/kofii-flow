@@ -69,7 +69,117 @@
   },
   "customer": {
     "account": "Account",
-    "log_in": "Log in"
+    "log_in": "Log in",
+    "email": "Email",
+    "password": "Password",
+    "password_confirm": "Confirm password",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "login": {
+      "title": "Log in",
+      "submit": "Log in",
+      "forgot": "Forgot your password?",
+      "no_account": "No account yet?",
+      "create_one": "Create one"
+    },
+    "recover": {
+      "title": "Reset your password",
+      "subtitle": "We will email you a link to set a new one.",
+      "submit": "Send reset link",
+      "success": "Check your inbox — we have sent you a link to reset your password.",
+      "cancel": "Back to log in"
+    },
+    "register": {
+      "title": "Create account",
+      "submit": "Create account",
+      "have_account": "Already have an account?",
+      "log_in": "Log in"
+    },
+    "activate": {
+      "title": "Activate your account",
+      "subtitle": "Choose a password to finish setting up your account.",
+      "submit": "Activate account",
+      "decline": "Decline invitation"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtitle": "Enter a new password for {{ email }}.",
+      "submit": "Save password"
+    },
+    "errors_title": "Please check the details below",
+    "log_out": "Log out",
+    "overview": {
+      "title": "Account",
+      "greeting": "Signed in as {{ email }}",
+      "orders_title": "Order history",
+      "addresses_link": "View addresses",
+      "address_title": "Default address",
+      "no_address": "No default address set.",
+      "none": "You have not placed any orders yet.",
+      "start_shopping": "Start shopping"
+    },
+    "orders": {
+      "order_number": "Order",
+      "date": "Date",
+      "payment": "Payment",
+      "fulfillment": "Delivery",
+      "total": "Total",
+      "view": "View order {{ number }}"
+    },
+    "order": {
+      "title": "Order {{ number }}",
+      "placed_on": "Placed on {{ date }}",
+      "cancelled_on": "Cancelled on {{ date }}",
+      "cancelled_reason": "Reason: {{ reason }}",
+      "back": "Back to account",
+      "product": "Product",
+      "sku": "SKU",
+      "price": "Price",
+      "quantity": "Quantity",
+      "line_total": "Total",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "total": "Total",
+      "refunded": "Refunded",
+      "billing_address": "Billing address",
+      "shipping_address": "Shipping address",
+      "payment_status": "Payment status",
+      "fulfillment_status": "Delivery status",
+      "tracking": "Track shipment",
+      "fulfilled_on": "Delivered on {{ date }}"
+    },
+    "addresses": {
+      "title": "Addresses",
+      "count": {
+        "zero": "No addresses saved",
+        "one": "1 address",
+        "other": "{{ count }} addresses"
+      },
+      "add_title": "Add a new address",
+      "add_submit": "Add address",
+      "edit_title": "Edit address",
+      "edit": "Edit",
+      "edit_submit": "Save changes",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "delete_confirm": "Delete this address for good?",
+      "delete_submit": "Yes, delete it",
+      "default": "Default address",
+      "set_default": "Use as my default address",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "company": "Company",
+      "address1": "Address",
+      "address2": "Apartment, suite, etc.",
+      "city": "City",
+      "country": "Country or region",
+      "province": "State or province",
+      "zip": "Postcode",
+      "phone": "Phone",
+      "none": "You have not saved any addresses yet."
+    }
   },
   "products": {
     "product": {
@@ -207,6 +317,52 @@
     },
     "empty_title": "Nothing here yet",
     "empty_text": "Once an article is published it will show up here.",
-    "articles": "Articles"
+    "articles": "Articles",
+    "back_to_blog": "Back to {{ title }}",
+    "share": "Share this article",
+    "tags": "Tagged",
+    "previous_article": "Previous article",
+    "next_article": "Next article",
+    "comments": {
+      "title": "Comments",
+      "count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      },
+      "form_title": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "message": "Comment",
+      "submit": "Post comment",
+      "moderated": "Comments are reviewed before they appear.",
+      "posted": "Thanks, your comment is published.",
+      "pending": "Thanks. Your comment will appear once it has been reviewed.",
+      "error_title": "Your comment could not be posted"
+    }
+  },
+  "password": {
+    "title": "Opening soon",
+    "subtitle": "We are putting the finishing touches to the shop.",
+    "form_title": "Enter using a password",
+    "password_label": "Password",
+    "submit": "Enter",
+    "error": "Wrong password. Try again.",
+    "admin_link_html": "Are you the store owner? <a href=\"/admin\">Log in here</a>",
+    "close": "Close"
+  },
+  "gift_card": {
+    "title": "Gift card",
+    "subtitle": "Here is your gift card for {{ shop }}.",
+    "code_label": "Gift card code",
+    "initial_value": "Initial value",
+    "balance": "Remaining balance",
+    "expires_on": "Expires on {{ date }}",
+    "expired": "This gift card has expired.",
+    "disabled": "This gift card is no longer active.",
+    "shop_link": "Start shopping",
+    "print": "Print this card",
+    "add_to_wallet": "Add to Apple Wallet",
+    "copy": "Copy code",
+    "copied": "Code copied"
   }
 }

@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-activate-account",
+      "settings": {
+        "heading_size": "kf-h2",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": ["main"]
+}

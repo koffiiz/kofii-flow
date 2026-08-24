@@ -1,0 +1,417 @@
+{%- comment -%}
+  Kofii Flow — Article
+  ---------------------------------------------------------------------------
+  A single blog post. Canonical Shopify section name, so it keeps `main-article`
+  rather than the theme's `kf-` prefix.
+
+  The comment form is Shopify's own `{% form 'new_comment' %}`, so posting,
+  validation and moderation are handled by the platform. The three states it
+  can come back in are all rendered:
+
+    posted + moderated blog   the comment is queued for review
+    posted + open blog        the comment is live
+    errors                    the form redisplays with the messages
+
+  Shopify appends `#comments` after a post and re-renders the page, so the
+  anchor on the comments heading is what returns the reader to their comment
+  rather than the top of a long article.
+
+  Settings-driven rather than block-driven, unlike the product page: an
+  article's order — title, image, body — is not something a merchant needs to
+  rearrange, and blocks would add a lot of surface for no real choice.
+{%- endcomment -%}
+
+{{ 'section-article.css' | asset_url | stylesheet_tag }}
+{%- if section.settings.show_share -%}
+  <script src="{{ 'kf-share.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- liquid
+  assign s = section.settings
+
+  assign article_class = 'kf-article kf-article--' | append: s.width
+
+  assign back_label = 'blog.back_to_blog' | t: title: blog.title
+  assign share_label = 'blog.share' | t
+  assign tags_label = 'blog.tags' | t
+  assign copied_text = 'products.product.share_copied' | t
+  assign share_error = 'products.product.share_failed' | t
+  assign share_url = article.url | prepend: shop.url
+
+  assign comments_title = 'blog.comments.title' | t
+  assign comment_form_title = 'blog.comments.form_title' | t
+  assign moderated_note = 'blog.comments.moderated' | t
+  assign name_label = 'blog.comments.name' | t
+  assign email_label = 'blog.comments.email' | t
+  assign message_label = 'blog.comments.message' | t
+  assign submit_label = 'blog.comments.submit' | t
+  assign error_title = 'blog.comments.error_title' | t
+  assign prev_label = 'blog.previous_article' | t
+  assign next_label = 'blog.next_article' | t
+
+  assign comments_visible = false
+  if s.show_comments and blog.comments_enabled?
+    assign comments_visible = true
+  endif
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: article_class %}>
+  <div class="kf-container">
+    <article class="kf-article__inner">
+      <header class="kf-article__header{% if s.alignment == 'center' %} kf-article__header--center{% endif %}">
+        {%- if s.show_back_link -%}
+          <a class="kf-article__back" href="{{ blog.url }}">
+            {%- render 'kf-icon', name: 'chevron-right', class: 'kf-article__back-icon', size: 'sm' -%}
+            <span>{{ back_label }}</span>
+          </a>
+        {%- endif -%}
+
+        {%- if s.show_tag and article.tags.size > 0 -%}
+          <p class="kf-label kf-article__eyebrow">{{ article.tags.first | escape }}</p>
+        {%- endif -%}
+
+        <h1 class="kf-article__title {{ s.heading_size }}">{{ article.title | escape }}</h1>
+
+        {%- if s.show_date or s.show_author -%}
+          <p class="kf-article__meta kf-text-sm kf-text-muted">
+            {%- if s.show_date -%}
+              <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                {{- article.published_at | date: format: 'month_day_year' -}}
+              </time>
+            {%- endif -%}
+            {%- if s.show_author and article.author != blank -%}
+              {%- assign author_line = 'blog.meta_author' | t: author: article.author -%}
+              <span>{{ author_line }}</span>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+      </header>
+
+      {%- if s.show_image and article.image -%}
+        <div class="kf-article__media">
+          {%- render 'kf-media',
+            image: article.image,
+            ratio: s.media_ratio,
+            sizes: '(min-width: 990px) 70vw, 100vw',
+            loading: 'eager',
+            priority: true
+          -%}
+        </div>
+      {%- endif -%}
+
+      <div class="kf-article__content kf-rte">
+        {{ article.content }}
+      </div>
+
+      {%- if s.show_tags and article.tags.size > 0 -%}
+        <div class="kf-article__tags">
+          <span class="kf-label kf-text-muted">{{ tags_label }}</span>
+          <ul class="kf-article__tag-list" role="list">
+            {%- for tag in article.tags -%}
+              <li>
+                <a class="kf-article__tag" href="{{ blog.url }}/tagged/{{ tag | handleize }}">
+                  {{- tag | escape -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- if s.show_share -%}
+        <div class="kf-article__share">
+          <kf-share
+            class="kf-share"
+            data-url="{{ share_url }}"
+            data-title="{{ article.title | escape }}"
+            data-copied-text="{{ copied_text | escape }}"
+            data-error-text="{{ share_error | escape }}"
+          >
+            {%- render 'kf-button', label: share_label, style: 'plain', icon: 'arrow-diagonal' -%}
+          </kf-share>
+        </div>
+      {%- endif -%}
+    </article>
+
+    {%- if comments_visible -%}
+      <section class="kf-article__comments" id="comments">
+        {%- if article.comments_count > 0 -%}
+          {%- assign comment_count_label = 'blog.comments.count' | t: count: article.comments_count -%}
+          <h2 class="kf-h4 kf-article__comments-title">{{ comment_count_label }}</h2>
+
+          <ul class="kf-article__comment-list" role="list">
+            {%- for comment in article.comments -%}
+              <li class="kf-article__comment" id="comment-{{ comment.id }}">
+                <p class="kf-article__comment-meta kf-text-sm">
+                  <span class="kf-article__comment-author">{{ comment.author | escape }}</span>
+                  <time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}" class="kf-text-muted">
+                    {{- comment.created_at | date: format: 'abbreviated_date' -}}
+                  </time>
+                </p>
+                <div class="kf-rte kf-article__comment-body">{{ comment.content }}</div>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- paginate article.comments by 20 -%}
+            {%- render 'kf-pagination', paginate: paginate, anchor: '#comments' -%}
+          {%- endpaginate -%}
+        {%- else -%}
+          <h2 class="kf-h4 kf-article__comments-title">{{ comments_title }}</h2>
+        {%- endif -%}
+
+        {%- form 'new_comment', article, class: 'kf-article__comment-form' -%}
+          <h3 class="kf-h5">{{ comment_form_title }}</h3>
+
+          {%- if form.errors -%}
+            <div class="kf-form-message kf-form-message--error" role="alert">
+              {%- render 'kf-icon', name: 'close', size: 'sm' -%}
+              <div>
+                <p>{{ error_title }}</p>
+                {{ form.errors | default_errors }}
+              </div>
+            </div>
+          {%- elsif form.posted_successfully? -%}
+            {%- liquid
+              comment
+                A moderated blog queues the comment instead of publishing it,
+                and saying "published" there would be wrong.
+              endcomment
+              assign posted_message = 'blog.comments.posted' | t
+              if blog.moderated?
+                assign posted_message = 'blog.comments.pending' | t
+              endif
+            -%}
+            <p class="kf-form-message kf-form-message--success" role="status">
+              {%- render 'kf-icon', name: 'check', size: 'sm' -%}
+              {{ posted_message }}
+            </p>
+          {%- endif -%}
+
+          <div class="kf-article__comment-fields">
+            <div class="kf-field">
+              <label class="kf-field__label" for="CommentAuthor">{{ name_label }}</label>
+              <input
+                class="kf-input"
+                type="text"
+                id="CommentAuthor"
+                name="comment[author]"
+                value="{{ form.author }}"
+                autocomplete="name"
+                required
+              >
+            </div>
+
+            <div class="kf-field">
+              <label class="kf-field__label" for="CommentEmail">{{ email_label }}</label>
+              <input
+                class="kf-input"
+                type="email"
+                id="CommentEmail"
+                name="comment[email]"
+                value="{{ form.email }}"
+                autocomplete="email"
+                autocapitalize="off"
+                autocorrect="off"
+                spellcheck="false"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="kf-field">
+            <label class="kf-field__label" for="CommentBody">{{ message_label }}</label>
+            <textarea class="kf-textarea" id="CommentBody" name="comment[body]" rows="6" required>{{ form.body }}</textarea>
+          </div>
+
+          {%- if blog.moderated? -%}
+            <p class="kf-text-sm kf-text-muted">{{ moderated_note }}</p>
+          {%- endif -%}
+
+          {%- render 'kf-button', label: submit_label, type: 'submit', style: 'primary' -%}
+        {%- endform -%}
+      </section>
+    {%- endif -%}
+
+    {%- if s.show_adjacent -%}
+      {%- if blog.previous_article or blog.next_article -%}
+        <nav class="kf-article__adjacent" aria-label="{{ blog.title | escape }}">
+          {%- if blog.previous_article -%}
+            <a class="kf-article__adjacent-link kf-article__adjacent-link--prev" href="{{ blog.previous_article.url }}">
+              <span class="kf-label kf-text-muted">{{ prev_label }}</span>
+              <span class="kf-article__adjacent-title">{{ blog.previous_article.title | escape }}</span>
+            </a>
+          {%- endif -%}
+          {%- if blog.next_article -%}
+            <a class="kf-article__adjacent-link kf-article__adjacent-link--next" href="{{ blog.next_article.url }}">
+              <span class="kf-label kf-text-muted">{{ next_label }}</span>
+              <span class="kf-article__adjacent-title">{{ blog.next_article.title | escape }}</span>
+            </a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{%- if s.show_schema -%}
+  {%- render 'kf-article-structured-data', article: article, blog: blog -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "class": "kf-article-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Title size",
+      "options": [
+        { "value": "kf-h2", "label": "Small" },
+        { "value": "kf-h1", "label": "Medium" },
+        { "value": "kf-display", "label": "Large" }
+      ],
+      "default": "kf-h1"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Header alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_back_link",
+      "label": "Show a link back to the blog",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tag",
+      "label": "Show the first topic above the title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show the date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show the author",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Body"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Content width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "wide", "label": "Wide" }
+      ],
+      "default": "narrow",
+      "info": "Narrow keeps the text to a comfortable reading measure. The featured image stays full width either way."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show the featured image",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt", "label": "Adapt to image" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" },
+        { "value": "ultrawide", "label": "Ultra wide (21:9)" }
+      ],
+      "default": "wide"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "List every topic under the article",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Show a share button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "After the article"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_comments",
+      "label": "Show comments",
+      "default": true,
+      "info": "Only appears when comments are turned on for this blog in Shopify admin."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_adjacent",
+      "label": "Show previous and next links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_schema",
+      "label": "Add article structured data",
+      "default": true,
+      "info": "Helps search engines show the headline, date and image in results."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ]
+}
+{% endschema %}

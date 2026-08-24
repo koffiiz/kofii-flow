@@ -346,18 +346,20 @@ Then check by hand:
 
 **Not built yet — do not pretend otherwise:**
 
-- Templates: `article`, `gift_card`, `password`, customer templates.
-- Sections: `main-article`, and the rest of the marketing library (product spotlight, logo cloud, comparison, video, stats, image reveal).
+- Sections: the rest of the marketing library (product spotlight, logo cloud, comparison, video, stats, image reveal).
 - Featured collection has grid, carousel and horizontal-scroll layouts. An editorial layout (oversized first product) is not built.
 - Timeline has vertical and alternating layouts. A horizontal (scrolling) timeline is not built — it needs a second spine orientation rather than a reuse of the existing CSS.
 - Components: none outstanding.
 - Product card quick-add (the card itself is complete and in use).
 - **3D models are not wired up.** `kf-product-media.liquid` emits the correct `model_viewer_tag` markup and the frame CSS exists, but the theme never loads Shopify's model-viewer feature (`Shopify.loadFeatures` with `model-viewer-ui`). Because the tag is rendered with `reveal: 'interaction'`, a model currently degrades to its poster image rather than breaking — but it is not interactive. Do not claim 3D support until the loader is added and tested on a product that actually has a model.
+- **No QR code on the gift card.** Shopify does not render one server-side and there is no image endpoint to point an <img> at, so every theme that shows one bundles a QR library. That would break rule 8, so the code is set large, monospaced and selectable instead. Adding it means accepting a dependency — decide that deliberately.
 - Art-directed mobile images in `kf-media` (focal point covers the common case today).
 - Schema label translation (`locales/*.schema.json`). Schema labels are currently authored in English inline.
 
 **Known product-page limitation, by design:** the quantity input is deliberately *outside* the variant region, so a shopper's chosen quantity survives a variant change. The trade-off is that its `max` attribute does not re-render, so an over-order is caught server-side — `<kf-product-form>` surfaces Shopify's own message. Do not "fix" this by recomputing stock limits in JavaScript; that would create a second source of truth for inventory.
 
-**Phase 5 — blog (in progress).** `main-blog.liquid` with topic filtering, a featured first article, grid and list layouts, and `templates/blog.json`. Articles render through `snippets/kf-article-card.liquid`, the blog equivalent of the product card. `main-article` and `templates/article.json` are next.
+**Phase 5 — blog and article (complete).** `main-blog.liquid` with topic filtering, a featured first article, grid and list layouts; `main-article.liquid` with the native comment form, share, topic links, previous/next navigation and BlogPosting JSON-LD; `templates/blog.json` and `templates/article.json`. Articles render through `snippets/kf-article-card.liquid`, the blog equivalent of the product card.
+
+**Phase 6 — Theme Store readiness (in progress).** Every template now exists. All seven customer templates and sections are built: login (recovery form in a native <details>), register, activate, reset, account, order and addresses. Address fields live in `snippets/kf-address-fields.liquid`; `<kf-address-form>` upgrades the province text input to a select and applies the saved country, because `country_option_tags` always preselects the shop's. The password page has its own `layout/password.liquid`, and `templates/gift_card.liquid` is standalone with `layout none`. Still outstanding: schema label translation across 62 schemas, and the full locale set.
 
 **Phase order:** 4 — marketing section library. 5 — blog + article. 6 — Theme Store readiness (schema i18n, remaining templates, full locale set).
