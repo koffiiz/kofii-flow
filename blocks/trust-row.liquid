@@ -17,7 +17,7 @@
 
 {% schema %}
 {
-  "name": "Trust row",
+  "name": "t:blocks.trust-row.name",
   "tag": null,
   "blocks": [
     {
@@ -27,28 +27,40 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Add short reassurances: shipping, returns, guarantees. Three is usually the right number."
+      "content": "t:blocks.trust-row.settings.paragraph__1.content"
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.trust-row.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.trust-row.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:blocks.trust-row.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.trust-row.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.trust-row.settings.animation.options__3.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:blocks.trust-row.settings.animation.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.trust-row.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -58,11 +70,17 @@
   ],
   "presets": [
     {
-      "name": "Trust row",
+      "name": "t:blocks.trust-row.presets.name",
       "blocks": [
-        { "type": "_trust-item" },
-        { "type": "_trust-item" },
-        { "type": "_trust-item" }
+        {
+          "type": "_trust-item"
+        },
+        {
+          "type": "_trust-item"
+        },
+        {
+          "type": "_trust-item"
+        }
       ]
     }
   ]

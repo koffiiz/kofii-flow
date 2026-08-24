@@ -27,17 +27,21 @@
 
 {% schema %}
 {
-  "name": "Buy buttons",
+  "name": "t:blocks.product-buy-buttons.name",
   "tag": null,
   "settings": [
     {
       "type": "checkbox",
       "id": "show_dynamic_checkout",
-      "label": "Show dynamic checkout buttons",
+      "label": "t:blocks.product-buy-buttons.settings.show_dynamic_checkout.label",
       "default": true,
-      "info": "Shows the payment methods available to each shopper, such as Shop Pay, PayPal or Google Pay."
+      "info": "t:blocks.product-buy-buttons.settings.show_dynamic_checkout.info"
     }
   ],
-  "presets": [{ "name": "Buy buttons" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-buy-buttons.presets.name"
+    }
+  ]
 }
 {% endschema %}

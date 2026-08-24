@@ -74,16 +74,20 @@
 
 {% schema %}
 {
-  "name": "Quantity",
+  "name": "t:blocks.product-quantity.name",
   "tag": null,
   "settings": [
     {
       "type": "checkbox",
       "id": "show_label",
-      "label": "Show label",
+      "label": "t:blocks.product-quantity.settings.show_label.label",
       "default": true
     }
   ],
-  "presets": [{ "name": "Quantity" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-quantity.presets.name"
+    }
+  ]
 }
 {% endschema %}

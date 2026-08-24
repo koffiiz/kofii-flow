@@ -29,76 +29,142 @@
 
 {% schema %}
 {
-  "name": "Heading",
+  "name": "t:blocks.heading.name",
   "tag": null,
   "settings": [
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:blocks.heading.settings.heading.label",
       "default": "A heading that carries the page"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Size",
+      "label": "t:blocks.heading.settings.heading_size.label",
       "options": [
-        { "value": "kf-h4", "label": "Small" },
-        { "value": "kf-h3", "label": "Medium" },
-        { "value": "kf-h2", "label": "Large" },
-        { "value": "kf-h1", "label": "Extra large" },
-        { "value": "kf-display-sm", "label": "Display" },
-        { "value": "kf-display-md", "label": "Display large" },
-        { "value": "kf-display-lg", "label": "Display extra large" }
+        {
+          "value": "kf-h4",
+          "label": "t:blocks.heading.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:blocks.heading.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:blocks.heading.settings.heading_size.options__3.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:blocks.heading.settings.heading_size.options__4.label"
+        },
+        {
+          "value": "kf-display-sm",
+          "label": "t:blocks.heading.settings.heading_size.options__5.label"
+        },
+        {
+          "value": "kf-display-md",
+          "label": "t:blocks.heading.settings.heading_size.options__6.label"
+        },
+        {
+          "value": "kf-display-lg",
+          "label": "t:blocks.heading.settings.heading_size.options__7.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "select",
       "id": "heading_tag",
-      "label": "Heading level",
-      "info": "Affects SEO and screen readers, not the visual size. Use H1 only once per page.",
+      "label": "t:blocks.heading.settings.heading_tag.label",
+      "info": "t:blocks.heading.settings.heading_tag.info",
       "options": [
-        { "value": "h1", "label": "H1" },
-        { "value": "h2", "label": "H2" },
-        { "value": "h3", "label": "H3" },
-        { "value": "h4", "label": "H4" },
-        { "value": "p", "label": "Paragraph (no heading level)" }
+        {
+          "value": "h1",
+          "label": "t:blocks.heading.settings.heading_tag.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:blocks.heading.settings.heading_tag.options__2.label"
+        },
+        {
+          "value": "h3",
+          "label": "t:blocks.heading.settings.heading_tag.options__3.label"
+        },
+        {
+          "value": "h4",
+          "label": "t:blocks.heading.settings.heading_tag.options__4.label"
+        },
+        {
+          "value": "p",
+          "label": "t:blocks.heading.settings.heading_tag.options__5.label"
+        }
       ],
       "default": "h2"
     },
     {
       "type": "checkbox",
       "id": "heading_accent",
-      "label": "Use accent color",
+      "label": "t:blocks.heading.settings.heading_accent.label",
       "default": false
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.heading.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.heading.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "fade-down", "label": "Fade down" },
-        { "value": "fade-left", "label": "Fade left" },
-        { "value": "fade-right", "label": "Fade right" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "blur-in", "label": "Blur" },
-        { "value": "clip-up", "label": "Clip reveal" },
-        { "value": "reveal", "label": "Editorial reveal" }
+        {
+          "value": "none",
+          "label": "t:blocks.heading.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.heading.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.heading.settings.animation.options__3.label"
+        },
+        {
+          "value": "fade-down",
+          "label": "t:blocks.heading.settings.animation.options__4.label"
+        },
+        {
+          "value": "fade-left",
+          "label": "t:blocks.heading.settings.animation.options__5.label"
+        },
+        {
+          "value": "fade-right",
+          "label": "t:blocks.heading.settings.animation.options__6.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:blocks.heading.settings.animation.options__7.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:blocks.heading.settings.animation.options__8.label"
+        },
+        {
+          "value": "clip-up",
+          "label": "t:blocks.heading.settings.animation.options__9.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:blocks.heading.settings.animation.options__10.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.heading.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -108,7 +174,7 @@
   ],
   "presets": [
     {
-      "name": "Heading"
+      "name": "t:blocks.heading.presets.name"
     }
   ]
 }

@@ -86,138 +86,234 @@
 
 {% schema %}
 {
-  "name": "Image with text",
+  "name": "t:sections.kf-image-with-text.name",
   "tag": "section",
   "class": "kf-image-text-section",
   "settings": [
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-image-with-text.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.kf-image-with-text.settings.layout.label",
       "options": [
-        { "value": "image-left", "label": "Image left" },
-        { "value": "image-right", "label": "Image right" },
-        { "value": "stacked", "label": "Stacked" },
-        { "value": "overlapping", "label": "Overlapping" },
-        { "value": "editorial", "label": "Editorial" }
+        {
+          "value": "image-left",
+          "label": "t:sections.kf-image-with-text.settings.layout.options__1.label"
+        },
+        {
+          "value": "image-right",
+          "label": "t:sections.kf-image-with-text.settings.layout.options__2.label"
+        },
+        {
+          "value": "stacked",
+          "label": "t:sections.kf-image-with-text.settings.layout.options__3.label"
+        },
+        {
+          "value": "overlapping",
+          "label": "t:sections.kf-image-with-text.settings.layout.options__4.label"
+        },
+        {
+          "value": "editorial",
+          "label": "t:sections.kf-image-with-text.settings.layout.options__5.label"
+        }
       ],
       "default": "image-left"
     },
     {
       "type": "select",
       "id": "content_width",
-      "label": "Content width",
-      "info": "Applies to the stacked layout.",
+      "label": "t:sections.kf-image-with-text.settings.content_width.label",
+      "info": "t:sections.kf-image-with-text.settings.content_width.info",
       "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "full", "label": "Full" }
+        {
+          "value": "narrow",
+          "label": "t:sections.kf-image-with-text.settings.content_width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.kf-image-with-text.settings.content_width.options__2.label"
+        },
+        {
+          "value": "full",
+          "label": "t:sections.kf-image-with-text.settings.content_width.options__3.label"
+        }
       ],
       "default": "medium"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Text alignment",
+      "label": "t:sections.kf-image-with-text.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "end", "label": "Right" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-image-with-text.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-image-with-text.settings.alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-image-with-text.settings.alignment.options__3.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "select",
       "id": "content_position",
-      "label": "Vertical alignment",
-      "info": "Applies when the image and text sit side by side.",
+      "label": "t:sections.kf-image-with-text.settings.content_position.label",
+      "info": "t:sections.kf-image-with-text.settings.content_position.info",
       "options": [
-        { "value": "start", "label": "Top" },
-        { "value": "center", "label": "Middle" },
-        { "value": "end", "label": "Bottom" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-image-with-text.settings.content_position.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-image-with-text.settings.content_position.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-image-with-text.settings.content_position.options__3.label"
+        }
       ],
       "default": "center"
     },
     {
       "type": "header",
-      "content": "Media"
+      "content": "t:sections.kf-image-with-text.settings.header__2.content"
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image",
-      "info": "Set the focal point on the image so it crops well on every screen size."
+      "label": "t:sections.kf-image-with-text.settings.image.label",
+      "info": "t:sections.kf-image-with-text.settings.image.info"
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.kf-image-with-text.settings.media_ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "tall", "label": "Tall (3:4)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.kf-image-with-text.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.kf-image-with-text.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-image-with-text.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "tall",
+          "label": "t:sections.kf-image-with-text.settings.media_ratio.options__4.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-image-with-text.settings.media_ratio.options__5.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-image-with-text.settings.media_ratio.options__6.label"
+        }
       ],
       "default": "landscape"
     },
     {
       "type": "select",
       "id": "media_width",
-      "label": "Image width",
-      "info": "Applies when the image and text sit side by side.",
+      "label": "t:sections.kf-image-with-text.settings.media_width.label",
+      "info": "t:sections.kf-image-with-text.settings.media_width.info",
       "options": [
-        { "value": "small", "label": "Small" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "large", "label": "Large" }
+        {
+          "value": "small",
+          "label": "t:sections.kf-image-with-text.settings.media_width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.kf-image-with-text.settings.media_width.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.kf-image-with-text.settings.media_width.options__3.label"
+        }
       ],
       "default": "medium"
     },
     {
       "type": "range",
       "id": "media_parallax",
-      "label": "Parallax strength",
+      "label": "t:sections.kf-image-with-text.settings.media_parallax.label",
       "min": 0,
       "max": 60,
       "step": 5,
       "unit": "%",
       "default": 0,
-      "info": "Ignored when Flow Mode is off or the visitor prefers reduced motion."
+      "info": "t:sections.kf-image-with-text.settings.media_parallax.info"
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-image-with-text.settings.header__3.content"
     },
     {
       "type": "paragraph",
-      "content": "Each content block has its own animation. This section plays them in sequence."
+      "content": "t:sections.kf-image-with-text.settings.paragraph__4.content"
     },
     {
       "type": "select",
       "id": "media_animation",
-      "label": "Image reveal",
+      "label": "t:sections.kf-image-with-text.settings.media_animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "zoom-in", "label": "Zoom" },
-        { "value": "blur-in", "label": "Blur" },
-        { "value": "clip-up", "label": "Clip reveal" },
-        { "value": "clip-right", "label": "Wipe from left" },
-        { "value": "reveal", "label": "Editorial reveal" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__4.label"
+        },
+        {
+          "value": "zoom-in",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__5.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__6.label"
+        },
+        {
+          "value": "clip-up",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__7.label"
+        },
+        {
+          "value": "clip-right",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__8.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:sections.kf-image-with-text.settings.media_animation.options__9.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "media_animation_delay",
-      "label": "Image reveal delay",
+      "label": "t:sections.kf-image-with-text.settings.media_animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -227,25 +323,37 @@
     {
       "type": "select",
       "id": "animation",
-      "label": "Animate the text column",
+      "label": "t:sections.kf-image-with-text.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-image-with-text.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-image-with-text.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-image-with-text.settings.animation.options__3.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-image-with-text.settings.animation.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "checkbox",
       "id": "animation_stagger",
-      "label": "Stagger text blocks",
+      "label": "t:sections.kf-image-with-text.settings.animation_stagger.label",
       "default": true
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-image-with-text.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -255,64 +363,106 @@
     {
       "type": "select",
       "id": "animation_duration",
-      "label": "Duration",
+      "label": "t:sections.kf-image-with-text.settings.animation_duration.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "fast", "label": "Fast" },
-        { "value": "normal", "label": "Normal" },
-        { "value": "slow", "label": "Slow" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-image-with-text.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-image-with-text.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-image-with-text.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-image-with-text.settings.animation_duration.options__4.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_easing",
-      "label": "Easing",
+      "label": "t:sections.kf-image-with-text.settings.animation_easing.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "standard", "label": "Standard" },
-        { "value": "smooth", "label": "Smooth" },
-        { "value": "out", "label": "Ease out" },
-        { "value": "spring", "label": "Spring-like" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-image-with-text.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-image-with-text.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-image-with-text.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-image-with-text.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-image-with-text.settings.animation_easing.options__5.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_trigger",
-      "label": "Trigger",
+      "label": "t:sections.kf-image-with-text.settings.animation_trigger.label",
       "options": [
-        { "value": "scroll", "label": "On scroll" },
-        { "value": "load", "label": "On load" }
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-image-with-text.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-image-with-text.settings.animation_trigger.options__2.label"
+        }
       ],
       "default": "scroll"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-image-with-text.settings.header__5.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-image-with-text.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-image-with-text.settings.section_transition.label",
+      "info": "t:sections.kf-image-with-text.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-image-with-text.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-image-with-text.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-image-with-text.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-image-with-text.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -322,7 +472,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-image-with-text.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -331,12 +481,16 @@
     }
   ],
   "blocks": [
-    { "type": "@theme" },
-    { "type": "@app" }
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
   ],
   "presets": [
     {
-      "name": "Image with text",
+      "name": "t:sections.kf-image-with-text.presets.name",
       "blocks": [
         {
           "type": "badge",

@@ -260,142 +260,175 @@
 
 {% schema %}
 {
-  "name": "Article",
+  "name": "t:sections.main-article.name",
   "tag": "section",
   "class": "kf-article-section",
   "settings": [
     {
       "type": "header",
-      "content": "Header"
+      "content": "t:sections.main-article.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Title size",
+      "label": "t:sections.main-article.settings.heading_size.label",
       "options": [
-        { "value": "kf-h2", "label": "Small" },
-        { "value": "kf-h1", "label": "Medium" },
-        { "value": "kf-display", "label": "Large" }
+        {
+          "value": "kf-h2",
+          "label": "t:sections.main-article.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.main-article.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-display",
+          "label": "t:sections.main-article.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h1"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Header alignment",
+      "label": "t:sections.main-article.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.main-article.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.main-article.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "checkbox",
       "id": "show_back_link",
-      "label": "Show a link back to the blog",
+      "label": "t:sections.main-article.settings.show_back_link.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_tag",
-      "label": "Show the first topic above the title",
+      "label": "t:sections.main-article.settings.show_tag.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_date",
-      "label": "Show the date",
+      "label": "t:sections.main-article.settings.show_date.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_author",
-      "label": "Show the author",
+      "label": "t:sections.main-article.settings.show_author.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Body"
+      "content": "t:sections.main-article.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "width",
-      "label": "Content width",
+      "label": "t:sections.main-article.settings.width.label",
       "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "wide", "label": "Wide" }
+        {
+          "value": "narrow",
+          "label": "t:sections.main-article.settings.width.options__1.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.main-article.settings.width.options__2.label"
+        }
       ],
       "default": "narrow",
-      "info": "Narrow keeps the text to a comfortable reading measure. The featured image stays full width either way."
+      "info": "t:sections.main-article.settings.width.info"
     },
     {
       "type": "checkbox",
       "id": "show_image",
-      "label": "Show the featured image",
+      "label": "t:sections.main-article.settings.show_image.label",
       "default": true
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.main-article.settings.media_ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" },
-        { "value": "ultrawide", "label": "Ultra wide (21:9)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.main-article.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.main-article.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.main-article.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "ultrawide",
+          "label": "t:sections.main-article.settings.media_ratio.options__4.label"
+        }
       ],
       "default": "wide"
     },
     {
       "type": "checkbox",
       "id": "show_tags",
-      "label": "List every topic under the article",
+      "label": "t:sections.main-article.settings.show_tags.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_share",
-      "label": "Show a share button",
+      "label": "t:sections.main-article.settings.show_share.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "After the article"
+      "content": "t:sections.main-article.settings.header__3.content"
     },
     {
       "type": "checkbox",
       "id": "show_comments",
-      "label": "Show comments",
+      "label": "t:sections.main-article.settings.show_comments.label",
       "default": true,
-      "info": "Only appears when comments are turned on for this blog in Shopify admin."
+      "info": "t:sections.main-article.settings.show_comments.info"
     },
     {
       "type": "checkbox",
       "id": "show_adjacent",
-      "label": "Show previous and next links",
+      "label": "t:sections.main-article.settings.show_adjacent.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_schema",
-      "label": "Add article structured data",
+      "label": "t:sections.main-article.settings.show_schema.label",
       "default": true,
-      "info": "Helps search engines show the headline, date and image in results."
+      "info": "t:sections.main-article.settings.show_schema.info"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.main-article.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.main-article.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.main-article.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -405,7 +438,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.main-article.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,

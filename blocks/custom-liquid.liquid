@@ -17,16 +17,20 @@
 
 {% schema %}
 {
-  "name": "Custom Liquid",
+  "name": "t:blocks.custom-liquid.name",
   "tag": null,
   "settings": [
     {
       "type": "liquid",
       "id": "code",
-      "label": "Liquid",
-      "info": "Add app snippets or custom Liquid. Anything invalid here will show as an error on the storefront."
+      "label": "t:blocks.custom-liquid.settings.code.label",
+      "info": "t:blocks.custom-liquid.settings.code.info"
     }
   ],
-  "presets": [{ "name": "Custom Liquid" }]
+  "presets": [
+    {
+      "name": "t:blocks.custom-liquid.presets.name"
+    }
+  ]
 }
 {% endschema %}

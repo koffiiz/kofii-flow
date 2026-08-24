@@ -119,107 +119,164 @@
 
 {% schema %}
 {
-  "name": "Timeline",
+  "name": "t:sections.kf-timeline.name",
   "tag": "section",
   "class": "kf-timeline-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-timeline.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-timeline.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-timeline.settings.heading.label",
       "default": "Our story so far"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-timeline.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-timeline.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-timeline.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-timeline.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "select",
       "id": "item_heading_size",
-      "label": "Entry heading size",
+      "label": "t:sections.kf-timeline.settings.item_heading_size.label",
       "options": [
-        { "value": "kf-h5", "label": "Small" },
-        { "value": "kf-h4", "label": "Medium" },
-        { "value": "kf-h3", "label": "Large" }
+        {
+          "value": "kf-h5",
+          "label": "t:sections.kf-timeline.settings.item_heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-timeline.settings.item_heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-timeline.settings.item_heading_size.options__3.label"
+        }
       ],
       "default": "kf-h4"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-timeline.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.kf-timeline.settings.layout.label",
       "options": [
-        { "value": "vertical", "label": "Spine on the left" },
-        { "value": "alternating", "label": "Alternating sides" }
+        {
+          "value": "vertical",
+          "label": "t:sections.kf-timeline.settings.layout.options__1.label"
+        },
+        {
+          "value": "alternating",
+          "label": "t:sections.kf-timeline.settings.layout.options__2.label"
+        }
       ],
       "default": "vertical",
-      "info": "Alternating applies from 990px up and collapses to the left-spine layout on smaller screens."
+      "info": "t:sections.kf-timeline.settings.layout.info"
     },
     {
       "type": "select",
       "id": "marker",
-      "label": "Marker",
+      "label": "t:sections.kf-timeline.settings.marker.label",
       "options": [
-        { "value": "dot", "label": "Dot" },
-        { "value": "number", "label": "Number" }
+        {
+          "value": "dot",
+          "label": "t:sections.kf-timeline.settings.marker.options__1.label"
+        },
+        {
+          "value": "number",
+          "label": "t:sections.kf-timeline.settings.marker.options__2.label"
+        }
       ],
       "default": "dot"
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
-      "info": "Only entries with an image show one.",
+      "label": "t:sections.kf-timeline.settings.media_ratio.label",
+      "info": "t:sections.kf-timeline.settings.media_ratio.info",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.kf-timeline.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.kf-timeline.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-timeline.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-timeline.settings.media_ratio.options__4.label"
+        }
       ],
       "default": "landscape"
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-timeline.settings.header__3.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Entry animation",
-      "info": "The spine draws itself in alongside whichever animation you choose.",
+      "label": "t:sections.kf-timeline.settings.animation.label",
+      "info": "t:sections.kf-timeline.settings.animation.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "fade-right", "label": "Fade in from the left" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-timeline.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-timeline.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-timeline.settings.animation.options__3.label"
+        },
+        {
+          "value": "fade-right",
+          "label": "t:sections.kf-timeline.settings.animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-timeline.settings.animation.options__5.label"
+        }
       ],
       "default": "fade-up"
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-timeline.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -229,64 +286,106 @@
     {
       "type": "select",
       "id": "animation_duration",
-      "label": "Duration",
+      "label": "t:sections.kf-timeline.settings.animation_duration.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "fast", "label": "Fast" },
-        { "value": "normal", "label": "Normal" },
-        { "value": "slow", "label": "Slow" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-timeline.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-timeline.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-timeline.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-timeline.settings.animation_duration.options__4.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_easing",
-      "label": "Easing",
+      "label": "t:sections.kf-timeline.settings.animation_easing.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "standard", "label": "Standard" },
-        { "value": "smooth", "label": "Smooth" },
-        { "value": "out", "label": "Ease out" },
-        { "value": "spring", "label": "Spring-like" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-timeline.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-timeline.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-timeline.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-timeline.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-timeline.settings.animation_easing.options__5.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_trigger",
-      "label": "Trigger",
+      "label": "t:sections.kf-timeline.settings.animation_trigger.label",
       "options": [
-        { "value": "scroll", "label": "On scroll" },
-        { "value": "load", "label": "On load" }
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-timeline.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-timeline.settings.animation_trigger.options__2.label"
+        }
       ],
       "default": "scroll"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-timeline.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-timeline.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-timeline.settings.section_transition.label",
+      "info": "t:sections.kf-timeline.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-timeline.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-timeline.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-timeline.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-timeline.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -296,7 +395,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-timeline.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -307,52 +406,70 @@
   "blocks": [
     {
       "type": "item",
-      "name": "Entry",
+      "name": "t:sections.kf-timeline.blocks.item.name",
       "limit": 12,
       "settings": [
         {
           "type": "text",
           "id": "date",
-          "label": "Date or label",
+          "label": "t:sections.kf-timeline.blocks.item.settings.date.label",
           "default": "2019"
         },
         {
           "type": "inline_richtext",
           "id": "heading",
-          "label": "Heading",
+          "label": "t:sections.kf-timeline.blocks.item.settings.heading.label",
           "default": "Where it began"
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "Text",
+          "label": "t:sections.kf-timeline.blocks.item.settings.text.label",
           "default": "<p>A sentence or two on what happened, and why it mattered.</p>"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "t:sections.kf-timeline.blocks.item.settings.image.label"
         },
         {
           "type": "text",
           "id": "link_label",
-          "label": "Link label"
+          "label": "t:sections.kf-timeline.blocks.item.settings.link_label.label"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "t:sections.kf-timeline.blocks.item.settings.link.label"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Timeline",
+      "name": "t:sections.kf-timeline.presets.name",
       "blocks": [
-        { "type": "item", "settings": { "date": "2019", "heading": "Where it began" } },
-        { "type": "item", "settings": { "date": "2022", "heading": "The first workshop" } },
-        { "type": "item", "settings": { "date": "Today", "heading": "What comes next" } }
+        {
+          "type": "item",
+          "settings": {
+            "date": "2019",
+            "heading": "Where it began"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "date": "2022",
+            "heading": "The first workshop"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "date": "Today",
+            "heading": "What comes next"
+          }
+        }
       ]
     }
   ]

@@ -1,0 +1,5376 @@
+{
+  "sections": {
+    "apps": {
+      "name": "Apps",
+      "settings": {
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Apps"
+      }
+    },
+    "cart-drawer": {
+      "name": "Cart drawer",
+      "settings": {
+        "show_recommendations": {
+          "label": "Show recommended products",
+          "info": "Also needs to be enabled in Theme settings > Cart."
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        }
+      }
+    },
+    "kf-announcement-bar": {
+      "name": "Announcement bar",
+      "settings": {
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "header__1": {
+          "content": "Scrolling"
+        },
+        "paragraph__2": {
+          "content": "Add two or more messages to turn the bar into a scrolling marquee."
+        },
+        "speed": {
+          "label": "Scroll duration",
+          "info": "Higher is slower."
+        },
+        "pause_on_hover": {
+          "label": "Pause on hover"
+        },
+        "edge_fade": {
+          "label": "Fade the edges"
+        }
+      },
+      "blocks": {
+        "message": {
+          "name": "Message",
+          "settings": {
+            "text": {
+              "label": "Text"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Announcement bar"
+      }
+    },
+    "kf-bento": {
+      "name": "Bento grid",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "tile_heading_size": {
+          "label": "Tile heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__2": {
+          "content": "Grid"
+        },
+        "columns": {
+          "label": "Columns on desktop",
+          "info": "A tile set wider than this is trimmed to fit."
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile",
+          "info": "Any tile wider than one column fills the row here.",
+          "options__1": {
+            "label": "1"
+          },
+          "options__2": {
+            "label": "2"
+          }
+        },
+        "row_height": {
+          "label": "Row height on desktop",
+          "info": "A minimum, not a cap. A tile with a lot of text grows rather than clipping it."
+        },
+        "row_height_mobile": {
+          "label": "Row height on mobile"
+        },
+        "gap": {
+          "label": "Space between tiles"
+        },
+        "header__3": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Tile animation",
+          "info": "Tiles arrive one after another in the order they are listed.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay",
+          "info": "Gap between each tile arriving. A large grid at a high value takes a long time to finish."
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Section color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "image": {
+          "name": "Image tile",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "text_position": {
+              "label": "Text position",
+              "options__1": {
+                "label": "Top"
+              },
+              "options__2": {
+                "label": "Bottom"
+              }
+            },
+            "overlay_opacity": {
+              "label": "Overlay",
+              "info": "Needed behind any text on the image, and harmless without it."
+            },
+            "overlay_style": {
+              "label": "Overlay style",
+              "options__1": {
+                "label": "Solid"
+              },
+              "options__2": {
+                "label": "Gradient"
+              }
+            },
+            "link": {
+              "label": "Link"
+            },
+            "link_label": {
+              "label": "Link description",
+              "info": "Not shown. Read out in place of the tile when someone uses a screen reader, so describe where the link goes."
+            },
+            "column_span": {
+              "label": "Columns wide"
+            },
+            "row_span": {
+              "label": "Rows tall"
+            }
+          }
+        },
+        "text": {
+          "name": "Text tile",
+          "settings": {
+            "eyebrow": {
+              "label": "Eyebrow"
+            },
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "text_position": {
+              "label": "Text position",
+              "options__1": {
+                "label": "Top"
+              },
+              "options__2": {
+                "label": "Bottom"
+              }
+            },
+            "link_label": {
+              "label": "Link label"
+            },
+            "link": {
+              "label": "Link"
+            },
+            "link_style": {
+              "label": "Link style",
+              "options__1": {
+                "label": "Text link"
+              },
+              "options__2": {
+                "label": "Outlined button"
+              },
+              "options__3": {
+                "label": "Solid button"
+              }
+            },
+            "color_scheme": {
+              "label": "Tile color scheme"
+            },
+            "column_span": {
+              "label": "Columns wide"
+            },
+            "row_span": {
+              "label": "Rows tall"
+            }
+          }
+        },
+        "product": {
+          "name": "Product tile",
+          "settings": {
+            "product": {
+              "label": "Product"
+            },
+            "color_scheme": {
+              "label": "Tile color scheme"
+            },
+            "column_span": {
+              "label": "Columns wide"
+            },
+            "row_span": {
+              "label": "Rows tall"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Bento grid"
+      }
+    },
+    "kf-compare": {
+      "name": "Before and after",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__2": {
+          "content": "Images"
+        },
+        "image_before": {
+          "label": "Before image"
+        },
+        "image_after": {
+          "label": "After image",
+          "info": "Shoot both from the same position and at the same size, or the divider will look like it is moving the subject."
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to the before image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Landscape (4:3)"
+          },
+          "options__5": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "label_before": {
+          "label": "Before label"
+        },
+        "label_after": {
+          "label": "After label"
+        },
+        "header__3": {
+          "content": "Behaviour"
+        },
+        "start_position": {
+          "label": "Starting position",
+          "info": "Where the divider sits before anyone touches it. This is also what visitors without JavaScript see."
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Before and after"
+      }
+    },
+    "kf-faq": {
+      "name": "FAQ",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "info": "Only applies when the heading sits above the questions.",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "question_size": {
+          "label": "Question size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "info": "Beside applies from 990px up and stacks below that.",
+          "options__1": {
+            "label": "Heading above the questions"
+          },
+          "options__2": {
+            "label": "Heading beside the questions"
+          }
+        },
+        "header__3": {
+          "content": "Behaviour"
+        },
+        "single": {
+          "label": "Open one answer at a time"
+        },
+        "open_first": {
+          "label": "Start with the first answer open",
+          "info": "Shows visitors that the rows open, at the cost of a longer section on arrival."
+        },
+        "show_schema": {
+          "label": "Add FAQ structured data",
+          "info": "Lets search engines show these questions directly in results. Turn it off if another section on the same page already publishes an FAQ."
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "question": {
+          "name": "Question",
+          "settings": {
+            "question": {
+              "label": "Question"
+            },
+            "answer": {
+              "label": "Answer"
+            },
+            "page": {
+              "label": "Or use a page",
+              "info": "When set, the page content replaces the answer above. Useful for a policy you keep in one place."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "FAQ"
+      }
+    },
+    "kf-featured-collection": {
+      "name": "Featured collection",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "collection": {
+          "label": "Collection"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "subheading": {
+          "label": "Text"
+        },
+        "products_to_show": {
+          "label": "Products to show"
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Grid"
+          },
+          "options__2": {
+            "label": "Carousel with arrows"
+          },
+          "options__3": {
+            "label": "Horizontal scroll"
+          }
+        },
+        "columns_desktop": {
+          "label": "Columns on desktop"
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile",
+          "info": "Applies to the grid layout. The scrolling layouts always show one and a bit.",
+          "options__1": {
+            "label": "1"
+          },
+          "options__2": {
+            "label": "2"
+          }
+        },
+        "show_arrows": {
+          "label": "Show arrows",
+          "info": "Applies to the carousel and horizontal scroll layouts. With arrows off, a slim scrollbar is shown instead — a mouse cannot scroll a horizontal row without one."
+        },
+        "pagination": {
+          "label": "Pagination",
+          "info": "Applies to the carousel and horizontal scroll layouts. A progress pill is the better choice when there are more than a handful of products.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Progress pill"
+          },
+          "options__3": {
+            "label": "Dots"
+          }
+        },
+        "header__3": {
+          "content": "Cards"
+        },
+        "paragraph__4": {
+          "content": "Vendor, ratings, swatches and badges are set once for the whole theme in Theme settings > Media and cards."
+        },
+        "image_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Adapt to image"
+          },
+          "options__3": {
+            "label": "Square (1:1)"
+          },
+          "options__4": {
+            "label": "Portrait (4:5)"
+          },
+          "options__5": {
+            "label": "Tall (3:4)"
+          },
+          "options__6": {
+            "label": "Landscape (4:3)"
+          }
+        },
+        "header__5": {
+          "content": "View all"
+        },
+        "show_view_all": {
+          "label": "Show a link to the collection"
+        },
+        "view_all_label": {
+          "label": "Link label",
+          "info": "Leave blank to use the theme default."
+        },
+        "view_all_style": {
+          "label": "Link style",
+          "options__1": {
+            "label": "Solid"
+          },
+          "options__2": {
+            "label": "Outline"
+          },
+          "options__3": {
+            "label": "Text link"
+          }
+        },
+        "header__6": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Card animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__7": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Featured collection"
+      }
+    },
+    "kf-footer": {
+      "name": "Footer",
+      "settings": {
+        "header__1": {
+          "content": "Utility bar"
+        },
+        "show_policy_links": {
+          "label": "Show store policy links",
+          "info": "Shows the policies you have written in Settings > Policies."
+        },
+        "show_localization": {
+          "label": "Show country and language selectors"
+        },
+        "show_payment_icons": {
+          "label": "Show payment icons"
+        },
+        "header__2": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "brand": {
+          "name": "Brand",
+          "settings": {
+            "logo": {
+              "label": "Logo"
+            },
+            "logo_width": {
+              "label": "Logo width"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "show_social": {
+              "label": "Show social links"
+            }
+          }
+        },
+        "menu": {
+          "name": "Menu",
+          "settings": {
+            "heading": {
+              "label": "Heading"
+            },
+            "menu": {
+              "label": "Menu"
+            }
+          }
+        },
+        "text": {
+          "name": "Text",
+          "settings": {
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            }
+          }
+        },
+        "newsletter": {
+          "name": "Newsletter",
+          "settings": {
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "paragraph__1": {
+              "content": "Subscribers are saved to Customers with the newsletter tag."
+            }
+          }
+        },
+        "image": {
+          "name": "Image",
+          "settings": {
+            "heading": {
+              "label": "Heading"
+            },
+            "image": {
+              "label": "Image"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Footer"
+      }
+    },
+    "kf-header": {
+      "name": "Header",
+      "settings": {
+        "header__1": {
+          "content": "Logo"
+        },
+        "logo": {
+          "label": "Logo image"
+        },
+        "logo_width": {
+          "label": "Logo width"
+        },
+        "logo_width_mobile": {
+          "label": "Logo width on mobile"
+        },
+        "header__2": {
+          "content": "Navigation"
+        },
+        "menu": {
+          "label": "Menu",
+          "info": "Menu items with sub-items become dropdowns. Items with three levels become mega menus."
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Logo left, menu beside it"
+          },
+          "options__2": {
+            "label": "Logo centered, menu below"
+          }
+        },
+        "mega_columns": {
+          "label": "Mega menu columns"
+        },
+        "header__3": {
+          "content": "Behaviour"
+        },
+        "sticky": {
+          "label": "Sticky header",
+          "options__1": {
+            "label": "Off"
+          },
+          "options__2": {
+            "label": "Always visible"
+          },
+          "options__3": {
+            "label": "Hide on scroll down, show on scroll up"
+          }
+        },
+        "transparent": {
+          "label": "Transparent over the first section",
+          "info": "Best with a full-height hero. The header becomes solid as soon as the page scrolls."
+        },
+        "header__4": {
+          "content": "Icons"
+        },
+        "show_search": {
+          "label": "Show search"
+        },
+        "show_account": {
+          "label": "Show account"
+        },
+        "show_cart": {
+          "label": "Show cart"
+        },
+        "show_localization": {
+          "label": "Show country and language selectors"
+        },
+        "header__5": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "menu_promo": {
+          "name": "Mega menu promo",
+          "settings": {
+            "paragraph__1": {
+              "content": "Adds a promotional card to one mega menu."
+            },
+            "menu_item": {
+              "label": "Menu item",
+              "info": "Type the exact top-level menu item title this promo belongs to."
+            },
+            "image": {
+              "label": "Image"
+            },
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      }
+    },
+    "kf-hero": {
+      "name": "Hero",
+      "settings": {
+        "header__1": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Media background"
+          },
+          "options__2": {
+            "label": "Split — content left"
+          },
+          "options__3": {
+            "label": "Split — content right"
+          },
+          "options__4": {
+            "label": "Stacked"
+          },
+          "options__5": {
+            "label": "Centered"
+          },
+          "options__6": {
+            "label": "Editorial"
+          },
+          "options__7": {
+            "label": "Minimal"
+          }
+        },
+        "height_desktop": {
+          "label": "Height on desktop",
+          "options__1": {
+            "label": "Fit content"
+          },
+          "options__2": {
+            "label": "Small"
+          },
+          "options__3": {
+            "label": "Medium"
+          },
+          "options__4": {
+            "label": "Large"
+          },
+          "options__5": {
+            "label": "Full screen"
+          }
+        },
+        "height_mobile": {
+          "label": "Height on mobile",
+          "options__1": {
+            "label": "Fit content"
+          },
+          "options__2": {
+            "label": "Small"
+          },
+          "options__3": {
+            "label": "Medium"
+          },
+          "options__4": {
+            "label": "Large"
+          },
+          "options__5": {
+            "label": "Full screen"
+          }
+        },
+        "full_width": {
+          "label": "Full width"
+        },
+        "header__2": {
+          "content": "Content"
+        },
+        "content_width": {
+          "label": "Content width",
+          "options__1": {
+            "label": "Narrow"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Wide"
+          }
+        },
+        "content_alignment": {
+          "label": "Text alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          },
+          "options__3": {
+            "label": "Right"
+          }
+        },
+        "content_position": {
+          "label": "Vertical position",
+          "info": "Applies when the hero is taller than its content.",
+          "options__1": {
+            "label": "Top"
+          },
+          "options__2": {
+            "label": "Middle"
+          },
+          "options__3": {
+            "label": "Bottom"
+          }
+        },
+        "header__3": {
+          "content": "Media"
+        },
+        "image": {
+          "label": "Image",
+          "info": "Set the focal point on the image so it crops well on every screen size."
+        },
+        "video": {
+          "label": "Video",
+          "info": "Plays muted and looping, and replaces the image. Shopify-hosted videos only."
+        },
+        "media_ratio": {
+          "label": "Media ratio",
+          "info": "Used by the split, stacked and editorial layouts.",
+          "options__1": {
+            "label": "Square (1:1)"
+          },
+          "options__2": {
+            "label": "Portrait (4:5)"
+          },
+          "options__3": {
+            "label": "Tall (3:4)"
+          },
+          "options__4": {
+            "label": "Landscape (4:3)"
+          },
+          "options__5": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "show_media_placeholder": {
+          "label": "Show a placeholder while no media is set"
+        },
+        "header__4": {
+          "content": "Overlay"
+        },
+        "overlay_opacity": {
+          "label": "Overlay opacity"
+        },
+        "overlay_style": {
+          "label": "Overlay style",
+          "options__1": {
+            "label": "Even"
+          },
+          "options__2": {
+            "label": "Gradient from the bottom"
+          }
+        },
+        "overlay_color": {
+          "label": "Overlay color"
+        },
+        "header__5": {
+          "content": "Motion"
+        },
+        "paragraph__6": {
+          "content": "Each block has its own animation. The hero plays them in sequence."
+        },
+        "animation": {
+          "label": "Animate the content column",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger blocks"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          },
+          "options__5": {
+            "label": "Custom"
+          }
+        },
+        "animation_duration_custom": {
+          "label": "Custom duration"
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "info": "Heroes are usually above the fold, so On load is the right default.",
+          "options__1": {
+            "label": "On load"
+          },
+          "options__2": {
+            "label": "On scroll"
+          }
+        },
+        "animation_intensity": {
+          "label": "Intensity"
+        },
+        "media_parallax": {
+          "label": "Media parallax"
+        },
+        "header__7": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Hero"
+      }
+    },
+    "kf-image-with-text": {
+      "name": "Image with text",
+      "settings": {
+        "header__1": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Image left"
+          },
+          "options__2": {
+            "label": "Image right"
+          },
+          "options__3": {
+            "label": "Stacked"
+          },
+          "options__4": {
+            "label": "Overlapping"
+          },
+          "options__5": {
+            "label": "Editorial"
+          }
+        },
+        "content_width": {
+          "label": "Content width",
+          "info": "Applies to the stacked layout.",
+          "options__1": {
+            "label": "Narrow"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Full"
+          }
+        },
+        "alignment": {
+          "label": "Text alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          },
+          "options__3": {
+            "label": "Right"
+          }
+        },
+        "content_position": {
+          "label": "Vertical alignment",
+          "info": "Applies when the image and text sit side by side.",
+          "options__1": {
+            "label": "Top"
+          },
+          "options__2": {
+            "label": "Middle"
+          },
+          "options__3": {
+            "label": "Bottom"
+          }
+        },
+        "header__2": {
+          "content": "Media"
+        },
+        "image": {
+          "label": "Image",
+          "info": "Set the focal point on the image so it crops well on every screen size."
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Tall (3:4)"
+          },
+          "options__5": {
+            "label": "Landscape (4:3)"
+          },
+          "options__6": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "media_width": {
+          "label": "Image width",
+          "info": "Applies when the image and text sit side by side.",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "media_parallax": {
+          "label": "Parallax strength",
+          "info": "Ignored when Flow Mode is off or the visitor prefers reduced motion."
+        },
+        "header__3": {
+          "content": "Motion"
+        },
+        "paragraph__4": {
+          "content": "Each content block has its own animation. This section plays them in sequence."
+        },
+        "media_animation": {
+          "label": "Image reveal",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Zoom"
+          },
+          "options__6": {
+            "label": "Blur"
+          },
+          "options__7": {
+            "label": "Clip reveal"
+          },
+          "options__8": {
+            "label": "Wipe from left"
+          },
+          "options__9": {
+            "label": "Editorial reveal"
+          }
+        },
+        "media_animation_delay": {
+          "label": "Image reveal delay"
+        },
+        "animation": {
+          "label": "Animate the text column",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger text blocks"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__5": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Image with text"
+      }
+    },
+    "kf-lookbook": {
+      "name": "Lookbook",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__2": {
+          "content": "Interaction"
+        },
+        "interaction": {
+          "label": "Interaction",
+          "info": "Hotspots: tapping a pin opens its product card. Guided tour: the image zooms to each product as it scrolls past, which takes about one screen of scrolling per product.",
+          "options__1": {
+            "label": "Hotspots"
+          },
+          "options__2": {
+            "label": "Guided tour"
+          }
+        },
+        "tour_zoom": {
+          "label": "Guided tour zoom",
+          "info": "Use a large, sharp image. Zooming crops into the original file, so a small image will look soft."
+        },
+        "tour_media_position": {
+          "label": "Guided tour image position",
+          "info": "Applies from 990px up. Below that the image sits above the products.",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Right"
+          }
+        },
+        "tour_steps_alignment": {
+          "label": "Guided tour product alignment",
+          "info": "Where each product card sits in its column. Applies from 990px up.",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          },
+          "options__3": {
+            "label": "Right"
+          }
+        },
+        "tour_dim": {
+          "label": "Dim the products you are not on",
+          "info": "More editorial, but it also dims prices and add-to-cart buttons."
+        },
+        "header__3": {
+          "content": "Image"
+        },
+        "image": {
+          "label": "Image",
+          "info": "Add a hotspot for each product in the shot, then drag its position with the X and Y sliders."
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Landscape (4:3)"
+          },
+          "options__5": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "hotspot_style": {
+          "label": "Hotspot style",
+          "options__1": {
+            "label": "Dot"
+          },
+          "options__2": {
+            "label": "Plus"
+          },
+          "options__3": {
+            "label": "Number"
+          }
+        },
+        "header__4": {
+          "content": "Product list"
+        },
+        "show_products": {
+          "label": "Also list the products below the image",
+          "info": "Hotspots only — the guided tour already lists them. Useful when the image has many pins, or on small screens where they are fiddly."
+        },
+        "products_columns": {
+          "label": "Columns on desktop"
+        },
+        "header__5": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Product list animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          }
+        },
+        "header__6": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "hotspot": {
+          "name": "Hotspot",
+          "settings": {
+            "product": {
+              "label": "Product"
+            },
+            "x": {
+              "label": "Horizontal position"
+            },
+            "y": {
+              "label": "Vertical position"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Lookbook"
+      }
+    },
+    "kf-marquee": {
+      "name": "Marquee",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "text_size": {
+          "label": "Text size",
+          "options__1": {
+            "label": "Extra small"
+          },
+          "options__2": {
+            "label": "Small"
+          },
+          "options__3": {
+            "label": "Medium"
+          },
+          "options__4": {
+            "label": "Large"
+          },
+          "options__5": {
+            "label": "Extra large"
+          }
+        },
+        "uppercase": {
+          "label": "Uppercase text"
+        },
+        "separator": {
+          "label": "Separator",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Dot"
+          },
+          "options__3": {
+            "label": "Slash"
+          },
+          "options__4": {
+            "label": "Asterisk"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "full_width": {
+          "label": "Full width",
+          "info": "Turn off to keep the band inside the page margins."
+        },
+        "gap": {
+          "label": "Space between items"
+        },
+        "image_height": {
+          "label": "Image height",
+          "info": "Images are sized by height so logos of different shapes line up."
+        },
+        "header__3": {
+          "content": "Motion"
+        },
+        "speed": {
+          "label": "Time for one loop",
+          "info": "Higher is slower. A long band needs more time to cover the same distance."
+        },
+        "direction": {
+          "label": "Direction",
+          "options__1": {
+            "label": "Right to left"
+          },
+          "options__2": {
+            "label": "Left to right"
+          }
+        },
+        "pause_on_hover": {
+          "label": "Pause on hover",
+          "info": "A pause button is always shown as well — hovering does nothing on a touch screen."
+        },
+        "edge_fade": {
+          "label": "Fade the edges"
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "text": {
+          "name": "Text",
+          "settings": {
+            "text": {
+              "label": "Text"
+            },
+            "text_style": {
+              "label": "Style",
+              "options__1": {
+                "label": "Solid"
+              },
+              "options__2": {
+                "label": "Outlined"
+              }
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        },
+        "image": {
+          "name": "Image",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Marquee"
+      }
+    },
+    "kf-newsletter": {
+      "name": "Newsletter",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "small_print": {
+          "label": "Small print",
+          "info": "Sits under the form. Some regions require you to say how you will use the address."
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "info": "Beside applies from 750px up and stacks below that.",
+          "options__1": {
+            "label": "Centered"
+          },
+          "options__2": {
+            "label": "Text beside the form"
+          }
+        },
+        "header__3": {
+          "content": "Background image"
+        },
+        "background_image": {
+          "label": "Image",
+          "info": "Optional. Pick a color scheme with enough contrast against it, and use the overlay below to keep the text readable."
+        },
+        "overlay_opacity": {
+          "label": "Overlay"
+        },
+        "overlay_style": {
+          "label": "Overlay style",
+          "options__1": {
+            "label": "Solid"
+          },
+          "options__2": {
+            "label": "Gradient"
+          }
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Newsletter"
+      }
+    },
+    "kf-product-recommendations": {
+      "name": "Product recommendations",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "intent": {
+          "label": "Recommendation type",
+          "info": "Related products are chosen by Shopify automatically. Complementary products show nothing until you pick them in the Search & Discovery app. Add the section twice to show both.",
+          "options__1": {
+            "label": "Related products"
+          },
+          "options__2": {
+            "label": "Complementary products"
+          }
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "limit": {
+          "label": "Products shown",
+          "info": "Shopify may return fewer than this."
+        },
+        "columns_desktop": {
+          "label": "Columns on desktop"
+        },
+        "columns_tablet": {
+          "label": "Columns on tablet"
+        },
+        "mobile_layout": {
+          "label": "On mobile",
+          "options__1": {
+            "label": "Grid"
+          },
+          "options__2": {
+            "label": "Scrolling row"
+          }
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile",
+          "info": "Used when the mobile layout is a grid.",
+          "options__1": {
+            "label": "1"
+          },
+          "options__2": {
+            "label": "2"
+          }
+        },
+        "header__3": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Card animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          }
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Product recommendations"
+      }
+    },
+    "kf-rich-text": {
+      "name": "Rich text",
+      "settings": {
+        "header__1": {
+          "content": "Layout"
+        },
+        "content_width": {
+          "label": "Content width",
+          "options__1": {
+            "label": "Narrow"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Wide"
+          },
+          "options__4": {
+            "label": "Full"
+          }
+        },
+        "alignment": {
+          "label": "Alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          },
+          "options__3": {
+            "label": "Right"
+          }
+        },
+        "header__2": {
+          "content": "Motion"
+        },
+        "paragraph__3": {
+          "content": "Each block has its own animation. This section plays them in sequence."
+        },
+        "animation": {
+          "label": "Animate the whole column",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger blocks"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Rich text"
+      }
+    },
+    "kf-scrolling-story": {
+      "name": "Scrolling story",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "step_heading_size": {
+          "label": "Step heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Media position on desktop",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Right"
+          }
+        },
+        "media_width": {
+          "label": "Media width",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "media_ratio": {
+          "label": "Media ratio",
+          "options__1": {
+            "label": "Square (1:1)"
+          },
+          "options__2": {
+            "label": "Portrait (4:5)"
+          },
+          "options__3": {
+            "label": "Tall (3:4)"
+          },
+          "options__4": {
+            "label": "Landscape (4:3)"
+          }
+        },
+        "show_numbers": {
+          "label": "Number the steps"
+        },
+        "dim_inactive": {
+          "label": "Dim the steps you are not reading",
+          "info": "Fades text that is not the current step. Turned off automatically for visitors who prefer reduced motion."
+        },
+        "header__3": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "step": {
+          "name": "Step",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "eyebrow": {
+              "label": "Eyebrow"
+            },
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "link_label": {
+              "label": "Link label"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Scrolling story"
+      }
+    },
+    "kf-stacking-cards": {
+      "name": "Stacking cards",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header_position": {
+          "label": "Heading position",
+          "info": "Applies from 990px up. Pinned holds the heading still beside the deck while the cards stack past it.",
+          "options__1": {
+            "label": "Pinned beside the cards"
+          },
+          "options__2": {
+            "label": "Above the cards"
+          }
+        },
+        "header_pin_mobile": {
+          "label": "Also pin the heading on mobile",
+          "info": "Off by default. A pinned bar takes about a fifth of a phone screen for the whole section, and the card numbers already show where you are. Worth turning on for a short two or three word heading."
+        },
+        "header_reserve_mobile": {
+          "label": "Space for the pinned heading on mobile",
+          "info": "Only used when the heading is pinned on mobile. How far down the cards start, to clear it — raise it for a two-line heading or one with text under it."
+        },
+        "show_numbers": {
+          "label": "Number the cards"
+        },
+        "card_heading_size": {
+          "label": "Card heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "card_layout": {
+          "label": "Card layout",
+          "info": "Cards without an image are always a single column.",
+          "options__1": {
+            "label": "Image on the left"
+          },
+          "options__2": {
+            "label": "Image on the right"
+          },
+          "options__3": {
+            "label": "Alternate sides"
+          },
+          "options__4": {
+            "label": "Image above the text"
+          }
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Landscape (4:3)"
+          },
+          "options__5": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "card_height": {
+          "label": "Minimum card height",
+          "info": "Desktop and tablet. Mobile uses a share of the screen instead."
+        },
+        "card_height_mobile": {
+          "label": "Card height on mobile",
+          "info": "Share of the screen each card fills, so one card reads as roughly one screen on any phone."
+        },
+        "header__3": {
+          "content": "Stacking"
+        },
+        "stack_path": {
+          "label": "Direction the deck fans",
+          "info": "Sideways and diagonal narrow the cards to keep the fan inside the page, and both fall back to Down below 750px where there is no width to spare.",
+          "options__1": {
+            "label": "Down"
+          },
+          "options__2": {
+            "label": "Sideways"
+          },
+          "options__3": {
+            "label": "Down and sideways"
+          }
+        },
+        "stack_step": {
+          "label": "Offset between cards",
+          "info": "How much of each card stays visible once the next one covers it. Set to 0 to stack them exactly on top of each other."
+        },
+        "stack_offset": {
+          "label": "Distance from the top",
+          "info": "Measured below the sticky header, if you have one."
+        },
+        "card_gap": {
+          "label": "Scroll between cards",
+          "info": "How far you scroll before the next card arrives. This section uses roughly one card height of scroll per card, so keep the number of cards low."
+        },
+        "stack_end": {
+          "label": "Hold at the end",
+          "info": "How long the finished deck stays on screen before the section scrolls away. The last card needs some of this to settle at all."
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Section color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "card": {
+          "name": "Card",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "eyebrow": {
+              "label": "Eyebrow"
+            },
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "link_label": {
+              "label": "Link label"
+            },
+            "link": {
+              "label": "Link"
+            },
+            "link_style": {
+              "label": "Link style",
+              "options__1": {
+                "label": "Text link"
+              },
+              "options__2": {
+                "label": "Outlined button"
+              },
+              "options__3": {
+                "label": "Solid button"
+              }
+            },
+            "color_scheme": {
+              "label": "Card color scheme"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Stacking cards"
+      }
+    },
+    "kf-tabs": {
+      "name": "Tabs",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "panel_heading_size": {
+          "label": "Panel heading size",
+          "info": "Only seen by visitors whose browser has not run the theme's JavaScript, where the tabs become a stacked list.",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__2": {
+          "content": "Media"
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "info": "Only tabs with an image show one.",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Landscape (4:3)"
+          },
+          "options__5": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "header__3": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "tab": {
+          "name": "Tab",
+          "settings": {
+            "label": {
+              "label": "Tab label",
+              "info": "Keep it to a word or two — long labels turn the tablist into a scroll."
+            },
+            "text": {
+              "label": "Text"
+            },
+            "image": {
+              "label": "Image"
+            },
+            "media_position": {
+              "label": "Image position",
+              "info": "Applies from 750px up.",
+              "options__1": {
+                "label": "Left"
+              },
+              "options__2": {
+                "label": "Right"
+              }
+            },
+            "link_label": {
+              "label": "Link label"
+            },
+            "link": {
+              "label": "Link"
+            },
+            "link_style": {
+              "label": "Link style",
+              "options__1": {
+                "label": "Text link"
+              },
+              "options__2": {
+                "label": "Outlined button"
+              },
+              "options__3": {
+                "label": "Solid button"
+              }
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Tabs"
+      }
+    },
+    "kf-testimonials": {
+      "name": "Testimonials",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "info": "A grid shows more quotes at once, which is what makes social proof work. A carousel suits a long list of them.",
+          "options__1": {
+            "label": "Grid"
+          },
+          "options__2": {
+            "label": "Carousel"
+          }
+        },
+        "show_arrows": {
+          "label": "Show arrows",
+          "info": "Carousel only."
+        },
+        "pagination": {
+          "label": "Pagination",
+          "info": "Carousel only. With no arrows and no pagination the carousel is a plain swipeable row and loads no JavaScript.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Dots"
+          },
+          "options__3": {
+            "label": "Progress bar"
+          }
+        },
+        "columns_desktop": {
+          "label": "Columns on desktop"
+        },
+        "columns_tablet": {
+          "label": "Columns on tablet"
+        },
+        "mobile_layout": {
+          "label": "Below 990px",
+          "info": "The scrolling row runs on tablets as well as phones, showing about two cards at tablet size and one on a phone.",
+          "options__1": {
+            "label": "Stacked"
+          },
+          "options__2": {
+            "label": "Scrolling row"
+          }
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile",
+          "info": "Used when the layout above is stacked. Tablet uses its own column count.",
+          "options__1": {
+            "label": "1"
+          },
+          "options__2": {
+            "label": "2"
+          }
+        },
+        "avatar_size": {
+          "label": "Avatar size"
+        },
+        "header__3": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Card animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          }
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "testimonial": {
+          "name": "Testimonial",
+          "settings": {
+            "quote": {
+              "label": "Quote"
+            },
+            "author": {
+              "label": "Name"
+            },
+            "meta": {
+              "label": "Detail",
+              "info": "A location, a job title, or which product they bought."
+            },
+            "image": {
+              "label": "Photo"
+            },
+            "rating": {
+              "label": "Rating",
+              "info": "Set to 0 to leave the stars off this card."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Testimonials"
+      }
+    },
+    "kf-timeline": {
+      "name": "Timeline",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "item_heading_size": {
+          "label": "Entry heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "info": "Alternating applies from 990px up and collapses to the left-spine layout on smaller screens.",
+          "options__1": {
+            "label": "Spine on the left"
+          },
+          "options__2": {
+            "label": "Alternating sides"
+          }
+        },
+        "marker": {
+          "label": "Marker",
+          "options__1": {
+            "label": "Dot"
+          },
+          "options__2": {
+            "label": "Number"
+          }
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "info": "Only entries with an image show one.",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Landscape (4:3)"
+          },
+          "options__4": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "header__3": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Entry animation",
+          "info": "The spine draws itself in alongside whichever animation you choose.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Fade in from the left"
+          },
+          "options__5": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Transition into the next section",
+          "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Round the next section over this one"
+          },
+          "options__3": {
+            "label": "Overlap the next section"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "item": {
+          "name": "Entry",
+          "settings": {
+            "date": {
+              "label": "Date or label"
+            },
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "image": {
+              "label": "Image"
+            },
+            "link_label": {
+              "label": "Link label"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Timeline"
+      }
+    },
+    "main-404": {
+      "name": "404 page",
+      "settings": {
+        "show_search": {
+          "label": "Show search box"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade up"
+          },
+          "options__3": {
+            "label": "Editorial reveal"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On load"
+          },
+          "options__2": {
+            "label": "On scroll"
+          }
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-account": {
+      "name": "Account",
+      "settings": {
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-activate-account": {
+      "name": "Activate account",
+      "settings": {
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-addresses": {
+      "name": "Addresses",
+      "settings": {
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-article": {
+      "name": "Article",
+      "settings": {
+        "header__1": {
+          "content": "Header"
+        },
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "alignment": {
+          "label": "Header alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "show_back_link": {
+          "label": "Show a link back to the blog"
+        },
+        "show_tag": {
+          "label": "Show the first topic above the title"
+        },
+        "show_date": {
+          "label": "Show the date"
+        },
+        "show_author": {
+          "label": "Show the author"
+        },
+        "header__2": {
+          "content": "Body"
+        },
+        "width": {
+          "label": "Content width",
+          "info": "Narrow keeps the text to a comfortable reading measure. The featured image stays full width either way.",
+          "options__1": {
+            "label": "Narrow"
+          },
+          "options__2": {
+            "label": "Wide"
+          }
+        },
+        "show_image": {
+          "label": "Show the featured image"
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Landscape (4:3)"
+          },
+          "options__3": {
+            "label": "Wide (16:9)"
+          },
+          "options__4": {
+            "label": "Ultra wide (21:9)"
+          }
+        },
+        "show_tags": {
+          "label": "List every topic under the article"
+        },
+        "show_share": {
+          "label": "Show a share button"
+        },
+        "header__3": {
+          "content": "After the article"
+        },
+        "show_comments": {
+          "label": "Show comments",
+          "info": "Only appears when comments are turned on for this blog in Shopify admin."
+        },
+        "show_adjacent": {
+          "label": "Show previous and next links"
+        },
+        "show_schema": {
+          "label": "Add article structured data",
+          "info": "Helps search engines show the headline, date and image in results."
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-blog": {
+      "name": "Blog posts",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "show_heading": {
+          "label": "Show the blog title"
+        },
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text under the title"
+        },
+        "alignment": {
+          "label": "Title alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "show_topics": {
+          "label": "Show topic filters",
+          "info": "Lists the tags used across this blog. Plain links, so they work without JavaScript."
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "info": "List puts the image beside each article from 750px up.",
+          "options__1": {
+            "label": "Grid"
+          },
+          "options__2": {
+            "label": "List"
+          }
+        },
+        "feature_first": {
+          "label": "Feature the newest article",
+          "info": "Gives it the full width of the grid. Only on the first page, and not while a topic filter is applied."
+        },
+        "posts_per_page": {
+          "label": "Articles per page"
+        },
+        "columns_desktop": {
+          "label": "Columns on desktop",
+          "info": "Applies to the grid layout."
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile",
+          "options__1": {
+            "label": "1"
+          },
+          "options__2": {
+            "label": "2"
+          }
+        },
+        "header__3": {
+          "content": "Card"
+        },
+        "show_image": {
+          "label": "Show the featured image"
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Landscape (4:3)"
+          },
+          "options__4": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "show_tag": {
+          "label": "Show the first topic"
+        },
+        "show_date": {
+          "label": "Show the date"
+        },
+        "show_author": {
+          "label": "Show the author"
+        },
+        "show_excerpt": {
+          "label": "Show an excerpt"
+        },
+        "excerpt_limit": {
+          "label": "Excerpt length"
+        },
+        "header__4": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Card animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          }
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "header__5": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-cart": {
+      "name": "Cart",
+      "settings": {
+        "show_recommendations": {
+          "label": "Show recommended products",
+          "info": "Also needs to be enabled in Theme settings > Cart."
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-collection-banner": {
+      "name": "Collection banner",
+      "settings": {
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Text only"
+          },
+          "options__2": {
+            "label": "Text with image beside it"
+          },
+          "options__3": {
+            "label": "Text over the collection image"
+          }
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Medium"
+          },
+          "options__2": {
+            "label": "Large"
+          },
+          "options__3": {
+            "label": "Display"
+          }
+        },
+        "show_description": {
+          "label": "Show collection description"
+        },
+        "show_image": {
+          "label": "Show collection image",
+          "info": "Uses the image set on the collection in your admin."
+        },
+        "show_breadcrumb": {
+          "label": "Show breadcrumb"
+        },
+        "overlay_opacity": {
+          "label": "Overlay opacity",
+          "info": "Applies to the overlay layout only."
+        },
+        "header__1": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Editorial reveal"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On load"
+          },
+          "options__2": {
+            "label": "On scroll"
+          }
+        },
+        "header__2": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-collection-product-grid": {
+      "name": "Product grid",
+      "settings": {
+        "header__1": {
+          "content": "Grid"
+        },
+        "columns_desktop": {
+          "label": "Columns on desktop"
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile",
+          "options__1": {
+            "label": "1"
+          },
+          "options__2": {
+            "label": "2"
+          }
+        },
+        "products_per_page": {
+          "label": "Products per page"
+        },
+        "header__2": {
+          "content": "Filtering and sorting"
+        },
+        "paragraph__3": {
+          "content": "Filters come from Shopify. Add and configure them in Search & Discovery, then they appear here automatically."
+        },
+        "enable_filtering": {
+          "label": "Enable filtering"
+        },
+        "filter_layout": {
+          "label": "Filter layout on desktop",
+          "options__1": {
+            "label": "Sidebar"
+          },
+          "options__2": {
+            "label": "Slide-out panel"
+          }
+        },
+        "enable_sorting": {
+          "label": "Enable sorting"
+        },
+        "header__4": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger products"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "header__5": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-list-collections": {
+      "name": "Collections list",
+      "settings": {
+        "heading": {
+          "label": "Heading",
+          "info": "Leave blank to use the default."
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Medium"
+          },
+          "options__2": {
+            "label": "Large"
+          },
+          "options__3": {
+            "label": "Display"
+          }
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__1": {
+          "content": "Grid"
+        },
+        "columns_desktop": {
+          "label": "Columns on desktop"
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile",
+          "options__1": {
+            "label": "1"
+          },
+          "options__2": {
+            "label": "2"
+          }
+        },
+        "per_page": {
+          "label": "Collections per page"
+        },
+        "image_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Landscape (4:3)"
+          }
+        },
+        "show_count": {
+          "label": "Show product count"
+        },
+        "show_empty": {
+          "label": "Include collections with no products"
+        },
+        "header__2": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger cards"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "header__3": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-login": {
+      "name": "Login",
+      "settings": {
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "show_register_link": {
+          "label": "Show a link to create an account"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-order": {
+      "name": "Order",
+      "settings": {
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-page": {
+      "name": "Page",
+      "settings": {
+        "show_title": {
+          "label": "Show page title"
+        },
+        "title_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Medium"
+          },
+          "options__2": {
+            "label": "Large"
+          },
+          "options__3": {
+            "label": "Display"
+          }
+        },
+        "width": {
+          "label": "Content width",
+          "options__1": {
+            "label": "Narrow — best for reading"
+          },
+          "options__2": {
+            "label": "Full page width"
+          }
+        },
+        "alignment": {
+          "label": "Title alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__1": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Title animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Editorial reveal"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On load"
+          },
+          "options__2": {
+            "label": "On scroll"
+          }
+        },
+        "header__2": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-password": {
+      "name": "Password page",
+      "settings": {
+        "logo": {
+          "label": "Logo",
+          "info": "Falls back to the shop name when empty."
+        },
+        "logo_width": {
+          "label": "Logo width"
+        },
+        "heading": {
+          "label": "Heading",
+          "info": "Leave empty to use the theme's default wording."
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "show_newsletter": {
+          "label": "Show the email signup",
+          "info": "Subscribers are saved to Customers with the newsletter tag, exactly as they are elsewhere in the theme."
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-product": {
+      "name": "Product",
+      "settings": {
+        "header__1": {
+          "content": "Media"
+        },
+        "gallery_layout": {
+          "label": "Gallery layout",
+          "options__1": {
+            "label": "Carousel with thumbnails below"
+          },
+          "options__2": {
+            "label": "Thumbnails beside the image"
+          },
+          "options__3": {
+            "label": "Stacked, all images visible"
+          }
+        },
+        "show_thumbnails": {
+          "label": "Show thumbnails"
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Tall (3:4)"
+          }
+        },
+        "media_position": {
+          "label": "Media position on desktop",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Right"
+          }
+        },
+        "media_size": {
+          "label": "Media width on desktop",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "zoom": {
+          "label": "Zoom",
+          "options__1": {
+            "label": "Off"
+          },
+          "options__2": {
+            "label": "Magnify on hover"
+          },
+          "options__3": {
+            "label": "Open full screen on click"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "sticky_info": {
+          "label": "Keep product details in view while scrolling",
+          "info": "Desktop only. Best when the gallery is taller than the details."
+        },
+        "header__3": {
+          "content": "Sticky add to cart"
+        },
+        "sticky_atc": {
+          "label": "Show a sticky add to cart bar",
+          "info": "Appears once the real buy buttons scroll out of view."
+        },
+        "sticky_color_scheme": {
+          "label": "Sticky bar color scheme"
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-register": {
+      "name": "Register",
+      "settings": {
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "show_name_fields": {
+          "label": "Ask for a name",
+          "info": "Turn off to ask only for an email and password. Shopify does not require a name."
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-reset-password": {
+      "name": "Reset password",
+      "settings": {
+        "heading_size": {
+          "label": "Title size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    },
+    "main-search": {
+      "name": "Search results",
+      "settings": {
+        "columns": {
+          "label": "Columns on desktop"
+        },
+        "results_per_page": {
+          "label": "Results per page"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      }
+    }
+  },
+  "blocks": {
+    "badge": {
+      "name": "Badge",
+      "settings": {
+        "text": {
+          "label": "Text"
+        },
+        "style": {
+          "label": "Style",
+          "options__1": {
+            "label": "Muted"
+          },
+          "options__2": {
+            "label": "Outline"
+          },
+          "options__3": {
+            "label": "Solid"
+          },
+          "options__4": {
+            "label": "Accent"
+          }
+        },
+        "icon": {
+          "label": "Icon",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Star"
+          },
+          "options__3": {
+            "label": "Check"
+          },
+          "options__4": {
+            "label": "Arrow"
+          }
+        },
+        "header__1": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Badge"
+      }
+    },
+    "button": {
+      "name": "Buttons",
+      "settings": {
+        "label": {
+          "label": "Button label"
+        },
+        "link": {
+          "label": "Button link"
+        },
+        "style": {
+          "label": "Button style",
+          "options__1": {
+            "label": "Solid"
+          },
+          "options__2": {
+            "label": "Outline"
+          },
+          "options__3": {
+            "label": "Ghost"
+          },
+          "options__4": {
+            "label": "Text link"
+          }
+        },
+        "header__1": {
+          "content": "Second button"
+        },
+        "secondary_label": {
+          "label": "Button label"
+        },
+        "secondary_link": {
+          "label": "Button link"
+        },
+        "secondary_style": {
+          "label": "Button style",
+          "options__1": {
+            "label": "Solid"
+          },
+          "options__2": {
+            "label": "Outline"
+          },
+          "options__3": {
+            "label": "Ghost"
+          },
+          "options__4": {
+            "label": "Text link"
+          }
+        },
+        "header__2": {
+          "content": "Shared"
+        },
+        "size": {
+          "label": "Size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "new_tab": {
+          "label": "Open in a new tab"
+        },
+        "header__3": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Buttons"
+      }
+    },
+    "custom-liquid": {
+      "name": "Custom Liquid",
+      "settings": {
+        "code": {
+          "label": "Liquid",
+          "info": "Add app snippets or custom Liquid. Anything invalid here will show as an error on the storefront."
+        }
+      },
+      "presets": {
+        "name": "Custom Liquid"
+      }
+    },
+    "divider": {
+      "name": "Divider",
+      "settings": {
+        "width": {
+          "label": "Width",
+          "options__1": {
+            "label": "Narrow"
+          },
+          "options__2": {
+            "label": "Full"
+          }
+        },
+        "thickness": {
+          "label": "Thickness"
+        },
+        "style": {
+          "label": "Color",
+          "options__1": {
+            "label": "Border"
+          },
+          "options__2": {
+            "label": "Accent"
+          }
+        },
+        "header__1": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Draw from left"
+          },
+          "options__4": {
+            "label": "Draw from right"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Divider"
+      }
+    },
+    "heading": {
+      "name": "Heading",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          },
+          "options__4": {
+            "label": "Extra large"
+          },
+          "options__5": {
+            "label": "Display"
+          },
+          "options__6": {
+            "label": "Display large"
+          },
+          "options__7": {
+            "label": "Display extra large"
+          }
+        },
+        "heading_tag": {
+          "label": "Heading level",
+          "info": "Affects SEO and screen readers, not the visual size. Use H1 only once per page.",
+          "options__1": {
+            "label": "H1"
+          },
+          "options__2": {
+            "label": "H2"
+          },
+          "options__3": {
+            "label": "H3"
+          },
+          "options__4": {
+            "label": "H4"
+          },
+          "options__5": {
+            "label": "Paragraph (no heading level)"
+          }
+        },
+        "heading_accent": {
+          "label": "Use accent color"
+        },
+        "header__1": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Fade down"
+          },
+          "options__5": {
+            "label": "Fade left"
+          },
+          "options__6": {
+            "label": "Fade right"
+          },
+          "options__7": {
+            "label": "Scale"
+          },
+          "options__8": {
+            "label": "Blur"
+          },
+          "options__9": {
+            "label": "Clip reveal"
+          },
+          "options__10": {
+            "label": "Editorial reveal"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Heading"
+      }
+    },
+    "image": {
+      "name": "Image",
+      "settings": {
+        "image": {
+          "label": "Image"
+        },
+        "ratio": {
+          "label": "Ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Tall (3:4)"
+          },
+          "options__5": {
+            "label": "Landscape (4:3)"
+          },
+          "options__6": {
+            "label": "Wide (16:9)"
+          }
+        },
+        "width": {
+          "label": "Width",
+          "options__1": {
+            "label": "Narrow"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Full"
+          }
+        },
+        "link": {
+          "label": "Link"
+        },
+        "caption": {
+          "label": "Caption"
+        },
+        "header__1": {
+          "content": "Appearance"
+        },
+        "flush": {
+          "label": "Remove corner rounding"
+        },
+        "hover_zoom": {
+          "label": "Zoom on hover"
+        },
+        "header__2": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Zoom"
+          },
+          "options__6": {
+            "label": "Blur"
+          },
+          "options__7": {
+            "label": "Clip reveal"
+          },
+          "options__8": {
+            "label": "Clip from right"
+          },
+          "options__9": {
+            "label": "Editorial reveal"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        },
+        "parallax": {
+          "label": "Parallax strength",
+          "info": "0 turns parallax off. Ignored when Flow Mode is off or the visitor prefers reduced motion."
+        }
+      },
+      "presets": {
+        "name": "Image"
+      }
+    },
+    "product-accordion": {
+      "name": "Accordion",
+      "settings": {
+        "single": {
+          "label": "Open one row at a time"
+        },
+        "header__1": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Accordion"
+      }
+    },
+    "product-buy-buttons": {
+      "name": "Buy buttons",
+      "settings": {
+        "show_dynamic_checkout": {
+          "label": "Show dynamic checkout buttons",
+          "info": "Shows the payment methods available to each shopper, such as Shop Pay, PayPal or Google Pay."
+        }
+      },
+      "presets": {
+        "name": "Buy buttons"
+      }
+    },
+    "product-description": {
+      "name": "Description",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "collapse": {
+          "label": "Collapse long descriptions",
+          "info": "Shows the first 40 words with a Read more toggle. The full text stays in the page for SEO."
+        }
+      },
+      "presets": {
+        "name": "Description"
+      }
+    },
+    "product-inventory": {
+      "name": "Inventory status",
+      "settings": {
+        "low_threshold": {
+          "label": "Low stock threshold",
+          "info": "Shows the low stock message at or below this quantity."
+        },
+        "show_count": {
+          "label": "Show exact quantity"
+        }
+      },
+      "presets": {
+        "name": "Inventory status"
+      }
+    },
+    "product-meta": {
+      "name": "Product meta",
+      "settings": {
+        "show_vendor": {
+          "label": "Show vendor"
+        },
+        "link_vendor": {
+          "label": "Link the vendor to its products"
+        },
+        "show_type": {
+          "label": "Show product type"
+        },
+        "show_sku": {
+          "label": "Show SKU"
+        },
+        "show_barcode": {
+          "label": "Show barcode"
+        }
+      },
+      "presets": {
+        "name": "Product meta"
+      }
+    },
+    "product-pickup": {
+      "name": "Pickup availability",
+      "settings": {
+        "paragraph__1": {
+          "content": "Shows automatically once you have locations with local pickup enabled."
+        }
+      },
+      "presets": {
+        "name": "Pickup availability"
+      }
+    },
+    "product-price": {
+      "name": "Price",
+      "settings": {
+        "show_sale_badge": {
+          "label": "Show sale badge"
+        },
+        "sale_badge_style": {
+          "label": "Sale badge shows",
+          "options__1": {
+            "label": "Sale"
+          },
+          "options__2": {
+            "label": "Percentage saved"
+          },
+          "options__3": {
+            "label": "Amount saved"
+          }
+        },
+        "show_tax_note": {
+          "label": "Show tax and shipping note"
+        }
+      },
+      "presets": {
+        "name": "Price"
+      }
+    },
+    "product-quantity": {
+      "name": "Quantity",
+      "settings": {
+        "show_label": {
+          "label": "Show label"
+        }
+      },
+      "presets": {
+        "name": "Quantity"
+      }
+    },
+    "product-rating": {
+      "name": "Rating",
+      "settings": {
+        "paragraph__1": {
+          "content": "Shows once a review app has written to the standard reviews metafields."
+        },
+        "show_value": {
+          "label": "Show the score"
+        },
+        "show_count": {
+          "label": "Show the review count"
+        }
+      },
+      "presets": {
+        "name": "Rating"
+      }
+    },
+    "product-share": {
+      "name": "Share",
+      "settings": {
+        "label": {
+          "label": "Label",
+          "info": "Leave blank to use the theme default."
+        }
+      },
+      "presets": {
+        "name": "Share"
+      }
+    },
+    "product-title": {
+      "name": "Product title",
+      "settings": {
+        "heading_size": {
+          "label": "Size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          },
+          "options__4": {
+            "label": "Extra large"
+          }
+        },
+        "heading_tag": {
+          "label": "Heading level",
+          "info": "The product title should normally be the H1 of a product page.",
+          "options__1": {
+            "label": "H1"
+          },
+          "options__2": {
+            "label": "H2"
+          },
+          "options__3": {
+            "label": "H3"
+          }
+        },
+        "header__1": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Editorial reveal"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Product title"
+      }
+    },
+    "product-variant-picker": {
+      "name": "Variant picker",
+      "settings": {
+        "style": {
+          "label": "Style",
+          "info": "Automatic uses swatches for options that have them in your product settings, and buttons for the rest.",
+          "options__1": {
+            "label": "Automatic"
+          },
+          "options__2": {
+            "label": "Buttons"
+          },
+          "options__3": {
+            "label": "Swatches"
+          },
+          "options__4": {
+            "label": "Dropdowns"
+          }
+        },
+        "show_selected_value": {
+          "label": "Show the selected value beside the option name"
+        },
+        "update_url": {
+          "label": "Update the page address when a variant is chosen",
+          "info": "Lets shoppers share or bookmark a link to a specific variant."
+        }
+      },
+      "presets": {
+        "name": "Variant picker"
+      }
+    },
+    "spacer": {
+      "name": "Spacer",
+      "settings": {
+        "height": {
+          "label": "Height"
+        },
+        "height_mobile": {
+          "label": "Height on mobile"
+        }
+      },
+      "presets": {
+        "name": "Spacer"
+      }
+    },
+    "text": {
+      "name": "Text",
+      "settings": {
+        "text": {
+          "label": "Text"
+        },
+        "text_size": {
+          "label": "Size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          },
+          "options__4": {
+            "label": "Extra large"
+          }
+        },
+        "text_width": {
+          "label": "Width",
+          "options__1": {
+            "label": "Narrow"
+          },
+          "options__2": {
+            "label": "Full"
+          }
+        },
+        "text_muted": {
+          "label": "Muted color"
+        },
+        "header__1": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Fade down"
+          },
+          "options__5": {
+            "label": "Fade left"
+          },
+          "options__6": {
+            "label": "Fade right"
+          },
+          "options__7": {
+            "label": "Scale"
+          },
+          "options__8": {
+            "label": "Blur"
+          },
+          "options__9": {
+            "label": "Clip reveal"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Text"
+      }
+    },
+    "trust-row": {
+      "name": "Trust row",
+      "settings": {
+        "paragraph__1": {
+          "content": "Add short reassurances: shipping, returns, guarantees. Three is usually the right number."
+        },
+        "header__2": {
+          "content": "Animation"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        }
+      },
+      "presets": {
+        "name": "Trust row"
+      }
+    },
+    "_accordion-item": {
+      "name": "Accordion row",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "content": {
+          "label": "Content"
+        },
+        "page": {
+          "label": "Or use a page",
+          "info": "When set, the page content replaces the text above. Useful for policies you reuse across products."
+        },
+        "icon": {
+          "label": "Icon",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Check"
+          },
+          "options__3": {
+            "label": "Star"
+          },
+          "options__4": {
+            "label": "Globe"
+          },
+          "options__5": {
+            "label": "Cart"
+          }
+        }
+      }
+    },
+    "_trust-item": {
+      "name": "Trust item",
+      "settings": {
+        "text": {
+          "label": "Text"
+        },
+        "icon": {
+          "label": "Icon",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Check"
+          },
+          "options__3": {
+            "label": "Star"
+          },
+          "options__4": {
+            "label": "Globe"
+          },
+          "options__5": {
+            "label": "Arrow"
+          }
+        }
+      }
+    }
+  },
+  "settings_schema": {
+    "colors": {
+      "name": "Colors",
+      "settings": {
+        "paragraph__1": {
+          "content": "Kofii Flow uses color schemes. Every section picks a scheme instead of defining its own colors, so a change here updates the whole storefront."
+        }
+      }
+    },
+    "typography": {
+      "name": "Typography",
+      "settings": {
+        "header__1": {
+          "content": "Headings"
+        },
+        "type_heading_font": {
+          "label": "Heading font"
+        },
+        "type_heading_weight": {
+          "label": "Heading weight",
+          "options__1": {
+            "label": "Regular"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Semibold"
+          },
+          "options__4": {
+            "label": "Bold"
+          },
+          "options__5": {
+            "label": "Extra bold"
+          }
+        },
+        "type_heading_scale": {
+          "label": "Heading size"
+        },
+        "type_heading_spacing": {
+          "label": "Heading letter spacing"
+        },
+        "type_heading_leading": {
+          "label": "Heading line height"
+        },
+        "type_heading_transform": {
+          "label": "Heading case",
+          "options__1": {
+            "label": "As typed"
+          },
+          "options__2": {
+            "label": "Uppercase"
+          }
+        },
+        "header__2": {
+          "content": "Body"
+        },
+        "type_body_font": {
+          "label": "Body font"
+        },
+        "type_body_scale": {
+          "label": "Body size"
+        },
+        "type_body_leading": {
+          "label": "Body line height"
+        },
+        "header__3": {
+          "content": "Labels"
+        },
+        "paragraph__4": {
+          "content": "Eyebrows, badges and small labels share one style so the storefront stays consistent."
+        },
+        "type_accent_transform": {
+          "label": "Label case",
+          "options__1": {
+            "label": "Uppercase"
+          },
+          "options__2": {
+            "label": "As typed"
+          }
+        },
+        "type_accent_spacing": {
+          "label": "Label letter spacing"
+        }
+      }
+    },
+    "layout": {
+      "name": "Layout",
+      "settings": {
+        "page_width": {
+          "label": "Page width"
+        },
+        "page_gutter": {
+          "label": "Side padding"
+        },
+        "space_scale": {
+          "label": "Spacing scale",
+          "info": "Scales every spacing token at once, including section padding."
+        },
+        "grid_gap": {
+          "label": "Grid gap"
+        },
+        "header__1": {
+          "content": "Corners and depth"
+        },
+        "radius_scale": {
+          "label": "Corner rounding",
+          "info": "0% gives fully square corners across the theme."
+        },
+        "shadow_intensity": {
+          "label": "Shadow strength"
+        }
+      }
+    },
+    "buttons": {
+      "name": "Buttons",
+      "settings": {
+        "button_radius": {
+          "label": "Button corner radius"
+        },
+        "button_size": {
+          "label": "Button size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "button_transform": {
+          "label": "Button case",
+          "options__1": {
+            "label": "As typed"
+          },
+          "options__2": {
+            "label": "Uppercase"
+          }
+        },
+        "button_hover": {
+          "label": "Hover effect",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Lift"
+          },
+          "options__3": {
+            "label": "Color sweep"
+          },
+          "options__4": {
+            "label": "Arrow slide"
+          }
+        },
+        "header__1": {
+          "content": "Inputs"
+        },
+        "input_radius": {
+          "label": "Input corner radius"
+        }
+      }
+    },
+    "media_and_cards": {
+      "name": "Media and cards",
+      "settings": {
+        "media_radius": {
+          "label": "Media corner radius"
+        },
+        "card_style": {
+          "label": "Card style",
+          "options__1": {
+            "label": "Plain"
+          },
+          "options__2": {
+            "label": "Bordered"
+          },
+          "options__3": {
+            "label": "Surface"
+          },
+          "options__4": {
+            "label": "Elevated"
+          }
+        },
+        "card_hover": {
+          "label": "Card hover effect",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Media zoom"
+          },
+          "options__3": {
+            "label": "Lift"
+          },
+          "options__4": {
+            "label": "Swap to second image"
+          }
+        },
+        "header__1": {
+          "content": "Product cards"
+        },
+        "product_card_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square (1:1)"
+          },
+          "options__3": {
+            "label": "Portrait (4:5)"
+          },
+          "options__4": {
+            "label": "Tall (3:4)"
+          },
+          "options__5": {
+            "label": "Landscape (4:3)"
+          }
+        },
+        "product_card_align": {
+          "label": "Text alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "product_card_equal_height": {
+          "label": "Match card heights in a row",
+          "info": "Cards fill the tallest in their row and prices line up along the bottom, so a longer product title cannot make the grid look ragged."
+        },
+        "product_card_quick_add": {
+          "label": "Show quick add",
+          "info": "Adds single-variant products straight to the cart. Products with options open a panel so the shopper can choose."
+        },
+        "product_card_vendor": {
+          "label": "Show vendor"
+        },
+        "product_card_swatches": {
+          "label": "Show color swatches",
+          "info": "Uses the swatches configured on your product options."
+        },
+        "product_card_rating": {
+          "label": "Show rating",
+          "info": "Requires a review app that writes to the standard reviews metafields."
+        },
+        "product_card_sale_badge": {
+          "label": "Show sale badge"
+        },
+        "product_card_sale_style": {
+          "label": "Sale badge shows",
+          "options__1": {
+            "label": "Sale"
+          },
+          "options__2": {
+            "label": "Percentage saved"
+          },
+          "options__3": {
+            "label": "Amount saved"
+          }
+        }
+      }
+    },
+    "motion": {
+      "name": "Motion",
+      "settings": {
+        "paragraph__1": {
+          "content": "Flow Mode sets how expressive the whole storefront feels. Individual sections can still override their own animation."
+        },
+        "flow_mode": {
+          "label": "Flow Mode",
+          "options__1": {
+            "label": "Off"
+          },
+          "options__2": {
+            "label": "Subtle"
+          },
+          "options__3": {
+            "label": "Balanced"
+          },
+          "options__4": {
+            "label": "Expressive"
+          }
+        },
+        "header__2": {
+          "content": "Defaults"
+        },
+        "motion_duration": {
+          "label": "Default duration"
+        },
+        "motion_easing": {
+          "label": "Default easing",
+          "options__1": {
+            "label": "Standard"
+          },
+          "options__2": {
+            "label": "Smooth"
+          },
+          "options__3": {
+            "label": "Ease out"
+          },
+          "options__4": {
+            "label": "Spring-like"
+          }
+        },
+        "header__3": {
+          "content": "Effects"
+        },
+        "motion_parallax": {
+          "label": "Enable parallax media"
+        },
+        "motion_hover": {
+          "label": "Enable hover microinteractions"
+        },
+        "motion_section_transitions": {
+          "label": "Enable section transitions",
+          "info": "Lets a section round and overlap into the section below it."
+        },
+        "paragraph__4": {
+          "content": "Motion always respects a reduced-motion preference, and content stays readable if JavaScript fails."
+        }
+      }
+    },
+    "cart": {
+      "name": "Cart",
+      "settings": {
+        "cart_type": {
+          "label": "Cart type",
+          "options__1": {
+            "label": "Slide-out drawer"
+          },
+          "options__2": {
+            "label": "Go to the cart page"
+          }
+        },
+        "cart_show_note": {
+          "label": "Let shoppers add an order note"
+        },
+        "header__1": {
+          "content": "Free shipping progress"
+        },
+        "cart_free_shipping": {
+          "label": "Show free shipping progress",
+          "info": "Only turn this on if you actually offer free shipping at a threshold. Set the real rate up in Settings > Shipping."
+        },
+        "cart_free_shipping_threshold": {
+          "label": "Free shipping threshold",
+          "info": "The amount in your store currency, without a symbol. For example: 75"
+        },
+        "header__2": {
+          "content": "Recommendations"
+        },
+        "cart_recommendations": {
+          "label": "Show recommended products in the cart"
+        },
+        "cart_recommendations_count": {
+          "label": "Number of recommendations"
+        }
+      }
+    },
+    "search": {
+      "name": "Search",
+      "settings": {
+        "predictive_search_enabled": {
+          "label": "Enable predictive search"
+        },
+        "predictive_search_products": {
+          "label": "Show product suggestions"
+        },
+        "predictive_search_collections": {
+          "label": "Show collection suggestions"
+        },
+        "predictive_search_pages": {
+          "label": "Show page and article suggestions"
+        },
+        "predictive_search_queries": {
+          "label": "Show suggested search terms"
+        }
+      }
+    },
+    "brand_and_social": {
+      "name": "Brand and social",
+      "settings": {
+        "favicon": {
+          "label": "Favicon",
+          "info": "Will be scaled down to 32 x 32px."
+        },
+        "share_image": {
+          "label": "Social sharing image",
+          "info": "Used when a page has no image of its own. 1200 x 630px recommended."
+        },
+        "brand_twitter_handle": {
+          "label": "X (Twitter) handle",
+          "info": "Without the @ symbol. Used for social sharing cards."
+        },
+        "header__1": {
+          "content": "Social accounts"
+        },
+        "social_instagram_link": {
+          "label": "Instagram"
+        },
+        "social_tiktok_link": {
+          "label": "TikTok"
+        },
+        "social_youtube_link": {
+          "label": "YouTube"
+        },
+        "social_facebook_link": {
+          "label": "Facebook"
+        },
+        "social_twitter_link": {
+          "label": "X (Twitter)"
+        },
+        "social_pinterest_link": {
+          "label": "Pinterest"
+        },
+        "social_linkedin_link": {
+          "label": "LinkedIn"
+        }
+      }
+    },
+    "currency_and_localization": {
+      "name": "Currency and localization",
+      "settings": {
+        "currency_code_enabled": {
+          "label": "Show currency codes",
+          "info": "Displays $10.00 USD instead of $10.00."
+        }
+      }
+    }
+  }
+}

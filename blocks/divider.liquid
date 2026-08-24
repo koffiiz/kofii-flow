@@ -23,23 +23,29 @@
 
 {% schema %}
 {
-  "name": "Divider",
+  "name": "t:blocks.divider.name",
   "tag": null,
   "settings": [
     {
       "type": "select",
       "id": "width",
-      "label": "Width",
+      "label": "t:blocks.divider.settings.width.label",
       "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "full", "label": "Full" }
+        {
+          "value": "narrow",
+          "label": "t:blocks.divider.settings.width.options__1.label"
+        },
+        {
+          "value": "full",
+          "label": "t:blocks.divider.settings.width.options__2.label"
+        }
       ],
       "default": "full"
     },
     {
       "type": "range",
       "id": "thickness",
-      "label": "Thickness",
+      "label": "t:blocks.divider.settings.thickness.label",
       "min": 1,
       "max": 8,
       "step": 1,
@@ -49,33 +55,51 @@
     {
       "type": "select",
       "id": "style",
-      "label": "Color",
+      "label": "t:blocks.divider.settings.style.label",
       "options": [
-        { "value": "border", "label": "Border" },
-        { "value": "accent", "label": "Accent" }
+        {
+          "value": "border",
+          "label": "t:blocks.divider.settings.style.options__1.label"
+        },
+        {
+          "value": "accent",
+          "label": "t:blocks.divider.settings.style.options__2.label"
+        }
       ],
       "default": "border"
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.divider.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.divider.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "clip-right", "label": "Draw from left" },
-        { "value": "clip-left", "label": "Draw from right" }
+        {
+          "value": "none",
+          "label": "t:blocks.divider.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.divider.settings.animation.options__2.label"
+        },
+        {
+          "value": "clip-right",
+          "label": "t:blocks.divider.settings.animation.options__3.label"
+        },
+        {
+          "value": "clip-left",
+          "label": "t:blocks.divider.settings.animation.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.divider.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -85,7 +109,7 @@
   ],
   "presets": [
     {
-      "name": "Divider"
+      "name": "t:blocks.divider.presets.name"
     }
   ]
 }

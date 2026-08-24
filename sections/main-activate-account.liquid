@@ -88,31 +88,40 @@
 
 {% schema %}
 {
-  "name": "Activate account",
+  "name": "t:sections.main-activate-account.name",
   "tag": "section",
   "class": "kf-account-page",
   "settings": [
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Title size",
+      "label": "t:sections.main-activate-account.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.main-activate-account.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.main-activate-account.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.main-activate-account.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.main-activate-account.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.main-activate-account.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -122,7 +131,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.main-activate-account.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,

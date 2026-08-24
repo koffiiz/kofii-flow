@@ -72,67 +72,100 @@
 
 {% schema %}
 {
-  "name": "Rich text",
+  "name": "t:sections.kf-rich-text.name",
   "tag": "section",
   "class": "kf-rich-text-section",
   "settings": [
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-rich-text.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "content_width",
-      "label": "Content width",
+      "label": "t:sections.kf-rich-text.settings.content_width.label",
       "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "wide", "label": "Wide" },
-        { "value": "full", "label": "Full" }
+        {
+          "value": "narrow",
+          "label": "t:sections.kf-rich-text.settings.content_width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.kf-rich-text.settings.content_width.options__2.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-rich-text.settings.content_width.options__3.label"
+        },
+        {
+          "value": "full",
+          "label": "t:sections.kf-rich-text.settings.content_width.options__4.label"
+        }
       ],
       "default": "medium"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Alignment",
+      "label": "t:sections.kf-rich-text.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "end", "label": "Right" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-rich-text.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-rich-text.settings.alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-rich-text.settings.alignment.options__3.label"
+        }
       ],
       "default": "center"
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-rich-text.settings.header__2.content"
     },
     {
       "type": "paragraph",
-      "content": "Each block has its own animation. This section plays them in sequence."
+      "content": "t:sections.kf-rich-text.settings.paragraph__3.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animate the whole column",
+      "label": "t:sections.kf-rich-text.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-rich-text.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-rich-text.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-rich-text.settings.animation.options__3.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-rich-text.settings.animation.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "checkbox",
       "id": "animation_stagger",
-      "label": "Stagger blocks",
+      "label": "t:sections.kf-rich-text.settings.animation_stagger.label",
       "default": true
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-rich-text.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -142,64 +175,106 @@
     {
       "type": "select",
       "id": "animation_duration",
-      "label": "Duration",
+      "label": "t:sections.kf-rich-text.settings.animation_duration.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "fast", "label": "Fast" },
-        { "value": "normal", "label": "Normal" },
-        { "value": "slow", "label": "Slow" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-rich-text.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-rich-text.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-rich-text.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-rich-text.settings.animation_duration.options__4.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_easing",
-      "label": "Easing",
+      "label": "t:sections.kf-rich-text.settings.animation_easing.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "standard", "label": "Standard" },
-        { "value": "smooth", "label": "Smooth" },
-        { "value": "out", "label": "Ease out" },
-        { "value": "spring", "label": "Spring-like" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-rich-text.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-rich-text.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-rich-text.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-rich-text.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-rich-text.settings.animation_easing.options__5.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_trigger",
-      "label": "Trigger",
+      "label": "t:sections.kf-rich-text.settings.animation_trigger.label",
       "options": [
-        { "value": "scroll", "label": "On scroll" },
-        { "value": "load", "label": "On load" }
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-rich-text.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-rich-text.settings.animation_trigger.options__2.label"
+        }
       ],
       "default": "scroll"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-rich-text.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-rich-text.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-rich-text.settings.section_transition.label",
+      "info": "t:sections.kf-rich-text.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-rich-text.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-rich-text.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-rich-text.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-rich-text.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -209,7 +284,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-rich-text.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -218,12 +293,16 @@
     }
   ],
   "blocks": [
-    { "type": "@theme" },
-    { "type": "@app" }
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
   ],
   "presets": [
     {
-      "name": "Rich text",
+      "name": "t:sections.kf-rich-text.presets.name",
       "blocks": [
         {
           "type": "badge",

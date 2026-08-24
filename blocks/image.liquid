@@ -51,90 +51,144 @@
 
 {% schema %}
 {
-  "name": "Image",
+  "name": "t:blocks.image.name",
   "tag": null,
   "settings": [
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image"
+      "label": "t:blocks.image.settings.image.label"
     },
     {
       "type": "select",
       "id": "ratio",
-      "label": "Ratio",
+      "label": "t:blocks.image.settings.ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "tall", "label": "Tall (3:4)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "adapt",
+          "label": "t:blocks.image.settings.ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:blocks.image.settings.ratio.options__2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:blocks.image.settings.ratio.options__3.label"
+        },
+        {
+          "value": "tall",
+          "label": "t:blocks.image.settings.ratio.options__4.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:blocks.image.settings.ratio.options__5.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:blocks.image.settings.ratio.options__6.label"
+        }
       ],
       "default": "adapt"
     },
     {
       "type": "select",
       "id": "width",
-      "label": "Width",
+      "label": "t:blocks.image.settings.width.label",
       "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "full", "label": "Full" }
+        {
+          "value": "narrow",
+          "label": "t:blocks.image.settings.width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:blocks.image.settings.width.options__2.label"
+        },
+        {
+          "value": "full",
+          "label": "t:blocks.image.settings.width.options__3.label"
+        }
       ],
       "default": "full"
     },
     {
       "type": "url",
       "id": "link",
-      "label": "Link"
+      "label": "t:blocks.image.settings.link.label"
     },
     {
       "type": "text",
       "id": "caption",
-      "label": "Caption"
+      "label": "t:blocks.image.settings.caption.label"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:blocks.image.settings.header__1.content"
     },
     {
       "type": "checkbox",
       "id": "flush",
-      "label": "Remove corner rounding",
+      "label": "t:blocks.image.settings.flush.label",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "hover_zoom",
-      "label": "Zoom on hover",
+      "label": "t:blocks.image.settings.hover_zoom.label",
       "default": false
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.image.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.image.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "zoom-in", "label": "Zoom" },
-        { "value": "blur-in", "label": "Blur" },
-        { "value": "clip-up", "label": "Clip reveal" },
-        { "value": "clip-left", "label": "Clip from right" },
-        { "value": "reveal", "label": "Editorial reveal" }
+        {
+          "value": "none",
+          "label": "t:blocks.image.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.image.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.image.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:blocks.image.settings.animation.options__4.label"
+        },
+        {
+          "value": "zoom-in",
+          "label": "t:blocks.image.settings.animation.options__5.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:blocks.image.settings.animation.options__6.label"
+        },
+        {
+          "value": "clip-up",
+          "label": "t:blocks.image.settings.animation.options__7.label"
+        },
+        {
+          "value": "clip-left",
+          "label": "t:blocks.image.settings.animation.options__8.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:blocks.image.settings.animation.options__9.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.image.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -144,18 +198,18 @@
     {
       "type": "range",
       "id": "parallax",
-      "label": "Parallax strength",
+      "label": "t:blocks.image.settings.parallax.label",
       "min": 0,
       "max": 60,
       "step": 5,
       "unit": "%",
       "default": 0,
-      "info": "0 turns parallax off. Ignored when Flow Mode is off or the visitor prefers reduced motion."
+      "info": "t:blocks.image.settings.parallax.info"
     }
   ],
   "presets": [
     {
-      "name": "Image"
+      "name": "t:blocks.image.presets.name"
     }
   ]
 }

@@ -64,26 +64,30 @@
 
 {% schema %}
 {
-  "name": "Inventory status",
+  "name": "t:blocks.product-inventory.name",
   "tag": null,
   "settings": [
     {
       "type": "range",
       "id": "low_threshold",
-      "label": "Low stock threshold",
+      "label": "t:blocks.product-inventory.settings.low_threshold.label",
       "min": 1,
       "max": 50,
       "step": 1,
       "default": 10,
-      "info": "Shows the low stock message at or below this quantity."
+      "info": "t:blocks.product-inventory.settings.low_threshold.info"
     },
     {
       "type": "checkbox",
       "id": "show_count",
-      "label": "Show exact quantity",
+      "label": "t:blocks.product-inventory.settings.show_count.label",
       "default": false
     }
   ],
-  "presets": [{ "name": "Inventory status" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-inventory.presets.name"
+    }
+  ]
 }
 {% endschema %}

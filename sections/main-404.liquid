@@ -55,50 +55,67 @@
 
 {% schema %}
 {
-  "name": "404 page",
+  "name": "t:sections.main-404.name",
   "tag": "section",
   "class": "kf-404-section",
   "enabled_on": {
-    "templates": ["404"]
+    "templates": [
+      "404"
+    ]
   },
   "settings": [
     {
       "type": "checkbox",
       "id": "show_search",
-      "label": "Show search box",
+      "label": "t:sections.main-404.settings.show_search.label",
       "default": true
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:sections.main-404.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "reveal", "label": "Editorial reveal" }
+        {
+          "value": "none",
+          "label": "t:sections.main-404.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.main-404.settings.animation.options__2.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:sections.main-404.settings.animation.options__3.label"
+        }
       ],
       "default": "fade-up"
     },
     {
       "type": "select",
       "id": "animation_trigger",
-      "label": "Trigger",
+      "label": "t:sections.main-404.settings.animation_trigger.label",
       "options": [
-        { "value": "load", "label": "On load" },
-        { "value": "scroll", "label": "On scroll" }
+        {
+          "value": "load",
+          "label": "t:sections.main-404.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "scroll",
+          "label": "t:sections.main-404.settings.animation_trigger.options__2.label"
+        }
       ],
       "default": "load"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.main-404.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.main-404.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -108,7 +125,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.main-404.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,

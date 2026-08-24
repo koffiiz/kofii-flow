@@ -19,20 +19,20 @@
 
 {% schema %}
 {
-  "name": "Apps",
+  "name": "t:sections.apps.name",
   "tag": "section",
   "class": "kf-apps-section",
   "settings": [
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.apps.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.apps.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -42,7 +42,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.apps.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -50,10 +50,14 @@
       "default": 32
     }
   ],
-  "blocks": [{ "type": "@app" }],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
   "presets": [
     {
-      "name": "Apps"
+      "name": "t:sections.apps.presets.name"
     }
   ]
 }

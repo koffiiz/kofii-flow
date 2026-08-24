@@ -25,35 +25,48 @@
 
 {% schema %}
 {
-  "name": "Accordion",
+  "name": "t:blocks.product-accordion.name",
   "tag": null,
-  "blocks": [{ "type": "_accordion-item" }],
+  "blocks": [
+    {
+      "type": "_accordion-item"
+    }
+  ],
   "settings": [
     {
       "type": "checkbox",
       "id": "single",
-      "label": "Open one row at a time",
+      "label": "t:blocks.product-accordion.settings.single.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.product-accordion.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.product-accordion.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" }
+        {
+          "value": "none",
+          "label": "t:blocks.product-accordion.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.product-accordion.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.product-accordion.settings.animation.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.product-accordion.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -63,10 +76,14 @@
   ],
   "presets": [
     {
-      "name": "Accordion",
+      "name": "t:blocks.product-accordion.presets.name",
       "blocks": [
-        { "type": "_accordion-item" },
-        { "type": "_accordion-item" }
+        {
+          "type": "_accordion-item"
+        },
+        {
+          "type": "_accordion-item"
+        }
       ]
     }
   ]

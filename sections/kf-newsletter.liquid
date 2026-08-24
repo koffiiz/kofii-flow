@@ -74,77 +74,92 @@
 
 {% schema %}
 {
-  "name": "Newsletter",
+  "name": "t:sections.kf-newsletter.name",
   "tag": "section",
   "class": "kf-newsletter-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-newsletter.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-newsletter.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-newsletter.settings.heading.label",
       "default": "Get the good stuff first"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-newsletter.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-newsletter.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-newsletter.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-newsletter.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text",
+      "label": "t:sections.kf-newsletter.settings.text.label",
       "default": "<p>New arrivals, restocks and the occasional letter. No noise.</p>"
     },
     {
       "type": "richtext",
       "id": "small_print",
-      "label": "Small print",
-      "info": "Sits under the form. Some regions require you to say how you will use the address."
+      "label": "t:sections.kf-newsletter.settings.small_print.label",
+      "info": "t:sections.kf-newsletter.settings.small_print.info"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-newsletter.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.kf-newsletter.settings.layout.label",
       "options": [
-        { "value": "center", "label": "Centered" },
-        { "value": "split", "label": "Text beside the form" }
+        {
+          "value": "center",
+          "label": "t:sections.kf-newsletter.settings.layout.options__1.label"
+        },
+        {
+          "value": "split",
+          "label": "t:sections.kf-newsletter.settings.layout.options__2.label"
+        }
       ],
       "default": "center",
-      "info": "Beside applies from 750px up and stacks below that."
+      "info": "t:sections.kf-newsletter.settings.layout.info"
     },
     {
       "type": "header",
-      "content": "Background image"
+      "content": "t:sections.kf-newsletter.settings.header__3.content"
     },
     {
       "type": "image_picker",
       "id": "background_image",
-      "label": "Image",
-      "info": "Optional. Pick a color scheme with enough contrast against it, and use the overlay below to keep the text readable."
+      "label": "t:sections.kf-newsletter.settings.background_image.label",
+      "info": "t:sections.kf-newsletter.settings.background_image.info"
     },
     {
       "type": "range",
       "id": "overlay_opacity",
-      "label": "Overlay",
+      "label": "t:sections.kf-newsletter.settings.overlay_opacity.label",
       "min": 0,
       "max": 90,
       "step": 5,
@@ -154,39 +169,54 @@
     {
       "type": "select",
       "id": "overlay_style",
-      "label": "Overlay style",
+      "label": "t:sections.kf-newsletter.settings.overlay_style.label",
       "options": [
-        { "value": "solid", "label": "Solid" },
-        { "value": "gradient", "label": "Gradient" }
+        {
+          "value": "solid",
+          "label": "t:sections.kf-newsletter.settings.overlay_style.options__1.label"
+        },
+        {
+          "value": "gradient",
+          "label": "t:sections.kf-newsletter.settings.overlay_style.options__2.label"
+        }
       ],
       "default": "solid"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-newsletter.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-newsletter.settings.color_scheme.label",
       "default": "scheme-2"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-newsletter.settings.section_transition.label",
+      "info": "t:sections.kf-newsletter.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-newsletter.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-newsletter.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-newsletter.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-newsletter.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -196,7 +226,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-newsletter.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -206,7 +236,7 @@
   ],
   "presets": [
     {
-      "name": "Newsletter"
+      "name": "t:sections.kf-newsletter.presets.name"
     }
   ]
 }

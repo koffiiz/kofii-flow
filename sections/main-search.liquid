@@ -131,17 +131,19 @@
 
 {% schema %}
 {
-  "name": "Search results",
+  "name": "t:sections.main-search.name",
   "tag": "section",
   "class": "kf-search-page-section",
   "enabled_on": {
-    "templates": ["search"]
+    "templates": [
+      "search"
+    ]
   },
   "settings": [
     {
       "type": "range",
       "id": "columns",
-      "label": "Columns on desktop",
+      "label": "t:sections.main-search.settings.columns.label",
       "min": 2,
       "max": 5,
       "step": 1,
@@ -150,7 +152,7 @@
     {
       "type": "range",
       "id": "results_per_page",
-      "label": "Results per page",
+      "label": "t:sections.main-search.settings.results_per_page.label",
       "min": 8,
       "max": 48,
       "step": 4,
@@ -159,13 +161,13 @@
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.main-search.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.main-search.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -175,7 +177,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.main-search.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,

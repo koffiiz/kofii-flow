@@ -153,69 +153,80 @@
 
 {% schema %}
 {
-  "name": "Announcement bar",
+  "name": "t:sections.kf-announcement-bar.name",
   "class": "kf-announcement-section",
   "enabled_on": {
-    "groups": ["header", "footer"]
+    "groups": [
+      "header",
+      "footer"
+    ]
   },
   "settings": [
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-announcement-bar.settings.color_scheme.label",
       "default": "scheme-3"
     },
     {
       "type": "header",
-      "content": "Scrolling"
+      "content": "t:sections.kf-announcement-bar.settings.header__1.content"
     },
     {
       "type": "paragraph",
-      "content": "Add two or more messages to turn the bar into a scrolling marquee."
+      "content": "t:sections.kf-announcement-bar.settings.paragraph__2.content"
     },
     {
       "type": "range",
       "id": "speed",
-      "label": "Scroll duration",
+      "label": "t:sections.kf-announcement-bar.settings.speed.label",
       "min": 10,
       "max": 80,
       "step": 5,
       "unit": "s",
       "default": 30,
-      "info": "Higher is slower."
+      "info": "t:sections.kf-announcement-bar.settings.speed.info"
     },
     {
       "type": "checkbox",
       "id": "pause_on_hover",
-      "label": "Pause on hover",
+      "label": "t:sections.kf-announcement-bar.settings.pause_on_hover.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "edge_fade",
-      "label": "Fade the edges",
+      "label": "t:sections.kf-announcement-bar.settings.edge_fade.label",
       "default": true
     }
   ],
   "blocks": [
     {
       "type": "message",
-      "name": "Message",
+      "name": "t:sections.kf-announcement-bar.blocks.message.name",
       "settings": [
         {
           "type": "text",
           "id": "text",
-          "label": "Text",
+          "label": "t:sections.kf-announcement-bar.blocks.message.settings.text.label",
           "default": "Complimentary shipping on orders over $75"
         },
-        { "type": "url", "id": "link", "label": "Link" }
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.kf-announcement-bar.blocks.message.settings.link.label"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Announcement bar",
-      "blocks": [{ "type": "message" }]
+      "name": "t:sections.kf-announcement-bar.presets.name",
+      "blocks": [
+        {
+          "type": "message"
+        }
+      ]
     }
   ]
 }

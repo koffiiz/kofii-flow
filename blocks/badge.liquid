@@ -20,60 +20,99 @@
 
 {% schema %}
 {
-  "name": "Badge",
+  "name": "t:blocks.badge.name",
   "tag": null,
   "settings": [
     {
       "type": "text",
       "id": "text",
-      "label": "Text",
+      "label": "t:blocks.badge.settings.text.label",
       "default": "New this season"
     },
     {
       "type": "select",
       "id": "style",
-      "label": "Style",
+      "label": "t:blocks.badge.settings.style.label",
       "options": [
-        { "value": "muted", "label": "Muted" },
-        { "value": "outline", "label": "Outline" },
-        { "value": "solid", "label": "Solid" },
-        { "value": "accent", "label": "Accent" }
+        {
+          "value": "muted",
+          "label": "t:blocks.badge.settings.style.options__1.label"
+        },
+        {
+          "value": "outline",
+          "label": "t:blocks.badge.settings.style.options__2.label"
+        },
+        {
+          "value": "solid",
+          "label": "t:blocks.badge.settings.style.options__3.label"
+        },
+        {
+          "value": "accent",
+          "label": "t:blocks.badge.settings.style.options__4.label"
+        }
       ],
       "default": "outline"
     },
     {
       "type": "select",
       "id": "icon",
-      "label": "Icon",
+      "label": "t:blocks.badge.settings.icon.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "star", "label": "Star" },
-        { "value": "check", "label": "Check" },
-        { "value": "arrow", "label": "Arrow" }
+        {
+          "value": "none",
+          "label": "t:blocks.badge.settings.icon.options__1.label"
+        },
+        {
+          "value": "star",
+          "label": "t:blocks.badge.settings.icon.options__2.label"
+        },
+        {
+          "value": "check",
+          "label": "t:blocks.badge.settings.icon.options__3.label"
+        },
+        {
+          "value": "arrow",
+          "label": "t:blocks.badge.settings.icon.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.badge.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.badge.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:blocks.badge.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.badge.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.badge.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:blocks.badge.settings.animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:blocks.badge.settings.animation.options__5.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.badge.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -83,7 +122,7 @@
   ],
   "presets": [
     {
-      "name": "Badge"
+      "name": "t:blocks.badge.presets.name"
     }
   ]
 }

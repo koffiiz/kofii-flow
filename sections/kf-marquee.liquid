@@ -161,60 +161,87 @@
 
 {% schema %}
 {
-  "name": "Marquee",
+  "name": "t:sections.kf-marquee.name",
   "tag": "section",
   "class": "kf-marquee-band-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-marquee.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "text_size",
-      "label": "Text size",
+      "label": "t:sections.kf-marquee.settings.text_size.label",
       "options": [
-        { "value": "kf-h5", "label": "Extra small" },
-        { "value": "kf-h4", "label": "Small" },
-        { "value": "kf-h3", "label": "Medium" },
-        { "value": "kf-h2", "label": "Large" },
-        { "value": "kf-h1", "label": "Extra large" }
+        {
+          "value": "kf-h5",
+          "label": "t:sections.kf-marquee.settings.text_size.options__1.label"
+        },
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-marquee.settings.text_size.options__2.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-marquee.settings.text_size.options__3.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-marquee.settings.text_size.options__4.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-marquee.settings.text_size.options__5.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "checkbox",
       "id": "uppercase",
-      "label": "Uppercase text",
+      "label": "t:sections.kf-marquee.settings.uppercase.label",
       "default": true
     },
     {
       "type": "select",
       "id": "separator",
-      "label": "Separator",
+      "label": "t:sections.kf-marquee.settings.separator.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "dot", "label": "Dot" },
-        { "value": "slash", "label": "Slash" },
-        { "value": "asterisk", "label": "Asterisk" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-marquee.settings.separator.options__1.label"
+        },
+        {
+          "value": "dot",
+          "label": "t:sections.kf-marquee.settings.separator.options__2.label"
+        },
+        {
+          "value": "slash",
+          "label": "t:sections.kf-marquee.settings.separator.options__3.label"
+        },
+        {
+          "value": "asterisk",
+          "label": "t:sections.kf-marquee.settings.separator.options__4.label"
+        }
       ],
       "default": "dot"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-marquee.settings.header__2.content"
     },
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "Full width",
+      "label": "t:sections.kf-marquee.settings.full_width.label",
       "default": true,
-      "info": "Turn off to keep the band inside the page margins."
+      "info": "t:sections.kf-marquee.settings.full_width.info"
     },
     {
       "type": "range",
       "id": "gap",
-      "label": "Space between items",
+      "label": "t:sections.kf-marquee.settings.gap.label",
       "min": 8,
       "max": 120,
       "step": 4,
@@ -224,78 +251,93 @@
     {
       "type": "range",
       "id": "image_height",
-      "label": "Image height",
+      "label": "t:sections.kf-marquee.settings.image_height.label",
       "min": 16,
       "max": 160,
       "step": 4,
       "unit": "px",
       "default": 48,
-      "info": "Images are sized by height so logos of different shapes line up."
+      "info": "t:sections.kf-marquee.settings.image_height.info"
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-marquee.settings.header__3.content"
     },
     {
       "type": "range",
       "id": "speed",
-      "label": "Time for one loop",
+      "label": "t:sections.kf-marquee.settings.speed.label",
       "min": 10,
       "max": 120,
       "step": 5,
       "unit": "s",
       "default": 40,
-      "info": "Higher is slower. A long band needs more time to cover the same distance."
+      "info": "t:sections.kf-marquee.settings.speed.info"
     },
     {
       "type": "select",
       "id": "direction",
-      "label": "Direction",
+      "label": "t:sections.kf-marquee.settings.direction.label",
       "options": [
-        { "value": "left", "label": "Right to left" },
-        { "value": "right", "label": "Left to right" }
+        {
+          "value": "left",
+          "label": "t:sections.kf-marquee.settings.direction.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.kf-marquee.settings.direction.options__2.label"
+        }
       ],
       "default": "left"
     },
     {
       "type": "checkbox",
       "id": "pause_on_hover",
-      "label": "Pause on hover",
+      "label": "t:sections.kf-marquee.settings.pause_on_hover.label",
       "default": true,
-      "info": "A pause button is always shown as well — hovering does nothing on a touch screen."
+      "info": "t:sections.kf-marquee.settings.pause_on_hover.info"
     },
     {
       "type": "checkbox",
       "id": "edge_fade",
-      "label": "Fade the edges",
+      "label": "t:sections.kf-marquee.settings.edge_fade.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-marquee.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-marquee.settings.color_scheme.label",
       "default": "scheme-2"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-marquee.settings.section_transition.label",
+      "info": "t:sections.kf-marquee.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-marquee.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-marquee.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-marquee.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-marquee.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -305,7 +347,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-marquee.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -316,55 +358,76 @@
   "blocks": [
     {
       "type": "text",
-      "name": "Text",
+      "name": "t:sections.kf-marquee.blocks.text.name",
       "settings": [
         {
           "type": "text",
           "id": "text",
-          "label": "Text",
+          "label": "t:sections.kf-marquee.blocks.text.settings.text.label",
           "default": "Free shipping over $75"
         },
         {
           "type": "select",
           "id": "text_style",
-          "label": "Style",
+          "label": "t:sections.kf-marquee.blocks.text.settings.text_style.label",
           "options": [
-            { "value": "solid", "label": "Solid" },
-            { "value": "outline", "label": "Outlined" }
+            {
+              "value": "solid",
+              "label": "t:sections.kf-marquee.blocks.text.settings.text_style.options__1.label"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.kf-marquee.blocks.text.settings.text_style.options__2.label"
+            }
           ],
           "default": "solid"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "t:sections.kf-marquee.blocks.text.settings.link.label"
         }
       ]
     },
     {
       "type": "image",
-      "name": "Image",
+      "name": "t:sections.kf-marquee.blocks.image.name",
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "t:sections.kf-marquee.blocks.image.settings.image.label"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "t:sections.kf-marquee.blocks.image.settings.link.label"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Marquee",
+      "name": "t:sections.kf-marquee.presets.name",
       "blocks": [
-        { "type": "text", "settings": { "text": "Free shipping over $75" } },
-        { "type": "text", "settings": { "text": "30 day returns" } },
-        { "type": "text", "settings": { "text": "Made in small batches" } }
+        {
+          "type": "text",
+          "settings": {
+            "text": "Free shipping over $75"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "30 day returns"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "Made in small batches"
+          }
+        }
       ]
     }
   ]

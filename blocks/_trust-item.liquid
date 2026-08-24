@@ -17,25 +17,40 @@
 
 {% schema %}
 {
-  "name": "Trust item",
+  "name": "t:blocks._trust-item.name",
   "tag": null,
   "settings": [
     {
       "type": "text",
       "id": "text",
-      "label": "Text",
+      "label": "t:blocks._trust-item.settings.text.label",
       "default": "Free returns within 30 days"
     },
     {
       "type": "select",
       "id": "icon",
-      "label": "Icon",
+      "label": "t:blocks._trust-item.settings.icon.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "check", "label": "Check" },
-        { "value": "star", "label": "Star" },
-        { "value": "globe", "label": "Globe" },
-        { "value": "arrow", "label": "Arrow" }
+        {
+          "value": "none",
+          "label": "t:blocks._trust-item.settings.icon.options__1.label"
+        },
+        {
+          "value": "check",
+          "label": "t:blocks._trust-item.settings.icon.options__2.label"
+        },
+        {
+          "value": "star",
+          "label": "t:blocks._trust-item.settings.icon.options__3.label"
+        },
+        {
+          "value": "globe",
+          "label": "t:blocks._trust-item.settings.icon.options__4.label"
+        },
+        {
+          "value": "arrow",
+          "label": "t:blocks._trust-item.settings.icon.options__5.label"
+        }
       ],
       "default": "check"
     }

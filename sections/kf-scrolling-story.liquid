@@ -150,123 +150,177 @@
 
 {% schema %}
 {
-  "name": "Scrolling story",
+  "name": "t:sections.kf-scrolling-story.name",
   "tag": "section",
   "class": "kf-story-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-scrolling-story.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-scrolling-story.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-scrolling-story.settings.heading.label",
       "default": "How it is made"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-scrolling-story.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-scrolling-story.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-scrolling-story.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-scrolling-story.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "select",
       "id": "step_heading_size",
-      "label": "Step heading size",
+      "label": "t:sections.kf-scrolling-story.settings.step_heading_size.label",
       "options": [
-        { "value": "kf-h4", "label": "Small" },
-        { "value": "kf-h3", "label": "Medium" },
-        { "value": "kf-h2", "label": "Large" }
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-scrolling-story.settings.step_heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-scrolling-story.settings.step_heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-scrolling-story.settings.step_heading_size.options__3.label"
+        }
       ],
       "default": "kf-h3"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-scrolling-story.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Media position on desktop",
+      "label": "t:sections.kf-scrolling-story.settings.layout.label",
       "options": [
-        { "value": "media-left", "label": "Left" },
-        { "value": "media-right", "label": "Right" }
+        {
+          "value": "media-left",
+          "label": "t:sections.kf-scrolling-story.settings.layout.options__1.label"
+        },
+        {
+          "value": "media-right",
+          "label": "t:sections.kf-scrolling-story.settings.layout.options__2.label"
+        }
       ],
       "default": "media-left"
     },
     {
       "type": "select",
       "id": "media_width",
-      "label": "Media width",
+      "label": "t:sections.kf-scrolling-story.settings.media_width.label",
       "options": [
-        { "value": "small", "label": "Small" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "large", "label": "Large" }
+        {
+          "value": "small",
+          "label": "t:sections.kf-scrolling-story.settings.media_width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.kf-scrolling-story.settings.media_width.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.kf-scrolling-story.settings.media_width.options__3.label"
+        }
       ],
       "default": "medium"
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Media ratio",
+      "label": "t:sections.kf-scrolling-story.settings.media_ratio.label",
       "options": [
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "tall", "label": "Tall (3:4)" },
-        { "value": "landscape", "label": "Landscape (4:3)" }
+        {
+          "value": "square",
+          "label": "t:sections.kf-scrolling-story.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-scrolling-story.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "tall",
+          "label": "t:sections.kf-scrolling-story.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-scrolling-story.settings.media_ratio.options__4.label"
+        }
       ],
       "default": "portrait"
     },
     {
       "type": "checkbox",
       "id": "show_numbers",
-      "label": "Number the steps",
+      "label": "t:sections.kf-scrolling-story.settings.show_numbers.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "dim_inactive",
-      "label": "Dim the steps you are not reading",
+      "label": "t:sections.kf-scrolling-story.settings.dim_inactive.label",
       "default": true,
-      "info": "Fades text that is not the current step. Turned off automatically for visitors who prefer reduced motion."
+      "info": "t:sections.kf-scrolling-story.settings.dim_inactive.info"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-scrolling-story.settings.header__3.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-scrolling-story.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-scrolling-story.settings.section_transition.label",
+      "info": "t:sections.kf-scrolling-story.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-scrolling-story.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-scrolling-story.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-scrolling-story.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-scrolling-story.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -276,7 +330,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-scrolling-story.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -287,51 +341,66 @@
   "blocks": [
     {
       "type": "step",
-      "name": "Step",
+      "name": "t:sections.kf-scrolling-story.blocks.step.name",
       "limit": 8,
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "t:sections.kf-scrolling-story.blocks.step.settings.image.label"
         },
         {
           "type": "text",
           "id": "eyebrow",
-          "label": "Eyebrow"
+          "label": "t:sections.kf-scrolling-story.blocks.step.settings.eyebrow.label"
         },
         {
           "type": "inline_richtext",
           "id": "heading",
-          "label": "Heading",
+          "label": "t:sections.kf-scrolling-story.blocks.step.settings.heading.label",
           "default": "The first step"
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "Text",
+          "label": "t:sections.kf-scrolling-story.blocks.step.settings.text.label",
           "default": "<p>One paragraph on this stage of the story. Keep it to something a reader can take in while the image is on screen.</p>"
         },
         {
           "type": "text",
           "id": "link_label",
-          "label": "Link label"
+          "label": "t:sections.kf-scrolling-story.blocks.step.settings.link_label.label"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "t:sections.kf-scrolling-story.blocks.step.settings.link.label"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Scrolling story",
+      "name": "t:sections.kf-scrolling-story.presets.name",
       "blocks": [
-        { "type": "step", "settings": { "heading": "It starts with the fibre" } },
-        { "type": "step", "settings": { "heading": "Then the loom" } },
-        { "type": "step", "settings": { "heading": "And finally, the finish" } }
+        {
+          "type": "step",
+          "settings": {
+            "heading": "It starts with the fibre"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "heading": "Then the loom"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "heading": "And finally, the finish"
+          }
+        }
       ]
     }
   ]

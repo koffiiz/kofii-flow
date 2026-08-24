@@ -203,89 +203,119 @@
 
 {% schema %}
 {
-  "name": "Testimonials",
+  "name": "t:sections.kf-testimonials.name",
   "tag": "section",
   "class": "kf-testimonials-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-testimonials.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-testimonials.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-testimonials.settings.heading.label",
       "default": "What people say"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-testimonials.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-testimonials.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-testimonials.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-testimonials.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text"
+      "label": "t:sections.kf-testimonials.settings.text.label"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Heading alignment",
+      "label": "t:sections.kf-testimonials.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-testimonials.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-testimonials.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-testimonials.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.kf-testimonials.settings.layout.label",
       "options": [
-        { "value": "grid", "label": "Grid" },
-        { "value": "carousel", "label": "Carousel" }
+        {
+          "value": "grid",
+          "label": "t:sections.kf-testimonials.settings.layout.options__1.label"
+        },
+        {
+          "value": "carousel",
+          "label": "t:sections.kf-testimonials.settings.layout.options__2.label"
+        }
       ],
       "default": "grid",
-      "info": "A grid shows more quotes at once, which is what makes social proof work. A carousel suits a long list of them."
+      "info": "t:sections.kf-testimonials.settings.layout.info"
     },
     {
       "type": "checkbox",
       "id": "show_arrows",
-      "label": "Show arrows",
+      "label": "t:sections.kf-testimonials.settings.show_arrows.label",
       "default": true,
-      "info": "Carousel only."
+      "info": "t:sections.kf-testimonials.settings.show_arrows.info"
     },
     {
       "type": "select",
       "id": "pagination",
-      "label": "Pagination",
+      "label": "t:sections.kf-testimonials.settings.pagination.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "dots", "label": "Dots" },
-        { "value": "progress", "label": "Progress bar" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-testimonials.settings.pagination.options__1.label"
+        },
+        {
+          "value": "dots",
+          "label": "t:sections.kf-testimonials.settings.pagination.options__2.label"
+        },
+        {
+          "value": "progress",
+          "label": "t:sections.kf-testimonials.settings.pagination.options__3.label"
+        }
       ],
       "default": "dots",
-      "info": "Carousel only. With no arrows and no pagination the carousel is a plain swipeable row and loads no JavaScript."
+      "info": "t:sections.kf-testimonials.settings.pagination.info"
     },
     {
       "type": "range",
       "id": "columns_desktop",
-      "label": "Columns on desktop",
+      "label": "t:sections.kf-testimonials.settings.columns_desktop.label",
       "min": 1,
       "max": 4,
       "step": 1,
@@ -294,7 +324,7 @@
     {
       "type": "range",
       "id": "columns_tablet",
-      "label": "Columns on tablet",
+      "label": "t:sections.kf-testimonials.settings.columns_tablet.label",
       "min": 1,
       "max": 3,
       "step": 1,
@@ -303,29 +333,41 @@
     {
       "type": "select",
       "id": "mobile_layout",
-      "label": "Below 990px",
+      "label": "t:sections.kf-testimonials.settings.mobile_layout.label",
       "options": [
-        { "value": "grid", "label": "Stacked" },
-        { "value": "scroll", "label": "Scrolling row" }
+        {
+          "value": "grid",
+          "label": "t:sections.kf-testimonials.settings.mobile_layout.options__1.label"
+        },
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-testimonials.settings.mobile_layout.options__2.label"
+        }
       ],
       "default": "scroll",
-      "info": "The scrolling row runs on tablets as well as phones, showing about two cards at tablet size and one on a phone."
+      "info": "t:sections.kf-testimonials.settings.mobile_layout.info"
     },
     {
       "type": "select",
       "id": "columns_mobile",
-      "label": "Columns on mobile",
+      "label": "t:sections.kf-testimonials.settings.columns_mobile.label",
       "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
+        {
+          "value": "1",
+          "label": "t:sections.kf-testimonials.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.kf-testimonials.settings.columns_mobile.options__2.label"
+        }
       ],
       "default": "1",
-      "info": "Used when the layout above is stacked. Tablet uses its own column count."
+      "info": "t:sections.kf-testimonials.settings.columns_mobile.info"
     },
     {
       "type": "range",
       "id": "avatar_size",
-      "label": "Avatar size",
+      "label": "t:sections.kf-testimonials.settings.avatar_size.label",
       "min": 32,
       "max": 72,
       "step": 4,
@@ -334,24 +376,36 @@
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-testimonials.settings.header__3.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Card animation",
+      "label": "t:sections.kf-testimonials.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-testimonials.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-testimonials.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-testimonials.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-testimonials.settings.animation.options__4.label"
+        }
       ],
       "default": "fade-up"
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-testimonials.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -360,30 +414,39 @@
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-testimonials.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-testimonials.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-testimonials.settings.section_transition.label",
+      "info": "t:sections.kf-testimonials.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-testimonials.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-testimonials.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-testimonials.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-testimonials.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -393,7 +456,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-testimonials.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -404,52 +467,64 @@
   "blocks": [
     {
       "type": "testimonial",
-      "name": "Testimonial",
+      "name": "t:sections.kf-testimonials.blocks.testimonial.name",
       "limit": 12,
       "settings": [
         {
           "type": "richtext",
           "id": "quote",
-          "label": "Quote",
+          "label": "t:sections.kf-testimonials.blocks.testimonial.settings.quote.label",
           "default": "<p>Genuinely the best thing I have bought this year. It arrived faster than I expected and it has not left my side since.</p>"
         },
         {
           "type": "text",
           "id": "author",
-          "label": "Name",
+          "label": "t:sections.kf-testimonials.blocks.testimonial.settings.author.label",
           "default": "Sam R."
         },
         {
           "type": "text",
           "id": "meta",
-          "label": "Detail",
-          "info": "A location, a job title, or which product they bought."
+          "label": "t:sections.kf-testimonials.blocks.testimonial.settings.meta.label",
+          "info": "t:sections.kf-testimonials.blocks.testimonial.settings.meta.info"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Photo"
+          "label": "t:sections.kf-testimonials.blocks.testimonial.settings.image.label"
         },
         {
           "type": "range",
           "id": "rating",
-          "label": "Rating",
+          "label": "t:sections.kf-testimonials.blocks.testimonial.settings.rating.label",
           "min": 0,
           "max": 5,
           "step": 1,
           "default": 5,
-          "info": "Set to 0 to leave the stars off this card."
+          "info": "t:sections.kf-testimonials.blocks.testimonial.settings.rating.info"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Testimonials",
+      "name": "t:sections.kf-testimonials.presets.name",
       "blocks": [
-        { "type": "testimonial" },
-        { "type": "testimonial", "settings": { "author": "Alex M." } },
-        { "type": "testimonial", "settings": { "author": "Jordan P." } }
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "author": "Alex M."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "author": "Jordan P."
+          }
+        }
       ]
     }
   ]

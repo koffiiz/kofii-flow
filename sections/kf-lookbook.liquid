@@ -238,156 +238,216 @@
 
 {% schema %}
 {
-  "name": "Lookbook",
+  "name": "t:sections.kf-lookbook.name",
   "tag": "section",
   "class": "kf-lookbook-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-lookbook.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-lookbook.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-lookbook.settings.heading.label",
       "default": "Shop the look"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-lookbook.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-lookbook.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-lookbook.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-lookbook.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text"
+      "label": "t:sections.kf-lookbook.settings.text.label"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Heading alignment",
+      "label": "t:sections.kf-lookbook.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-lookbook.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-lookbook.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "header",
-      "content": "Interaction"
+      "content": "t:sections.kf-lookbook.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "interaction",
-      "label": "Interaction",
+      "label": "t:sections.kf-lookbook.settings.interaction.label",
       "options": [
-        { "value": "hotspots", "label": "Hotspots" },
-        { "value": "tour", "label": "Guided tour" }
+        {
+          "value": "hotspots",
+          "label": "t:sections.kf-lookbook.settings.interaction.options__1.label"
+        },
+        {
+          "value": "tour",
+          "label": "t:sections.kf-lookbook.settings.interaction.options__2.label"
+        }
       ],
       "default": "hotspots",
-      "info": "Hotspots: tapping a pin opens its product card. Guided tour: the image zooms to each product as it scrolls past, which takes about one screen of scrolling per product."
+      "info": "t:sections.kf-lookbook.settings.interaction.info"
     },
     {
       "type": "range",
       "id": "tour_zoom",
-      "label": "Guided tour zoom",
+      "label": "t:sections.kf-lookbook.settings.tour_zoom.label",
       "min": 100,
       "max": 160,
       "step": 5,
       "unit": "%",
       "default": 140,
-      "info": "Use a large, sharp image. Zooming crops into the original file, so a small image will look soft."
+      "info": "t:sections.kf-lookbook.settings.tour_zoom.info"
     },
     {
       "type": "select",
       "id": "tour_media_position",
-      "label": "Guided tour image position",
+      "label": "t:sections.kf-lookbook.settings.tour_media_position.label",
       "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" }
+        {
+          "value": "left",
+          "label": "t:sections.kf-lookbook.settings.tour_media_position.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.kf-lookbook.settings.tour_media_position.options__2.label"
+        }
       ],
       "default": "left",
-      "info": "Applies from 990px up. Below that the image sits above the products."
+      "info": "t:sections.kf-lookbook.settings.tour_media_position.info"
     },
     {
       "type": "select",
       "id": "tour_steps_alignment",
-      "label": "Guided tour product alignment",
+      "label": "t:sections.kf-lookbook.settings.tour_steps_alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "end", "label": "Right" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-lookbook.settings.tour_steps_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-lookbook.settings.tour_steps_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-lookbook.settings.tour_steps_alignment.options__3.label"
+        }
       ],
       "default": "center",
-      "info": "Where each product card sits in its column. Applies from 990px up."
+      "info": "t:sections.kf-lookbook.settings.tour_steps_alignment.info"
     },
     {
       "type": "checkbox",
       "id": "tour_dim",
-      "label": "Dim the products you are not on",
+      "label": "t:sections.kf-lookbook.settings.tour_dim.label",
       "default": false,
-      "info": "More editorial, but it also dims prices and add-to-cart buttons."
+      "info": "t:sections.kf-lookbook.settings.tour_dim.info"
     },
     {
       "type": "header",
-      "content": "Image"
+      "content": "t:sections.kf-lookbook.settings.header__3.content"
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image",
-      "info": "Add a hotspot for each product in the shot, then drag its position with the X and Y sliders."
+      "label": "t:sections.kf-lookbook.settings.image.label",
+      "info": "t:sections.kf-lookbook.settings.image.info"
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.kf-lookbook.settings.media_ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.kf-lookbook.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.kf-lookbook.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-lookbook.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-lookbook.settings.media_ratio.options__4.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-lookbook.settings.media_ratio.options__5.label"
+        }
       ],
       "default": "landscape"
     },
     {
       "type": "select",
       "id": "hotspot_style",
-      "label": "Hotspot style",
+      "label": "t:sections.kf-lookbook.settings.hotspot_style.label",
       "options": [
-        { "value": "dot", "label": "Dot" },
-        { "value": "plus", "label": "Plus" },
-        { "value": "number", "label": "Number" }
+        {
+          "value": "dot",
+          "label": "t:sections.kf-lookbook.settings.hotspot_style.options__1.label"
+        },
+        {
+          "value": "plus",
+          "label": "t:sections.kf-lookbook.settings.hotspot_style.options__2.label"
+        },
+        {
+          "value": "number",
+          "label": "t:sections.kf-lookbook.settings.hotspot_style.options__3.label"
+        }
       ],
       "default": "plus"
     },
     {
       "type": "header",
-      "content": "Product list"
+      "content": "t:sections.kf-lookbook.settings.header__4.content"
     },
     {
       "type": "checkbox",
       "id": "show_products",
-      "label": "Also list the products below the image",
+      "label": "t:sections.kf-lookbook.settings.show_products.label",
       "default": false,
-      "info": "Hotspots only — the guided tour already lists them. Useful when the image has many pins, or on small screens where they are fiddly."
+      "info": "t:sections.kf-lookbook.settings.show_products.info"
     },
     {
       "type": "range",
       "id": "products_columns",
-      "label": "Columns on desktop",
+      "label": "t:sections.kf-lookbook.settings.products_columns.label",
       "min": 2,
       "max": 5,
       "step": 1,
@@ -395,46 +455,67 @@
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-lookbook.settings.header__5.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Product list animation",
+      "label": "t:sections.kf-lookbook.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-lookbook.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-lookbook.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-lookbook.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-lookbook.settings.animation.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-lookbook.settings.header__6.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-lookbook.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-lookbook.settings.section_transition.label",
+      "info": "t:sections.kf-lookbook.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-lookbook.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-lookbook.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-lookbook.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-lookbook.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -444,7 +525,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-lookbook.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -455,18 +536,18 @@
   "blocks": [
     {
       "type": "hotspot",
-      "name": "Hotspot",
+      "name": "t:sections.kf-lookbook.blocks.hotspot.name",
       "limit": 8,
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "Product"
+          "label": "t:sections.kf-lookbook.blocks.hotspot.settings.product.label"
         },
         {
           "type": "range",
           "id": "x",
-          "label": "Horizontal position",
+          "label": "t:sections.kf-lookbook.blocks.hotspot.settings.x.label",
           "min": 0,
           "max": 100,
           "step": 1,
@@ -476,7 +557,7 @@
         {
           "type": "range",
           "id": "y",
-          "label": "Vertical position",
+          "label": "t:sections.kf-lookbook.blocks.hotspot.settings.y.label",
           "min": 0,
           "max": 100,
           "step": 1,
@@ -488,10 +569,22 @@
   ],
   "presets": [
     {
-      "name": "Lookbook",
+      "name": "t:sections.kf-lookbook.presets.name",
       "blocks": [
-        { "type": "hotspot", "settings": { "x": 32, "y": 38 } },
-        { "type": "hotspot", "settings": { "x": 64, "y": 62 } }
+        {
+          "type": "hotspot",
+          "settings": {
+            "x": 32,
+            "y": 38
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "x": 64,
+            "y": 62
+          }
+        }
       ]
     }
   ]

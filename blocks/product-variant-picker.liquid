@@ -29,36 +29,52 @@
 
 {% schema %}
 {
-  "name": "Variant picker",
+  "name": "t:blocks.product-variant-picker.name",
   "tag": null,
   "settings": [
     {
       "type": "select",
       "id": "style",
-      "label": "Style",
+      "label": "t:blocks.product-variant-picker.settings.style.label",
       "options": [
-        { "value": "auto", "label": "Automatic" },
-        { "value": "buttons", "label": "Buttons" },
-        { "value": "swatches", "label": "Swatches" },
-        { "value": "dropdown", "label": "Dropdowns" }
+        {
+          "value": "auto",
+          "label": "t:blocks.product-variant-picker.settings.style.options__1.label"
+        },
+        {
+          "value": "buttons",
+          "label": "t:blocks.product-variant-picker.settings.style.options__2.label"
+        },
+        {
+          "value": "swatches",
+          "label": "t:blocks.product-variant-picker.settings.style.options__3.label"
+        },
+        {
+          "value": "dropdown",
+          "label": "t:blocks.product-variant-picker.settings.style.options__4.label"
+        }
       ],
       "default": "auto",
-      "info": "Automatic uses swatches for options that have them in your product settings, and buttons for the rest."
+      "info": "t:blocks.product-variant-picker.settings.style.info"
     },
     {
       "type": "checkbox",
       "id": "show_selected_value",
-      "label": "Show the selected value beside the option name",
+      "label": "t:blocks.product-variant-picker.settings.show_selected_value.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "update_url",
-      "label": "Update the page address when a variant is chosen",
+      "label": "t:blocks.product-variant-picker.settings.update_url.label",
       "default": true,
-      "info": "Lets shoppers share or bookmark a link to a specific variant."
+      "info": "t:blocks.product-variant-picker.settings.update_url.info"
     }
   ],
-  "presets": [{ "name": "Variant picker" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-variant-picker.presets.name"
+    }
+  ]
 }
 {% endschema %}

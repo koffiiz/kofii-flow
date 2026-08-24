@@ -29,53 +29,86 @@
 
 {% schema %}
 {
-  "name": "Product title",
+  "name": "t:blocks.product-title.name",
   "tag": null,
   "settings": [
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Size",
+      "label": "t:blocks.product-title.settings.heading_size.label",
       "options": [
-        { "value": "kf-h4", "label": "Small" },
-        { "value": "kf-h3", "label": "Medium" },
-        { "value": "kf-h2", "label": "Large" },
-        { "value": "kf-h1", "label": "Extra large" }
+        {
+          "value": "kf-h4",
+          "label": "t:blocks.product-title.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:blocks.product-title.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:blocks.product-title.settings.heading_size.options__3.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:blocks.product-title.settings.heading_size.options__4.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "select",
       "id": "heading_tag",
-      "label": "Heading level",
-      "info": "The product title should normally be the H1 of a product page.",
+      "label": "t:blocks.product-title.settings.heading_tag.label",
+      "info": "t:blocks.product-title.settings.heading_tag.info",
       "options": [
-        { "value": "h1", "label": "H1" },
-        { "value": "h2", "label": "H2" },
-        { "value": "h3", "label": "H3" }
+        {
+          "value": "h1",
+          "label": "t:blocks.product-title.settings.heading_tag.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:blocks.product-title.settings.heading_tag.options__2.label"
+        },
+        {
+          "value": "h3",
+          "label": "t:blocks.product-title.settings.heading_tag.options__3.label"
+        }
       ],
       "default": "h1"
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.product-title.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.product-title.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "reveal", "label": "Editorial reveal" }
+        {
+          "value": "none",
+          "label": "t:blocks.product-title.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.product-title.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.product-title.settings.animation.options__3.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:blocks.product-title.settings.animation.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.product-title.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -83,6 +116,10 @@
       "default": 0
     }
   ],
-  "presets": [{ "name": "Product title" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-title.presets.name"
+    }
+  ]
 }
 {% endschema %}

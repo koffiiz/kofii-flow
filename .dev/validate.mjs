@@ -115,6 +115,21 @@ function checkRange(setting, relPath, scope) {
   if (typeof value === 'number' && (value < min || value > max)) {
     fail(relPath, `${where} has default ${value} outside ${min}–${max}`);
   }
+
+  // Being inside the range is not enough — the default has to land ON one of
+  // the steps. min 40 / max 90 / step 5 offers 40, 45 … 70; a default of 68 is
+  // in range, looks entirely reasonable, and is rejected on upload with
+  // "default must be a step in the range".
+  if (typeof value === 'number' && step > 0 && value >= min && value <= max) {
+    const offset = (value - min) / step;
+    if (Math.abs(offset - Math.round(offset)) > 1e-9) {
+      const below = min + Math.floor(offset) * step;
+      fail(
+        relPath,
+        `${where} has default ${value}, which is not a step of ${step} from ${min} — use ${below} or ${below + step}`
+      );
+    }
+  }
 }
 
 /**

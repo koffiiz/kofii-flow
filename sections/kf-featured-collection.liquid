@@ -255,50 +255,59 @@
 
 {% schema %}
 {
-  "name": "Featured collection",
+  "name": "t:sections.kf-featured-collection.name",
   "tag": "section",
   "class": "kf-featured-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-featured-collection.settings.header__1.content"
     },
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection"
+      "label": "t:sections.kf-featured-collection.settings.collection.label"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-featured-collection.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-featured-collection.settings.heading.label",
       "default": "Best sellers"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-featured-collection.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-featured-collection.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-featured-collection.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-featured-collection.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "richtext",
       "id": "subheading",
-      "label": "Text"
+      "label": "t:sections.kf-featured-collection.settings.subheading.label"
     },
     {
       "type": "range",
       "id": "products_to_show",
-      "label": "Products to show",
+      "label": "t:sections.kf-featured-collection.settings.products_to_show.label",
       "min": 2,
       "max": 24,
       "step": 1,
@@ -306,23 +315,32 @@
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-featured-collection.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.kf-featured-collection.settings.layout.label",
       "options": [
-        { "value": "grid", "label": "Grid" },
-        { "value": "carousel", "label": "Carousel with arrows" },
-        { "value": "scroll", "label": "Horizontal scroll" }
+        {
+          "value": "grid",
+          "label": "t:sections.kf-featured-collection.settings.layout.options__1.label"
+        },
+        {
+          "value": "carousel",
+          "label": "t:sections.kf-featured-collection.settings.layout.options__2.label"
+        },
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-featured-collection.settings.layout.options__3.label"
+        }
       ],
       "default": "grid"
     },
     {
       "type": "range",
       "id": "columns_desktop",
-      "label": "Columns on desktop",
+      "label": "t:sections.kf-featured-collection.settings.columns_desktop.label",
       "min": 2,
       "max": 5,
       "step": 1,
@@ -331,103 +349,160 @@
     {
       "type": "select",
       "id": "columns_mobile",
-      "label": "Columns on mobile",
-      "info": "Applies to the grid layout. The scrolling layouts always show one and a bit.",
+      "label": "t:sections.kf-featured-collection.settings.columns_mobile.label",
+      "info": "t:sections.kf-featured-collection.settings.columns_mobile.info",
       "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
+        {
+          "value": "1",
+          "label": "t:sections.kf-featured-collection.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.kf-featured-collection.settings.columns_mobile.options__2.label"
+        }
       ],
       "default": "2"
     },
     {
       "type": "checkbox",
       "id": "show_arrows",
-      "label": "Show arrows",
-      "info": "Applies to the carousel and horizontal scroll layouts. With arrows off, a slim scrollbar is shown instead — a mouse cannot scroll a horizontal row without one.",
+      "label": "t:sections.kf-featured-collection.settings.show_arrows.label",
+      "info": "t:sections.kf-featured-collection.settings.show_arrows.info",
       "default": true
     },
     {
       "type": "select",
       "id": "pagination",
-      "label": "Pagination",
-      "info": "Applies to the carousel and horizontal scroll layouts. A progress pill is the better choice when there are more than a handful of products.",
+      "label": "t:sections.kf-featured-collection.settings.pagination.label",
+      "info": "t:sections.kf-featured-collection.settings.pagination.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "progress", "label": "Progress pill" },
-        { "value": "dots", "label": "Dots" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-featured-collection.settings.pagination.options__1.label"
+        },
+        {
+          "value": "progress",
+          "label": "t:sections.kf-featured-collection.settings.pagination.options__2.label"
+        },
+        {
+          "value": "dots",
+          "label": "t:sections.kf-featured-collection.settings.pagination.options__3.label"
+        }
       ],
       "default": "progress"
     },
     {
       "type": "header",
-      "content": "Cards"
+      "content": "t:sections.kf-featured-collection.settings.header__3.content"
     },
     {
       "type": "paragraph",
-      "content": "Vendor, ratings, swatches and badges are set once for the whole theme in Theme settings > Media and cards."
+      "content": "t:sections.kf-featured-collection.settings.paragraph__4.content"
     },
     {
       "type": "select",
       "id": "image_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.kf-featured-collection.settings.image_ratio.label",
       "options": [
-        { "value": "default", "label": "Theme default" },
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "tall", "label": "Tall (3:4)" },
-        { "value": "landscape", "label": "Landscape (4:3)" }
+        {
+          "value": "default",
+          "label": "t:sections.kf-featured-collection.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "adapt",
+          "label": "t:sections.kf-featured-collection.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.kf-featured-collection.settings.image_ratio.options__3.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-featured-collection.settings.image_ratio.options__4.label"
+        },
+        {
+          "value": "tall",
+          "label": "t:sections.kf-featured-collection.settings.image_ratio.options__5.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-featured-collection.settings.image_ratio.options__6.label"
+        }
       ],
       "default": "default"
     },
     {
       "type": "header",
-      "content": "View all"
+      "content": "t:sections.kf-featured-collection.settings.header__5.content"
     },
     {
       "type": "checkbox",
       "id": "show_view_all",
-      "label": "Show a link to the collection",
+      "label": "t:sections.kf-featured-collection.settings.show_view_all.label",
       "default": true
     },
     {
       "type": "text",
       "id": "view_all_label",
-      "label": "Link label",
-      "info": "Leave blank to use the theme default."
+      "label": "t:sections.kf-featured-collection.settings.view_all_label.label",
+      "info": "t:sections.kf-featured-collection.settings.view_all_label.info"
     },
     {
       "type": "select",
       "id": "view_all_style",
-      "label": "Link style",
+      "label": "t:sections.kf-featured-collection.settings.view_all_style.label",
       "options": [
-        { "value": "primary", "label": "Solid" },
-        { "value": "secondary", "label": "Outline" },
-        { "value": "plain", "label": "Text link" }
+        {
+          "value": "primary",
+          "label": "t:sections.kf-featured-collection.settings.view_all_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.kf-featured-collection.settings.view_all_style.options__2.label"
+        },
+        {
+          "value": "plain",
+          "label": "t:sections.kf-featured-collection.settings.view_all_style.options__3.label"
+        }
       ],
       "default": "plain"
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-featured-collection.settings.header__6.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Card animation",
+      "label": "t:sections.kf-featured-collection.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-featured-collection.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-featured-collection.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-featured-collection.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-featured-collection.settings.animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-featured-collection.settings.animation.options__5.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-featured-collection.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -437,64 +512,106 @@
     {
       "type": "select",
       "id": "animation_duration",
-      "label": "Duration",
+      "label": "t:sections.kf-featured-collection.settings.animation_duration.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "fast", "label": "Fast" },
-        { "value": "normal", "label": "Normal" },
-        { "value": "slow", "label": "Slow" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-featured-collection.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-featured-collection.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-featured-collection.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-featured-collection.settings.animation_duration.options__4.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_easing",
-      "label": "Easing",
+      "label": "t:sections.kf-featured-collection.settings.animation_easing.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "standard", "label": "Standard" },
-        { "value": "smooth", "label": "Smooth" },
-        { "value": "out", "label": "Ease out" },
-        { "value": "spring", "label": "Spring-like" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-featured-collection.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-featured-collection.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-featured-collection.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-featured-collection.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-featured-collection.settings.animation_easing.options__5.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_trigger",
-      "label": "Trigger",
+      "label": "t:sections.kf-featured-collection.settings.animation_trigger.label",
       "options": [
-        { "value": "scroll", "label": "On scroll" },
-        { "value": "load", "label": "On load" }
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-featured-collection.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-featured-collection.settings.animation_trigger.options__2.label"
+        }
       ],
       "default": "scroll"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-featured-collection.settings.header__7.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-featured-collection.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-featured-collection.settings.section_transition.label",
+      "info": "t:sections.kf-featured-collection.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-featured-collection.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-featured-collection.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-featured-collection.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-featured-collection.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -504,7 +621,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-featured-collection.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -514,7 +631,7 @@
   ],
   "presets": [
     {
-      "name": "Featured collection"
+      "name": "t:sections.kf-featured-collection.presets.name"
     }
   ]
 }

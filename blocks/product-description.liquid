@@ -49,22 +49,26 @@
 
 {% schema %}
 {
-  "name": "Description",
+  "name": "t:blocks.product-description.name",
   "tag": null,
   "settings": [
     {
       "type": "text",
       "id": "heading",
-      "label": "Heading"
+      "label": "t:blocks.product-description.settings.heading.label"
     },
     {
       "type": "checkbox",
       "id": "collapse",
-      "label": "Collapse long descriptions",
+      "label": "t:blocks.product-description.settings.collapse.label",
       "default": false,
-      "info": "Shows the first 40 words with a Read more toggle. The full text stays in the page for SEO."
+      "info": "t:blocks.product-description.settings.collapse.info"
     }
   ],
-  "presets": [{ "name": "Description" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-description.presets.name"
+    }
+  ]
 }
 {% endschema %}

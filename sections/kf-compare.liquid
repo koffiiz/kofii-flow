@@ -110,132 +110,171 @@
 
 {% schema %}
 {
-  "name": "Before and after",
+  "name": "t:sections.kf-compare.name",
   "tag": "section",
   "class": "kf-compare-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-compare.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-compare.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-compare.settings.heading.label",
       "default": "See the difference"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-compare.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-compare.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-compare.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-compare.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text"
+      "label": "t:sections.kf-compare.settings.text.label"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Heading alignment",
+      "label": "t:sections.kf-compare.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-compare.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-compare.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "header",
-      "content": "Images"
+      "content": "t:sections.kf-compare.settings.header__2.content"
     },
     {
       "type": "image_picker",
       "id": "image_before",
-      "label": "Before image"
+      "label": "t:sections.kf-compare.settings.image_before.label"
     },
     {
       "type": "image_picker",
       "id": "image_after",
-      "label": "After image",
-      "info": "Shoot both from the same position and at the same size, or the divider will look like it is moving the subject."
+      "label": "t:sections.kf-compare.settings.image_after.label",
+      "info": "t:sections.kf-compare.settings.image_after.info"
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.kf-compare.settings.media_ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to the before image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.kf-compare.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.kf-compare.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-compare.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-compare.settings.media_ratio.options__4.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-compare.settings.media_ratio.options__5.label"
+        }
       ],
       "default": "landscape"
     },
     {
       "type": "text",
       "id": "label_before",
-      "label": "Before label",
+      "label": "t:sections.kf-compare.settings.label_before.label",
       "default": "Before"
     },
     {
       "type": "text",
       "id": "label_after",
-      "label": "After label",
+      "label": "t:sections.kf-compare.settings.label_after.label",
       "default": "After"
     },
     {
       "type": "header",
-      "content": "Behaviour"
+      "content": "t:sections.kf-compare.settings.header__3.content"
     },
     {
       "type": "range",
       "id": "start_position",
-      "label": "Starting position",
+      "label": "t:sections.kf-compare.settings.start_position.label",
       "min": 0,
       "max": 100,
       "step": 5,
       "unit": "%",
       "default": 50,
-      "info": "Where the divider sits before anyone touches it. This is also what visitors without JavaScript see."
+      "info": "t:sections.kf-compare.settings.start_position.info"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-compare.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-compare.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-compare.settings.section_transition.label",
+      "info": "t:sections.kf-compare.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-compare.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-compare.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-compare.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-compare.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -245,7 +284,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-compare.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -255,7 +294,7 @@
   ],
   "presets": [
     {
-      "name": "Before and after"
+      "name": "t:sections.kf-compare.presets.name"
     }
   ]
 }

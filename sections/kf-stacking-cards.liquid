@@ -186,235 +186,310 @@
 
 {% schema %}
 {
-  "name": "Stacking cards",
+  "name": "t:sections.kf-stacking-cards.name",
   "tag": "section",
   "class": "kf-stack-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-stacking-cards.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-stacking-cards.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-stacking-cards.settings.heading.label",
       "default": "How it works"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-stacking-cards.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-stacking-cards.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-stacking-cards.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-stacking-cards.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text"
+      "label": "t:sections.kf-stacking-cards.settings.text.label"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Heading alignment",
+      "label": "t:sections.kf-stacking-cards.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-stacking-cards.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-stacking-cards.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "select",
       "id": "header_position",
-      "label": "Heading position",
+      "label": "t:sections.kf-stacking-cards.settings.header_position.label",
       "options": [
-        { "value": "side", "label": "Pinned beside the cards" },
-        { "value": "above", "label": "Above the cards" }
+        {
+          "value": "side",
+          "label": "t:sections.kf-stacking-cards.settings.header_position.options__1.label"
+        },
+        {
+          "value": "above",
+          "label": "t:sections.kf-stacking-cards.settings.header_position.options__2.label"
+        }
       ],
       "default": "side",
-      "info": "Applies from 990px up. Pinned holds the heading still beside the deck while the cards stack past it."
+      "info": "t:sections.kf-stacking-cards.settings.header_position.info"
     },
     {
       "type": "checkbox",
       "id": "header_pin_mobile",
-      "label": "Also pin the heading on mobile",
+      "label": "t:sections.kf-stacking-cards.settings.header_pin_mobile.label",
       "default": false,
-      "info": "Off by default. A pinned bar takes about a fifth of a phone screen for the whole section, and the card numbers already show where you are. Worth turning on for a short two or three word heading."
+      "info": "t:sections.kf-stacking-cards.settings.header_pin_mobile.info"
     },
     {
       "type": "range",
       "id": "header_reserve_mobile",
-      "label": "Space for the pinned heading on mobile",
+      "label": "t:sections.kf-stacking-cards.settings.header_reserve_mobile.label",
       "min": 48,
       "max": 220,
       "step": 4,
       "unit": "px",
       "default": 96,
-      "info": "Only used when the heading is pinned on mobile. How far down the cards start, to clear it — raise it for a two-line heading or one with text under it."
+      "info": "t:sections.kf-stacking-cards.settings.header_reserve_mobile.info"
     },
     {
       "type": "checkbox",
       "id": "show_numbers",
-      "label": "Number the cards",
+      "label": "t:sections.kf-stacking-cards.settings.show_numbers.label",
       "default": true
     },
     {
       "type": "select",
       "id": "card_heading_size",
-      "label": "Card heading size",
+      "label": "t:sections.kf-stacking-cards.settings.card_heading_size.label",
       "options": [
-        { "value": "kf-h4", "label": "Small" },
-        { "value": "kf-h3", "label": "Medium" },
-        { "value": "kf-h2", "label": "Large" }
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-stacking-cards.settings.card_heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-stacking-cards.settings.card_heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-stacking-cards.settings.card_heading_size.options__3.label"
+        }
       ],
       "default": "kf-h3"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-stacking-cards.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "card_layout",
-      "label": "Card layout",
+      "label": "t:sections.kf-stacking-cards.settings.card_layout.label",
       "options": [
-        { "value": "media-start", "label": "Image on the left" },
-        { "value": "media-end", "label": "Image on the right" },
-        { "value": "alternate", "label": "Alternate sides" },
-        { "value": "stacked", "label": "Image above the text" }
+        {
+          "value": "media-start",
+          "label": "t:sections.kf-stacking-cards.settings.card_layout.options__1.label"
+        },
+        {
+          "value": "media-end",
+          "label": "t:sections.kf-stacking-cards.settings.card_layout.options__2.label"
+        },
+        {
+          "value": "alternate",
+          "label": "t:sections.kf-stacking-cards.settings.card_layout.options__3.label"
+        },
+        {
+          "value": "stacked",
+          "label": "t:sections.kf-stacking-cards.settings.card_layout.options__4.label"
+        }
       ],
       "default": "media-start",
-      "info": "Cards without an image are always a single column."
+      "info": "t:sections.kf-stacking-cards.settings.card_layout.info"
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.kf-stacking-cards.settings.media_ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.kf-stacking-cards.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.kf-stacking-cards.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-stacking-cards.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-stacking-cards.settings.media_ratio.options__4.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-stacking-cards.settings.media_ratio.options__5.label"
+        }
       ],
       "default": "landscape"
     },
     {
       "type": "range",
       "id": "card_height",
-      "label": "Minimum card height",
+      "label": "t:sections.kf-stacking-cards.settings.card_height.label",
       "min": 200,
       "max": 700,
       "step": 20,
       "unit": "px",
       "default": 380,
-      "info": "Desktop and tablet. Mobile uses a share of the screen instead."
+      "info": "t:sections.kf-stacking-cards.settings.card_height.info"
     },
     {
       "type": "range",
       "id": "card_height_mobile",
-      "label": "Card height on mobile",
+      "label": "t:sections.kf-stacking-cards.settings.card_height_mobile.label",
       "min": 40,
       "max": 90,
       "step": 5,
       "unit": "%",
-      "default": 68,
-      "info": "Share of the screen each card fills, so one card reads as roughly one screen on any phone."
+      "default": 70,
+      "info": "t:sections.kf-stacking-cards.settings.card_height_mobile.info"
     },
     {
       "type": "header",
-      "content": "Stacking"
+      "content": "t:sections.kf-stacking-cards.settings.header__3.content"
     },
     {
       "type": "select",
       "id": "stack_path",
-      "label": "Direction the deck fans",
+      "label": "t:sections.kf-stacking-cards.settings.stack_path.label",
       "options": [
-        { "value": "vertical", "label": "Down" },
-        { "value": "horizontal", "label": "Sideways" },
-        { "value": "diagonal", "label": "Down and sideways" }
+        {
+          "value": "vertical",
+          "label": "t:sections.kf-stacking-cards.settings.stack_path.options__1.label"
+        },
+        {
+          "value": "horizontal",
+          "label": "t:sections.kf-stacking-cards.settings.stack_path.options__2.label"
+        },
+        {
+          "value": "diagonal",
+          "label": "t:sections.kf-stacking-cards.settings.stack_path.options__3.label"
+        }
       ],
       "default": "vertical",
-      "info": "Sideways and diagonal narrow the cards to keep the fan inside the page, and both fall back to Down below 750px where there is no width to spare."
+      "info": "t:sections.kf-stacking-cards.settings.stack_path.info"
     },
     {
       "type": "range",
       "id": "stack_step",
-      "label": "Offset between cards",
+      "label": "t:sections.kf-stacking-cards.settings.stack_step.label",
       "min": 0,
       "max": 64,
       "step": 4,
       "unit": "px",
       "default": 24,
-      "info": "How much of each card stays visible once the next one covers it. Set to 0 to stack them exactly on top of each other."
+      "info": "t:sections.kf-stacking-cards.settings.stack_step.info"
     },
     {
       "type": "range",
       "id": "stack_offset",
-      "label": "Distance from the top",
+      "label": "t:sections.kf-stacking-cards.settings.stack_offset.label",
       "min": 0,
       "max": 160,
       "step": 8,
       "unit": "px",
       "default": 32,
-      "info": "Measured below the sticky header, if you have one."
+      "info": "t:sections.kf-stacking-cards.settings.stack_offset.info"
     },
     {
       "type": "range",
       "id": "card_gap",
-      "label": "Scroll between cards",
+      "label": "t:sections.kf-stacking-cards.settings.card_gap.label",
       "min": 40,
       "max": 400,
       "step": 20,
       "unit": "px",
       "default": 160,
-      "info": "How far you scroll before the next card arrives. This section uses roughly one card height of scroll per card, so keep the number of cards low."
+      "info": "t:sections.kf-stacking-cards.settings.card_gap.info"
     },
     {
       "type": "range",
       "id": "stack_end",
-      "label": "Hold at the end",
+      "label": "t:sections.kf-stacking-cards.settings.stack_end.label",
       "min": 40,
       "max": 600,
       "step": 20,
       "unit": "px",
       "default": 240,
-      "info": "How long the finished deck stays on screen before the section scrolls away. The last card needs some of this to settle at all."
+      "info": "t:sections.kf-stacking-cards.settings.stack_end.info"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-stacking-cards.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Section color scheme",
+      "label": "t:sections.kf-stacking-cards.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-stacking-cards.settings.section_transition.label",
+      "info": "t:sections.kf-stacking-cards.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-stacking-cards.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-stacking-cards.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-stacking-cards.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-stacking-cards.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -424,7 +499,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-stacking-cards.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -435,56 +510,65 @@
   "blocks": [
     {
       "type": "card",
-      "name": "Card",
+      "name": "t:sections.kf-stacking-cards.blocks.card.name",
       "limit": 8,
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.image.label"
         },
         {
           "type": "text",
           "id": "eyebrow",
-          "label": "Eyebrow"
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.eyebrow.label"
         },
         {
           "type": "inline_richtext",
           "id": "heading",
-          "label": "Heading",
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.heading.label",
           "default": "Pick your pieces"
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "Text",
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.text.label",
           "default": "<p>A sentence or two on what happens at this step, and why it matters.</p>"
         },
         {
           "type": "text",
           "id": "link_label",
-          "label": "Link label"
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.link_label.label"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.link.label"
         },
         {
           "type": "select",
           "id": "link_style",
-          "label": "Link style",
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.link_style.label",
           "options": [
-            { "value": "plain", "label": "Text link" },
-            { "value": "secondary", "label": "Outlined button" },
-            { "value": "primary", "label": "Solid button" }
+            {
+              "value": "plain",
+              "label": "t:sections.kf-stacking-cards.blocks.card.settings.link_style.options__1.label"
+            },
+            {
+              "value": "secondary",
+              "label": "t:sections.kf-stacking-cards.blocks.card.settings.link_style.options__2.label"
+            },
+            {
+              "value": "primary",
+              "label": "t:sections.kf-stacking-cards.blocks.card.settings.link_style.options__3.label"
+            }
           ],
           "default": "plain"
         },
         {
           "type": "color_scheme",
           "id": "color_scheme",
-          "label": "Card color scheme",
+          "label": "t:sections.kf-stacking-cards.blocks.card.settings.color_scheme.label",
           "default": "scheme-1"
         }
       ]
@@ -492,11 +576,26 @@
   ],
   "presets": [
     {
-      "name": "Stacking cards",
+      "name": "t:sections.kf-stacking-cards.presets.name",
       "blocks": [
-        { "type": "card", "settings": { "heading": "Pick your pieces" } },
-        { "type": "card", "settings": { "heading": "We make them to order" } },
-        { "type": "card", "settings": { "heading": "Delivered in two weeks" } }
+        {
+          "type": "card",
+          "settings": {
+            "heading": "Pick your pieces"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "heading": "We make them to order"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "heading": "Delivered in two weeks"
+          }
+        }
       ]
     }
   ]

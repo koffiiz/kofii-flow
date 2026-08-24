@@ -168,143 +168,236 @@
 
 {% schema %}
 {
-  "name": "Hero",
+  "name": "t:sections.kf-hero.name",
   "tag": "section",
   "class": "kf-hero-section",
   "settings": [
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-hero.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.kf-hero.settings.layout.label",
       "options": [
-        { "value": "media-background", "label": "Media background" },
-        { "value": "split", "label": "Split — content left" },
-        { "value": "split-reverse", "label": "Split — content right" },
-        { "value": "stacked", "label": "Stacked" },
-        { "value": "centered", "label": "Centered" },
-        { "value": "editorial", "label": "Editorial" },
-        { "value": "minimal", "label": "Minimal" }
+        {
+          "value": "media-background",
+          "label": "t:sections.kf-hero.settings.layout.options__1.label"
+        },
+        {
+          "value": "split",
+          "label": "t:sections.kf-hero.settings.layout.options__2.label"
+        },
+        {
+          "value": "split-reverse",
+          "label": "t:sections.kf-hero.settings.layout.options__3.label"
+        },
+        {
+          "value": "stacked",
+          "label": "t:sections.kf-hero.settings.layout.options__4.label"
+        },
+        {
+          "value": "centered",
+          "label": "t:sections.kf-hero.settings.layout.options__5.label"
+        },
+        {
+          "value": "editorial",
+          "label": "t:sections.kf-hero.settings.layout.options__6.label"
+        },
+        {
+          "value": "minimal",
+          "label": "t:sections.kf-hero.settings.layout.options__7.label"
+        }
       ],
       "default": "media-background"
     },
     {
       "type": "select",
       "id": "height_desktop",
-      "label": "Height on desktop",
+      "label": "t:sections.kf-hero.settings.height_desktop.label",
       "options": [
-        { "value": "auto", "label": "Fit content" },
-        { "value": "sm", "label": "Small" },
-        { "value": "md", "label": "Medium" },
-        { "value": "lg", "label": "Large" },
-        { "value": "full", "label": "Full screen" }
+        {
+          "value": "auto",
+          "label": "t:sections.kf-hero.settings.height_desktop.options__1.label"
+        },
+        {
+          "value": "sm",
+          "label": "t:sections.kf-hero.settings.height_desktop.options__2.label"
+        },
+        {
+          "value": "md",
+          "label": "t:sections.kf-hero.settings.height_desktop.options__3.label"
+        },
+        {
+          "value": "lg",
+          "label": "t:sections.kf-hero.settings.height_desktop.options__4.label"
+        },
+        {
+          "value": "full",
+          "label": "t:sections.kf-hero.settings.height_desktop.options__5.label"
+        }
       ],
       "default": "lg"
     },
     {
       "type": "select",
       "id": "height_mobile",
-      "label": "Height on mobile",
+      "label": "t:sections.kf-hero.settings.height_mobile.label",
       "options": [
-        { "value": "auto", "label": "Fit content" },
-        { "value": "sm", "label": "Small" },
-        { "value": "md", "label": "Medium" },
-        { "value": "lg", "label": "Large" },
-        { "value": "full", "label": "Full screen" }
+        {
+          "value": "auto",
+          "label": "t:sections.kf-hero.settings.height_mobile.options__1.label"
+        },
+        {
+          "value": "sm",
+          "label": "t:sections.kf-hero.settings.height_mobile.options__2.label"
+        },
+        {
+          "value": "md",
+          "label": "t:sections.kf-hero.settings.height_mobile.options__3.label"
+        },
+        {
+          "value": "lg",
+          "label": "t:sections.kf-hero.settings.height_mobile.options__4.label"
+        },
+        {
+          "value": "full",
+          "label": "t:sections.kf-hero.settings.height_mobile.options__5.label"
+        }
       ],
       "default": "md"
     },
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "Full width",
+      "label": "t:sections.kf-hero.settings.full_width.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-hero.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "content_width",
-      "label": "Content width",
+      "label": "t:sections.kf-hero.settings.content_width.label",
       "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "wide", "label": "Wide" }
+        {
+          "value": "narrow",
+          "label": "t:sections.kf-hero.settings.content_width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.kf-hero.settings.content_width.options__2.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-hero.settings.content_width.options__3.label"
+        }
       ],
       "default": "medium"
     },
     {
       "type": "select",
       "id": "content_alignment",
-      "label": "Text alignment",
+      "label": "t:sections.kf-hero.settings.content_alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "end", "label": "Right" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-hero.settings.content_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-hero.settings.content_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-hero.settings.content_alignment.options__3.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "select",
       "id": "content_position",
-      "label": "Vertical position",
-      "info": "Applies when the hero is taller than its content.",
+      "label": "t:sections.kf-hero.settings.content_position.label",
+      "info": "t:sections.kf-hero.settings.content_position.info",
       "options": [
-        { "value": "top", "label": "Top" },
-        { "value": "middle", "label": "Middle" },
-        { "value": "bottom", "label": "Bottom" }
+        {
+          "value": "top",
+          "label": "t:sections.kf-hero.settings.content_position.options__1.label"
+        },
+        {
+          "value": "middle",
+          "label": "t:sections.kf-hero.settings.content_position.options__2.label"
+        },
+        {
+          "value": "bottom",
+          "label": "t:sections.kf-hero.settings.content_position.options__3.label"
+        }
       ],
       "default": "middle"
     },
     {
       "type": "header",
-      "content": "Media"
+      "content": "t:sections.kf-hero.settings.header__3.content"
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image",
-      "info": "Set the focal point on the image so it crops well on every screen size."
+      "label": "t:sections.kf-hero.settings.image.label",
+      "info": "t:sections.kf-hero.settings.image.info"
     },
     {
       "type": "video",
       "id": "video",
-      "label": "Video",
-      "info": "Plays muted and looping, and replaces the image. Shopify-hosted videos only."
+      "label": "t:sections.kf-hero.settings.video.label",
+      "info": "t:sections.kf-hero.settings.video.info"
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Media ratio",
-      "info": "Used by the split, stacked and editorial layouts.",
+      "label": "t:sections.kf-hero.settings.media_ratio.label",
+      "info": "t:sections.kf-hero.settings.media_ratio.info",
       "options": [
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "tall", "label": "Tall (3:4)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "square",
+          "label": "t:sections.kf-hero.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-hero.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "tall",
+          "label": "t:sections.kf-hero.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-hero.settings.media_ratio.options__4.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-hero.settings.media_ratio.options__5.label"
+        }
       ],
       "default": "portrait"
     },
     {
       "type": "checkbox",
       "id": "show_media_placeholder",
-      "label": "Show a placeholder while no media is set",
+      "label": "t:sections.kf-hero.settings.show_media_placeholder.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Overlay"
+      "content": "t:sections.kf-hero.settings.header__4.content"
     },
     {
       "type": "range",
       "id": "overlay_opacity",
-      "label": "Overlay opacity",
+      "label": "t:sections.kf-hero.settings.overlay_opacity.label",
       "min": 0,
       "max": 90,
       "step": 5,
@@ -314,49 +407,67 @@
     {
       "type": "select",
       "id": "overlay_style",
-      "label": "Overlay style",
+      "label": "t:sections.kf-hero.settings.overlay_style.label",
       "options": [
-        { "value": "solid", "label": "Even" },
-        { "value": "gradient", "label": "Gradient from the bottom" }
+        {
+          "value": "solid",
+          "label": "t:sections.kf-hero.settings.overlay_style.options__1.label"
+        },
+        {
+          "value": "gradient",
+          "label": "t:sections.kf-hero.settings.overlay_style.options__2.label"
+        }
       ],
       "default": "gradient"
     },
     {
       "type": "color",
       "id": "overlay_color",
-      "label": "Overlay color",
+      "label": "t:sections.kf-hero.settings.overlay_color.label",
       "default": "#000000"
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-hero.settings.header__5.content"
     },
     {
       "type": "paragraph",
-      "content": "Each block has its own animation. The hero plays them in sequence."
+      "content": "t:sections.kf-hero.settings.paragraph__6.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animate the content column",
+      "label": "t:sections.kf-hero.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-hero.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-hero.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-hero.settings.animation.options__3.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-hero.settings.animation.options__4.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "checkbox",
       "id": "animation_stagger",
-      "label": "Stagger blocks",
+      "label": "t:sections.kf-hero.settings.animation_stagger.label",
       "default": true
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-hero.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -366,20 +477,35 @@
     {
       "type": "select",
       "id": "animation_duration",
-      "label": "Duration",
+      "label": "t:sections.kf-hero.settings.animation_duration.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "fast", "label": "Fast" },
-        { "value": "normal", "label": "Normal" },
-        { "value": "slow", "label": "Slow" },
-        { "value": "custom", "label": "Custom" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-hero.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-hero.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-hero.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-hero.settings.animation_duration.options__4.label"
+        },
+        {
+          "value": "custom",
+          "label": "t:sections.kf-hero.settings.animation_duration.options__5.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "range",
       "id": "animation_duration_custom",
-      "label": "Custom duration",
+      "label": "t:sections.kf-hero.settings.animation_duration_custom.label",
       "min": 200,
       "max": 2000,
       "step": 50,
@@ -389,31 +515,52 @@
     {
       "type": "select",
       "id": "animation_easing",
-      "label": "Easing",
+      "label": "t:sections.kf-hero.settings.animation_easing.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "standard", "label": "Standard" },
-        { "value": "smooth", "label": "Smooth" },
-        { "value": "out", "label": "Ease out" },
-        { "value": "spring", "label": "Spring-like" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-hero.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-hero.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-hero.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-hero.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-hero.settings.animation_easing.options__5.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_trigger",
-      "label": "Trigger",
+      "label": "t:sections.kf-hero.settings.animation_trigger.label",
       "options": [
-        { "value": "load", "label": "On load" },
-        { "value": "scroll", "label": "On scroll" }
+        {
+          "value": "load",
+          "label": "t:sections.kf-hero.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-hero.settings.animation_trigger.options__2.label"
+        }
       ],
       "default": "load",
-      "info": "Heroes are usually above the fold, so On load is the right default."
+      "info": "t:sections.kf-hero.settings.animation_trigger.info"
     },
     {
       "type": "range",
       "id": "animation_intensity",
-      "label": "Intensity",
+      "label": "t:sections.kf-hero.settings.animation_intensity.label",
       "min": 50,
       "max": 200,
       "step": 10,
@@ -423,7 +570,7 @@
     {
       "type": "range",
       "id": "media_parallax",
-      "label": "Media parallax",
+      "label": "t:sections.kf-hero.settings.media_parallax.label",
       "min": 0,
       "max": 60,
       "step": 5,
@@ -432,30 +579,39 @@
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-hero.settings.header__7.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-hero.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-hero.settings.section_transition.label",
+      "info": "t:sections.kf-hero.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-hero.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-hero.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-hero.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-hero.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -465,7 +621,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-hero.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -474,12 +630,16 @@
     }
   ],
   "blocks": [
-    { "type": "@theme" },
-    { "type": "@app" }
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
   ],
   "presets": [
     {
-      "name": "Hero",
+      "name": "t:sections.kf-hero.presets.name",
       "blocks": [
         {
           "type": "badge",

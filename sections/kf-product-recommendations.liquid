@@ -118,73 +118,96 @@
 
 {% schema %}
 {
-  "name": "Product recommendations",
+  "name": "t:sections.kf-product-recommendations.name",
   "tag": "section",
   "class": "kf-recs-section",
   "enabled_on": {
-    "templates": ["product"]
+    "templates": [
+      "product"
+    ]
   },
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-product-recommendations.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "intent",
-      "label": "Recommendation type",
+      "label": "t:sections.kf-product-recommendations.settings.intent.label",
       "options": [
-        { "value": "related", "label": "Related products" },
-        { "value": "complementary", "label": "Complementary products" }
+        {
+          "value": "related",
+          "label": "t:sections.kf-product-recommendations.settings.intent.options__1.label"
+        },
+        {
+          "value": "complementary",
+          "label": "t:sections.kf-product-recommendations.settings.intent.options__2.label"
+        }
       ],
       "default": "related",
-      "info": "Related products are chosen by Shopify automatically. Complementary products show nothing until you pick them in the Search & Discovery app. Add the section twice to show both."
+      "info": "t:sections.kf-product-recommendations.settings.intent.info"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-product-recommendations.settings.heading.label",
       "default": "You may also like"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-product-recommendations.settings.heading_size.label",
       "options": [
-        { "value": "kf-h4", "label": "Small" },
-        { "value": "kf-h3", "label": "Medium" },
-        { "value": "kf-h2", "label": "Large" }
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-product-recommendations.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-product-recommendations.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-product-recommendations.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h3"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Heading alignment",
+      "label": "t:sections.kf-product-recommendations.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-product-recommendations.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-product-recommendations.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.kf-product-recommendations.settings.header__2.content"
     },
     {
       "type": "range",
       "id": "limit",
-      "label": "Products shown",
+      "label": "t:sections.kf-product-recommendations.settings.limit.label",
       "min": 2,
       "max": 10,
       "step": 1,
       "default": 4,
-      "info": "Shopify may return fewer than this."
+      "info": "t:sections.kf-product-recommendations.settings.limit.info"
     },
     {
       "type": "range",
       "id": "columns_desktop",
-      "label": "Columns on desktop",
+      "label": "t:sections.kf-product-recommendations.settings.columns_desktop.label",
       "min": 2,
       "max": 5,
       "step": 1,
@@ -193,7 +216,7 @@
     {
       "type": "range",
       "id": "columns_tablet",
-      "label": "Columns on tablet",
+      "label": "t:sections.kf-product-recommendations.settings.columns_tablet.label",
       "min": 2,
       "max": 4,
       "step": 1,
@@ -202,44 +225,68 @@
     {
       "type": "select",
       "id": "mobile_layout",
-      "label": "On mobile",
+      "label": "t:sections.kf-product-recommendations.settings.mobile_layout.label",
       "options": [
-        { "value": "grid", "label": "Grid" },
-        { "value": "scroll", "label": "Scrolling row" }
+        {
+          "value": "grid",
+          "label": "t:sections.kf-product-recommendations.settings.mobile_layout.options__1.label"
+        },
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-product-recommendations.settings.mobile_layout.options__2.label"
+        }
       ],
       "default": "scroll"
     },
     {
       "type": "select",
       "id": "columns_mobile",
-      "label": "Columns on mobile",
-      "info": "Used when the mobile layout is a grid.",
+      "label": "t:sections.kf-product-recommendations.settings.columns_mobile.label",
+      "info": "t:sections.kf-product-recommendations.settings.columns_mobile.info",
       "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
+        {
+          "value": "1",
+          "label": "t:sections.kf-product-recommendations.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.kf-product-recommendations.settings.columns_mobile.options__2.label"
+        }
       ],
       "default": "2"
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-product-recommendations.settings.header__3.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Card animation",
+      "label": "t:sections.kf-product-recommendations.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-product-recommendations.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-product-recommendations.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-product-recommendations.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-product-recommendations.settings.animation.options__4.label"
+        }
       ],
       "default": "fade-up"
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-product-recommendations.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -248,30 +295,39 @@
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-product-recommendations.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-product-recommendations.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-product-recommendations.settings.section_transition.label",
+      "info": "t:sections.kf-product-recommendations.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-product-recommendations.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-product-recommendations.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-product-recommendations.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-product-recommendations.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -281,7 +337,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-product-recommendations.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -291,7 +347,7 @@
   ],
   "presets": [
     {
-      "name": "Product recommendations"
+      "name": "t:sections.kf-product-recommendations.presets.name"
     }
   ]
 }

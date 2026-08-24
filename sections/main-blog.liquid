@@ -146,79 +146,100 @@
 
 {% schema %}
 {
-  "name": "Blog posts",
+  "name": "t:sections.main-blog.name",
   "tag": "section",
   "class": "kf-blog-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.main-blog.settings.header__1.content"
     },
     {
       "type": "checkbox",
       "id": "show_heading",
-      "label": "Show the blog title",
+      "label": "t:sections.main-blog.settings.show_heading.label",
       "default": true
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Title size",
+      "label": "t:sections.main-blog.settings.heading_size.label",
       "options": [
-        { "value": "kf-h2", "label": "Small" },
-        { "value": "kf-h1", "label": "Medium" },
-        { "value": "kf-display", "label": "Large" }
+        {
+          "value": "kf-h2",
+          "label": "t:sections.main-blog.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.main-blog.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-display",
+          "label": "t:sections.main-blog.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h1"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text under the title"
+      "label": "t:sections.main-blog.settings.text.label"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Title alignment",
+      "label": "t:sections.main-blog.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.main-blog.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.main-blog.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "checkbox",
       "id": "show_topics",
-      "label": "Show topic filters",
+      "label": "t:sections.main-blog.settings.show_topics.label",
       "default": true,
-      "info": "Lists the tags used across this blog. Plain links, so they work without JavaScript."
+      "info": "t:sections.main-blog.settings.show_topics.info"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.main-blog.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.main-blog.settings.layout.label",
       "options": [
-        { "value": "grid", "label": "Grid" },
-        { "value": "list", "label": "List" }
+        {
+          "value": "grid",
+          "label": "t:sections.main-blog.settings.layout.options__1.label"
+        },
+        {
+          "value": "list",
+          "label": "t:sections.main-blog.settings.layout.options__2.label"
+        }
       ],
       "default": "grid",
-      "info": "List puts the image beside each article from 750px up."
+      "info": "t:sections.main-blog.settings.layout.info"
     },
     {
       "type": "checkbox",
       "id": "feature_first",
-      "label": "Feature the newest article",
+      "label": "t:sections.main-blog.settings.feature_first.label",
       "default": true,
-      "info": "Gives it the full width of the grid. Only on the first page, and not while a topic filter is applied."
+      "info": "t:sections.main-blog.settings.feature_first.info"
     },
     {
       "type": "range",
       "id": "posts_per_page",
-      "label": "Articles per page",
+      "label": "t:sections.main-blog.settings.posts_per_page.label",
       "min": 3,
       "max": 24,
       "step": 1,
@@ -227,73 +248,91 @@
     {
       "type": "range",
       "id": "columns_desktop",
-      "label": "Columns on desktop",
+      "label": "t:sections.main-blog.settings.columns_desktop.label",
       "min": 1,
       "max": 4,
       "step": 1,
       "default": 3,
-      "info": "Applies to the grid layout."
+      "info": "t:sections.main-blog.settings.columns_desktop.info"
     },
     {
       "type": "select",
       "id": "columns_mobile",
-      "label": "Columns on mobile",
+      "label": "t:sections.main-blog.settings.columns_mobile.label",
       "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
+        {
+          "value": "1",
+          "label": "t:sections.main-blog.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.main-blog.settings.columns_mobile.options__2.label"
+        }
       ],
       "default": "1"
     },
     {
       "type": "header",
-      "content": "Card"
+      "content": "t:sections.main-blog.settings.header__3.content"
     },
     {
       "type": "checkbox",
       "id": "show_image",
-      "label": "Show the featured image",
+      "label": "t:sections.main-blog.settings.show_image.label",
       "default": true
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.main-blog.settings.media_ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "landscape", "label": "Landscape (4:3)" },
-        { "value": "wide", "label": "Wide (16:9)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.main-blog.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-blog.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.main-blog.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.main-blog.settings.media_ratio.options__4.label"
+        }
       ],
       "default": "landscape"
     },
     {
       "type": "checkbox",
       "id": "show_tag",
-      "label": "Show the first topic",
+      "label": "t:sections.main-blog.settings.show_tag.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_date",
-      "label": "Show the date",
+      "label": "t:sections.main-blog.settings.show_date.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_author",
-      "label": "Show the author",
+      "label": "t:sections.main-blog.settings.show_author.label",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "show_excerpt",
-      "label": "Show an excerpt",
+      "label": "t:sections.main-blog.settings.show_excerpt.label",
       "default": true
     },
     {
       "type": "range",
       "id": "excerpt_limit",
-      "label": "Excerpt length",
+      "label": "t:sections.main-blog.settings.excerpt_limit.label",
       "min": 10,
       "max": 60,
       "step": 2,
@@ -302,24 +341,36 @@
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.main-blog.settings.header__4.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Card animation",
+      "label": "t:sections.main-blog.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" }
+        {
+          "value": "none",
+          "label": "t:sections.main-blog.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.main-blog.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.main-blog.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.main-blog.settings.animation.options__4.label"
+        }
       ],
       "default": "fade-up"
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.main-blog.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
@@ -328,18 +379,18 @@
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.main-blog.settings.header__5.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.main-blog.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.main-blog.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -349,7 +400,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.main-blog.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,

@@ -34,68 +34,113 @@
 
 {% schema %}
 {
-  "name": "Text",
+  "name": "t:blocks.text.name",
   "tag": null,
   "settings": [
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text",
+      "label": "t:blocks.text.settings.text.label",
       "default": "<p>Say the one thing a visitor needs to know before they scroll.</p>"
     },
     {
       "type": "select",
       "id": "text_size",
-      "label": "Size",
+      "label": "t:blocks.text.settings.text_size.label",
       "options": [
-        { "value": "sm", "label": "Small" },
-        { "value": "md", "label": "Medium" },
-        { "value": "lg", "label": "Large" },
-        { "value": "xl", "label": "Extra large" }
+        {
+          "value": "sm",
+          "label": "t:blocks.text.settings.text_size.options__1.label"
+        },
+        {
+          "value": "md",
+          "label": "t:blocks.text.settings.text_size.options__2.label"
+        },
+        {
+          "value": "lg",
+          "label": "t:blocks.text.settings.text_size.options__3.label"
+        },
+        {
+          "value": "xl",
+          "label": "t:blocks.text.settings.text_size.options__4.label"
+        }
       ],
       "default": "md"
     },
     {
       "type": "select",
       "id": "text_width",
-      "label": "Width",
+      "label": "t:blocks.text.settings.text_width.label",
       "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "full", "label": "Full" }
+        {
+          "value": "narrow",
+          "label": "t:blocks.text.settings.text_width.options__1.label"
+        },
+        {
+          "value": "full",
+          "label": "t:blocks.text.settings.text_width.options__2.label"
+        }
       ],
       "default": "full"
     },
     {
       "type": "checkbox",
       "id": "text_muted",
-      "label": "Muted color",
+      "label": "t:blocks.text.settings.text_muted.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.text.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.text.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "fade-down", "label": "Fade down" },
-        { "value": "fade-left", "label": "Fade left" },
-        { "value": "fade-right", "label": "Fade right" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "blur-in", "label": "Blur" },
-        { "value": "clip-up", "label": "Clip reveal" }
+        {
+          "value": "none",
+          "label": "t:blocks.text.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.text.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.text.settings.animation.options__3.label"
+        },
+        {
+          "value": "fade-down",
+          "label": "t:blocks.text.settings.animation.options__4.label"
+        },
+        {
+          "value": "fade-left",
+          "label": "t:blocks.text.settings.animation.options__5.label"
+        },
+        {
+          "value": "fade-right",
+          "label": "t:blocks.text.settings.animation.options__6.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:blocks.text.settings.animation.options__7.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:blocks.text.settings.animation.options__8.label"
+        },
+        {
+          "value": "clip-up",
+          "label": "t:blocks.text.settings.animation.options__9.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.text.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -105,7 +150,7 @@
   ],
   "presets": [
     {
-      "name": "Text"
+      "name": "t:blocks.text.presets.name"
     }
   ]
 }

@@ -254,120 +254,167 @@
 
 {% schema %}
 {
-  "name": "Product",
+  "name": "t:sections.main-product.name",
   "tag": "section",
   "class": "kf-product-section",
   "enabled_on": {
-    "templates": ["product"]
+    "templates": [
+      "product"
+    ]
   },
   "settings": [
     {
       "type": "header",
-      "content": "Media"
+      "content": "t:sections.main-product.settings.header__1.content"
     },
     {
       "type": "select",
       "id": "gallery_layout",
-      "label": "Gallery layout",
+      "label": "t:sections.main-product.settings.gallery_layout.label",
       "options": [
-        { "value": "carousel", "label": "Carousel with thumbnails below" },
-        { "value": "thumbs-left", "label": "Thumbnails beside the image" },
-        { "value": "stacked", "label": "Stacked, all images visible" }
+        {
+          "value": "carousel",
+          "label": "t:sections.main-product.settings.gallery_layout.options__1.label"
+        },
+        {
+          "value": "thumbs-left",
+          "label": "t:sections.main-product.settings.gallery_layout.options__2.label"
+        },
+        {
+          "value": "stacked",
+          "label": "t:sections.main-product.settings.gallery_layout.options__3.label"
+        }
       ],
       "default": "thumbs-left"
     },
     {
       "type": "checkbox",
       "id": "show_thumbnails",
-      "label": "Show thumbnails",
+      "label": "t:sections.main-product.settings.show_thumbnails.label",
       "default": true
     },
     {
       "type": "select",
       "id": "media_ratio",
-      "label": "Image ratio",
+      "label": "t:sections.main-product.settings.media_ratio.label",
       "options": [
-        { "value": "adapt", "label": "Adapt to image" },
-        { "value": "square", "label": "Square (1:1)" },
-        { "value": "portrait", "label": "Portrait (4:5)" },
-        { "value": "tall", "label": "Tall (3:4)" }
+        {
+          "value": "adapt",
+          "label": "t:sections.main-product.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-product.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-product.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "tall",
+          "label": "t:sections.main-product.settings.media_ratio.options__4.label"
+        }
       ],
       "default": "portrait"
     },
     {
       "type": "select",
       "id": "media_position",
-      "label": "Media position on desktop",
+      "label": "t:sections.main-product.settings.media_position.label",
       "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" }
+        {
+          "value": "left",
+          "label": "t:sections.main-product.settings.media_position.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.main-product.settings.media_position.options__2.label"
+        }
       ],
       "default": "left"
     },
     {
       "type": "select",
       "id": "media_size",
-      "label": "Media width on desktop",
+      "label": "t:sections.main-product.settings.media_size.label",
       "options": [
-        { "value": "small", "label": "Small" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "large", "label": "Large" }
+        {
+          "value": "small",
+          "label": "t:sections.main-product.settings.media_size.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.main-product.settings.media_size.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.main-product.settings.media_size.options__3.label"
+        }
       ],
       "default": "medium"
     },
     {
       "type": "select",
       "id": "zoom",
-      "label": "Zoom",
+      "label": "t:sections.main-product.settings.zoom.label",
       "options": [
-        { "value": "none", "label": "Off" },
-        { "value": "hover", "label": "Magnify on hover" },
-        { "value": "lightbox", "label": "Open full screen on click" }
+        {
+          "value": "none",
+          "label": "t:sections.main-product.settings.zoom.options__1.label"
+        },
+        {
+          "value": "hover",
+          "label": "t:sections.main-product.settings.zoom.options__2.label"
+        },
+        {
+          "value": "lightbox",
+          "label": "t:sections.main-product.settings.zoom.options__3.label"
+        }
       ],
       "default": "lightbox"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.main-product.settings.header__2.content"
     },
     {
       "type": "checkbox",
       "id": "sticky_info",
-      "label": "Keep product details in view while scrolling",
+      "label": "t:sections.main-product.settings.sticky_info.label",
       "default": true,
-      "info": "Desktop only. Best when the gallery is taller than the details."
+      "info": "t:sections.main-product.settings.sticky_info.info"
     },
     {
       "type": "header",
-      "content": "Sticky add to cart"
+      "content": "t:sections.main-product.settings.header__3.content"
     },
     {
       "type": "checkbox",
       "id": "sticky_atc",
-      "label": "Show a sticky add to cart bar",
+      "label": "t:sections.main-product.settings.sticky_atc.label",
       "default": true,
-      "info": "Appears once the real buy buttons scroll out of view."
+      "info": "t:sections.main-product.settings.sticky_atc.info"
     },
     {
       "type": "color_scheme",
       "id": "sticky_color_scheme",
-      "label": "Sticky bar color scheme",
+      "label": "t:sections.main-product.settings.sticky_color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.main-product.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.main-product.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.main-product.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -377,7 +424,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.main-product.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -386,8 +433,12 @@
     }
   ],
   "blocks": [
-    { "type": "@theme" },
-    { "type": "@app" }
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
   ]
 }
 {% endschema %}

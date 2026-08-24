@@ -110,38 +110,47 @@
 
 {% schema %}
 {
-  "name": "Register",
+  "name": "t:sections.main-register.name",
   "tag": "section",
   "class": "kf-account-page",
   "settings": [
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Title size",
+      "label": "t:sections.main-register.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.main-register.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.main-register.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.main-register.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "checkbox",
       "id": "show_name_fields",
-      "label": "Ask for a name",
+      "label": "t:sections.main-register.settings.show_name_fields.label",
       "default": true,
-      "info": "Turn off to ask only for an email and password. Shopify does not require a name."
+      "info": "t:sections.main-register.settings.show_name_fields.info"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.main-register.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.main-register.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -151,7 +160,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.main-register.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,

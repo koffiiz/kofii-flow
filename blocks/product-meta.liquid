@@ -48,20 +48,44 @@
 
 {% schema %}
 {
-  "name": "Product meta",
+  "name": "t:blocks.product-meta.name",
   "tag": null,
   "settings": [
-    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": true },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "t:blocks.product-meta.settings.show_vendor.label",
+      "default": true
+    },
     {
       "type": "checkbox",
       "id": "link_vendor",
-      "label": "Link the vendor to its products",
+      "label": "t:blocks.product-meta.settings.link_vendor.label",
       "default": true
     },
-    { "type": "checkbox", "id": "show_type", "label": "Show product type", "default": false },
-    { "type": "checkbox", "id": "show_sku", "label": "Show SKU", "default": false },
-    { "type": "checkbox", "id": "show_barcode", "label": "Show barcode", "default": false }
+    {
+      "type": "checkbox",
+      "id": "show_type",
+      "label": "t:blocks.product-meta.settings.show_type.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sku",
+      "label": "t:blocks.product-meta.settings.show_sku.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_barcode",
+      "label": "t:blocks.product-meta.settings.show_barcode.label",
+      "default": false
+    }
   ],
-  "presets": [{ "name": "Product meta" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-meta.presets.name"
+    }
+  ]
 }
 {% endschema %}

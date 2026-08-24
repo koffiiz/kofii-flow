@@ -51,100 +51,148 @@
 
 {% schema %}
 {
-  "name": "Buttons",
+  "name": "t:blocks.button.name",
   "tag": null,
   "settings": [
     {
       "type": "text",
       "id": "label",
-      "label": "Button label",
+      "label": "t:blocks.button.settings.label.label",
       "default": "Shop the collection"
     },
     {
       "type": "url",
       "id": "link",
-      "label": "Button link"
+      "label": "t:blocks.button.settings.link.label"
     },
     {
       "type": "select",
       "id": "style",
-      "label": "Button style",
+      "label": "t:blocks.button.settings.style.label",
       "options": [
-        { "value": "primary", "label": "Solid" },
-        { "value": "secondary", "label": "Outline" },
-        { "value": "ghost", "label": "Ghost" },
-        { "value": "plain", "label": "Text link" }
+        {
+          "value": "primary",
+          "label": "t:blocks.button.settings.style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:blocks.button.settings.style.options__2.label"
+        },
+        {
+          "value": "ghost",
+          "label": "t:blocks.button.settings.style.options__3.label"
+        },
+        {
+          "value": "plain",
+          "label": "t:blocks.button.settings.style.options__4.label"
+        }
       ],
       "default": "primary"
     },
     {
       "type": "header",
-      "content": "Second button"
+      "content": "t:blocks.button.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "secondary_label",
-      "label": "Button label"
+      "label": "t:blocks.button.settings.secondary_label.label"
     },
     {
       "type": "url",
       "id": "secondary_link",
-      "label": "Button link"
+      "label": "t:blocks.button.settings.secondary_link.label"
     },
     {
       "type": "select",
       "id": "secondary_style",
-      "label": "Button style",
+      "label": "t:blocks.button.settings.secondary_style.label",
       "options": [
-        { "value": "primary", "label": "Solid" },
-        { "value": "secondary", "label": "Outline" },
-        { "value": "ghost", "label": "Ghost" },
-        { "value": "plain", "label": "Text link" }
+        {
+          "value": "primary",
+          "label": "t:blocks.button.settings.secondary_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:blocks.button.settings.secondary_style.options__2.label"
+        },
+        {
+          "value": "ghost",
+          "label": "t:blocks.button.settings.secondary_style.options__3.label"
+        },
+        {
+          "value": "plain",
+          "label": "t:blocks.button.settings.secondary_style.options__4.label"
+        }
       ],
       "default": "plain"
     },
     {
       "type": "header",
-      "content": "Shared"
+      "content": "t:blocks.button.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "size",
-      "label": "Size",
+      "label": "t:blocks.button.settings.size.label",
       "options": [
-        { "value": "sm", "label": "Small" },
-        { "value": "md", "label": "Medium" },
-        { "value": "lg", "label": "Large" }
+        {
+          "value": "sm",
+          "label": "t:blocks.button.settings.size.options__1.label"
+        },
+        {
+          "value": "md",
+          "label": "t:blocks.button.settings.size.options__2.label"
+        },
+        {
+          "value": "lg",
+          "label": "t:blocks.button.settings.size.options__3.label"
+        }
       ],
       "default": "md"
     },
     {
       "type": "checkbox",
       "id": "new_tab",
-      "label": "Open in a new tab",
+      "label": "t:blocks.button.settings.new_tab.label",
       "default": false
     },
     {
       "type": "header",
-      "content": "Animation"
+      "content": "t:blocks.button.settings.header__3.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Animation",
+      "label": "t:blocks.button.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:blocks.button.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:blocks.button.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:blocks.button.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:blocks.button.settings.animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:blocks.button.settings.animation.options__5.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "animation_delay",
-      "label": "Delay",
+      "label": "t:blocks.button.settings.animation_delay.label",
       "min": 0,
       "max": 1000,
       "step": 50,
@@ -154,7 +202,7 @@
   ],
   "presets": [
     {
-      "name": "Buttons"
+      "name": "t:blocks.button.presets.name"
     }
   ]
 }

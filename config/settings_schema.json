@@ -7,13 +7,12 @@
     "theme_documentation_url": "https://github.com/kofii/kofii-flow#readme",
     "theme_support_url": "https://github.com/kofii/kofii-flow/issues"
   },
-
   {
-    "name": "Colors",
+    "name": "t:settings_schema.colors.name",
     "settings": [
       {
         "type": "paragraph",
-        "content": "Kofii Flow uses color schemes. Every section picks a scheme instead of defining its own colors, so a change here updates the whole storefront."
+        "content": "t:settings_schema.colors.settings.paragraph__1.content"
       },
       {
         "type": "color_scheme_group",
@@ -109,37 +108,51 @@
       }
     ]
   },
-
   {
-    "name": "Typography",
+    "name": "t:settings_schema.typography.name",
     "settings": [
       {
         "type": "header",
-        "content": "Headings"
+        "content": "t:settings_schema.typography.settings.header__1.content"
       },
       {
         "type": "font_picker",
         "id": "type_heading_font",
-        "label": "Heading font",
+        "label": "t:settings_schema.typography.settings.type_heading_font.label",
         "default": "assistant_n4"
       },
       {
         "type": "select",
         "id": "type_heading_weight",
-        "label": "Heading weight",
+        "label": "t:settings_schema.typography.settings.type_heading_weight.label",
         "options": [
-          { "value": "400", "label": "Regular" },
-          { "value": "500", "label": "Medium" },
-          { "value": "600", "label": "Semibold" },
-          { "value": "700", "label": "Bold" },
-          { "value": "800", "label": "Extra bold" }
+          {
+            "value": "400",
+            "label": "t:settings_schema.typography.settings.type_heading_weight.options__1.label"
+          },
+          {
+            "value": "500",
+            "label": "t:settings_schema.typography.settings.type_heading_weight.options__2.label"
+          },
+          {
+            "value": "600",
+            "label": "t:settings_schema.typography.settings.type_heading_weight.options__3.label"
+          },
+          {
+            "value": "700",
+            "label": "t:settings_schema.typography.settings.type_heading_weight.options__4.label"
+          },
+          {
+            "value": "800",
+            "label": "t:settings_schema.typography.settings.type_heading_weight.options__5.label"
+          }
         ],
         "default": "700"
       },
       {
         "type": "range",
         "id": "type_heading_scale",
-        "label": "Heading size",
+        "label": "t:settings_schema.typography.settings.type_heading_scale.label",
         "min": 80,
         "max": 140,
         "step": 5,
@@ -149,7 +162,7 @@
       {
         "type": "range",
         "id": "type_heading_spacing",
-        "label": "Heading letter spacing",
+        "label": "t:settings_schema.typography.settings.type_heading_spacing.label",
         "min": -5,
         "max": 5,
         "step": 1,
@@ -159,7 +172,7 @@
       {
         "type": "range",
         "id": "type_heading_leading",
-        "label": "Heading line height",
+        "label": "t:settings_schema.typography.settings.type_heading_leading.label",
         "min": 85,
         "max": 130,
         "step": 1,
@@ -169,27 +182,33 @@
       {
         "type": "select",
         "id": "type_heading_transform",
-        "label": "Heading case",
+        "label": "t:settings_schema.typography.settings.type_heading_transform.label",
         "options": [
-          { "value": "none", "label": "As typed" },
-          { "value": "uppercase", "label": "Uppercase" }
+          {
+            "value": "none",
+            "label": "t:settings_schema.typography.settings.type_heading_transform.options__1.label"
+          },
+          {
+            "value": "uppercase",
+            "label": "t:settings_schema.typography.settings.type_heading_transform.options__2.label"
+          }
         ],
         "default": "none"
       },
       {
         "type": "header",
-        "content": "Body"
+        "content": "t:settings_schema.typography.settings.header__2.content"
       },
       {
         "type": "font_picker",
         "id": "type_body_font",
-        "label": "Body font",
+        "label": "t:settings_schema.typography.settings.type_body_font.label",
         "default": "assistant_n4"
       },
       {
         "type": "range",
         "id": "type_body_scale",
-        "label": "Body size",
+        "label": "t:settings_schema.typography.settings.type_body_scale.label",
         "min": 90,
         "max": 130,
         "step": 5,
@@ -199,7 +218,7 @@
       {
         "type": "range",
         "id": "type_body_leading",
-        "label": "Body line height",
+        "label": "t:settings_schema.typography.settings.type_body_leading.label",
         "min": 120,
         "max": 190,
         "step": 5,
@@ -208,26 +227,32 @@
       },
       {
         "type": "header",
-        "content": "Labels"
+        "content": "t:settings_schema.typography.settings.header__3.content"
       },
       {
         "type": "paragraph",
-        "content": "Eyebrows, badges and small labels share one style so the storefront stays consistent."
+        "content": "t:settings_schema.typography.settings.paragraph__4.content"
       },
       {
         "type": "select",
         "id": "type_accent_transform",
-        "label": "Label case",
+        "label": "t:settings_schema.typography.settings.type_accent_transform.label",
         "options": [
-          { "value": "uppercase", "label": "Uppercase" },
-          { "value": "none", "label": "As typed" }
+          {
+            "value": "uppercase",
+            "label": "t:settings_schema.typography.settings.type_accent_transform.options__1.label"
+          },
+          {
+            "value": "none",
+            "label": "t:settings_schema.typography.settings.type_accent_transform.options__2.label"
+          }
         ],
         "default": "uppercase"
       },
       {
         "type": "range",
         "id": "type_accent_spacing",
-        "label": "Label letter spacing",
+        "label": "t:settings_schema.typography.settings.type_accent_spacing.label",
         "min": 0,
         "max": 20,
         "step": 1,
@@ -236,14 +261,13 @@
       }
     ]
   },
-
   {
-    "name": "Layout",
+    "name": "t:settings_schema.layout.name",
     "settings": [
       {
         "type": "range",
         "id": "page_width",
-        "label": "Page width",
+        "label": "t:settings_schema.layout.settings.page_width.label",
         "min": 1100,
         "max": 1800,
         "step": 20,
@@ -253,7 +277,7 @@
       {
         "type": "range",
         "id": "page_gutter",
-        "label": "Side padding",
+        "label": "t:settings_schema.layout.settings.page_gutter.label",
         "min": 12,
         "max": 48,
         "step": 2,
@@ -263,18 +287,18 @@
       {
         "type": "range",
         "id": "space_scale",
-        "label": "Spacing scale",
+        "label": "t:settings_schema.layout.settings.space_scale.label",
         "min": 70,
         "max": 140,
         "step": 5,
         "unit": "%",
         "default": 100,
-        "info": "Scales every spacing token at once, including section padding."
+        "info": "t:settings_schema.layout.settings.space_scale.info"
       },
       {
         "type": "range",
         "id": "grid_gap",
-        "label": "Grid gap",
+        "label": "t:settings_schema.layout.settings.grid_gap.label",
         "min": 8,
         "max": 48,
         "step": 2,
@@ -283,23 +307,23 @@
       },
       {
         "type": "header",
-        "content": "Corners and depth"
+        "content": "t:settings_schema.layout.settings.header__1.content"
       },
       {
         "type": "range",
         "id": "radius_scale",
-        "label": "Corner rounding",
+        "label": "t:settings_schema.layout.settings.radius_scale.label",
         "min": 0,
         "max": 200,
         "step": 10,
         "unit": "%",
         "default": 100,
-        "info": "0% gives fully square corners across the theme."
+        "info": "t:settings_schema.layout.settings.radius_scale.info"
       },
       {
         "type": "range",
         "id": "shadow_intensity",
-        "label": "Shadow strength",
+        "label": "t:settings_schema.layout.settings.shadow_intensity.label",
         "min": 0,
         "max": 150,
         "step": 10,
@@ -308,14 +332,13 @@
       }
     ]
   },
-
   {
-    "name": "Buttons",
+    "name": "t:settings_schema.buttons.name",
     "settings": [
       {
         "type": "range",
         "id": "button_radius",
-        "label": "Button corner radius",
+        "label": "t:settings_schema.buttons.settings.button_radius.label",
         "min": 0,
         "max": 60,
         "step": 2,
@@ -325,44 +348,71 @@
       {
         "type": "select",
         "id": "button_size",
-        "label": "Button size",
+        "label": "t:settings_schema.buttons.settings.button_size.label",
         "options": [
-          { "value": "sm", "label": "Small" },
-          { "value": "md", "label": "Medium" },
-          { "value": "lg", "label": "Large" }
+          {
+            "value": "sm",
+            "label": "t:settings_schema.buttons.settings.button_size.options__1.label"
+          },
+          {
+            "value": "md",
+            "label": "t:settings_schema.buttons.settings.button_size.options__2.label"
+          },
+          {
+            "value": "lg",
+            "label": "t:settings_schema.buttons.settings.button_size.options__3.label"
+          }
         ],
         "default": "md"
       },
       {
         "type": "select",
         "id": "button_transform",
-        "label": "Button case",
+        "label": "t:settings_schema.buttons.settings.button_transform.label",
         "options": [
-          { "value": "none", "label": "As typed" },
-          { "value": "uppercase", "label": "Uppercase" }
+          {
+            "value": "none",
+            "label": "t:settings_schema.buttons.settings.button_transform.options__1.label"
+          },
+          {
+            "value": "uppercase",
+            "label": "t:settings_schema.buttons.settings.button_transform.options__2.label"
+          }
         ],
         "default": "none"
       },
       {
         "type": "select",
         "id": "button_hover",
-        "label": "Hover effect",
+        "label": "t:settings_schema.buttons.settings.button_hover.label",
         "options": [
-          { "value": "none", "label": "None" },
-          { "value": "lift", "label": "Lift" },
-          { "value": "sweep", "label": "Color sweep" },
-          { "value": "arrow", "label": "Arrow slide" }
+          {
+            "value": "none",
+            "label": "t:settings_schema.buttons.settings.button_hover.options__1.label"
+          },
+          {
+            "value": "lift",
+            "label": "t:settings_schema.buttons.settings.button_hover.options__2.label"
+          },
+          {
+            "value": "sweep",
+            "label": "t:settings_schema.buttons.settings.button_hover.options__3.label"
+          },
+          {
+            "value": "arrow",
+            "label": "t:settings_schema.buttons.settings.button_hover.options__4.label"
+          }
         ],
         "default": "sweep"
       },
       {
         "type": "header",
-        "content": "Inputs"
+        "content": "t:settings_schema.buttons.settings.header__1.content"
       },
       {
         "type": "range",
         "id": "input_radius",
-        "label": "Input corner radius",
+        "label": "t:settings_schema.buttons.settings.input_radius.label",
         "min": 0,
         "max": 40,
         "step": 2,
@@ -371,14 +421,13 @@
       }
     ]
   },
-
   {
-    "name": "Media and cards",
+    "name": "t:settings_schema.media_and_cards.name",
     "settings": [
       {
         "type": "range",
         "id": "media_radius",
-        "label": "Media corner radius",
+        "label": "t:settings_schema.media_and_cards.settings.media_radius.label",
         "min": 0,
         "max": 40,
         "step": 2,
@@ -388,135 +437,200 @@
       {
         "type": "select",
         "id": "card_style",
-        "label": "Card style",
+        "label": "t:settings_schema.media_and_cards.settings.card_style.label",
         "options": [
-          { "value": "plain", "label": "Plain" },
-          { "value": "bordered", "label": "Bordered" },
-          { "value": "surface", "label": "Surface" },
-          { "value": "elevated", "label": "Elevated" }
+          {
+            "value": "plain",
+            "label": "t:settings_schema.media_and_cards.settings.card_style.options__1.label"
+          },
+          {
+            "value": "bordered",
+            "label": "t:settings_schema.media_and_cards.settings.card_style.options__2.label"
+          },
+          {
+            "value": "surface",
+            "label": "t:settings_schema.media_and_cards.settings.card_style.options__3.label"
+          },
+          {
+            "value": "elevated",
+            "label": "t:settings_schema.media_and_cards.settings.card_style.options__4.label"
+          }
         ],
         "default": "plain"
       },
       {
         "type": "select",
         "id": "card_hover",
-        "label": "Card hover effect",
+        "label": "t:settings_schema.media_and_cards.settings.card_hover.label",
         "options": [
-          { "value": "none", "label": "None" },
-          { "value": "zoom", "label": "Media zoom" },
-          { "value": "lift", "label": "Lift" },
-          { "value": "swap", "label": "Swap to second image" }
+          {
+            "value": "none",
+            "label": "t:settings_schema.media_and_cards.settings.card_hover.options__1.label"
+          },
+          {
+            "value": "zoom",
+            "label": "t:settings_schema.media_and_cards.settings.card_hover.options__2.label"
+          },
+          {
+            "value": "lift",
+            "label": "t:settings_schema.media_and_cards.settings.card_hover.options__3.label"
+          },
+          {
+            "value": "swap",
+            "label": "t:settings_schema.media_and_cards.settings.card_hover.options__4.label"
+          }
         ],
         "default": "swap"
       },
       {
         "type": "header",
-        "content": "Product cards"
+        "content": "t:settings_schema.media_and_cards.settings.header__1.content"
       },
       {
         "type": "select",
         "id": "product_card_ratio",
-        "label": "Image ratio",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_ratio.label",
         "options": [
-          { "value": "adapt", "label": "Adapt to image" },
-          { "value": "square", "label": "Square (1:1)" },
-          { "value": "portrait", "label": "Portrait (4:5)" },
-          { "value": "tall", "label": "Tall (3:4)" },
-          { "value": "landscape", "label": "Landscape (4:3)" }
+          {
+            "value": "adapt",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_ratio.options__1.label"
+          },
+          {
+            "value": "square",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_ratio.options__2.label"
+          },
+          {
+            "value": "portrait",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_ratio.options__3.label"
+          },
+          {
+            "value": "tall",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_ratio.options__4.label"
+          },
+          {
+            "value": "landscape",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_ratio.options__5.label"
+          }
         ],
         "default": "portrait"
       },
       {
         "type": "select",
         "id": "product_card_align",
-        "label": "Text alignment",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_align.label",
         "options": [
-          { "value": "start", "label": "Left" },
-          { "value": "center", "label": "Center" }
+          {
+            "value": "start",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_align.options__1.label"
+          },
+          {
+            "value": "center",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_align.options__2.label"
+          }
         ],
         "default": "start"
       },
       {
         "type": "checkbox",
         "id": "product_card_equal_height",
-        "label": "Match card heights in a row",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_equal_height.label",
         "default": true,
-        "info": "Cards fill the tallest in their row and prices line up along the bottom, so a longer product title cannot make the grid look ragged."
+        "info": "t:settings_schema.media_and_cards.settings.product_card_equal_height.info"
       },
       {
         "type": "checkbox",
         "id": "product_card_quick_add",
-        "label": "Show quick add",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_quick_add.label",
         "default": true,
-        "info": "Adds single-variant products straight to the cart. Products with options open a panel so the shopper can choose."
+        "info": "t:settings_schema.media_and_cards.settings.product_card_quick_add.info"
       },
       {
         "type": "checkbox",
         "id": "product_card_vendor",
-        "label": "Show vendor",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_vendor.label",
         "default": false
       },
       {
         "type": "checkbox",
         "id": "product_card_swatches",
-        "label": "Show color swatches",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_swatches.label",
         "default": true,
-        "info": "Uses the swatches configured on your product options."
+        "info": "t:settings_schema.media_and_cards.settings.product_card_swatches.info"
       },
       {
         "type": "checkbox",
         "id": "product_card_rating",
-        "label": "Show rating",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_rating.label",
         "default": false,
-        "info": "Requires a review app that writes to the standard reviews metafields."
+        "info": "t:settings_schema.media_and_cards.settings.product_card_rating.info"
       },
       {
         "type": "checkbox",
         "id": "product_card_sale_badge",
-        "label": "Show sale badge",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_sale_badge.label",
         "default": true
       },
       {
         "type": "select",
         "id": "product_card_sale_style",
-        "label": "Sale badge shows",
+        "label": "t:settings_schema.media_and_cards.settings.product_card_sale_style.label",
         "options": [
-          { "value": "text", "label": "Sale" },
-          { "value": "percent", "label": "Percentage saved" },
-          { "value": "amount", "label": "Amount saved" }
+          {
+            "value": "text",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_sale_style.options__1.label"
+          },
+          {
+            "value": "percent",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_sale_style.options__2.label"
+          },
+          {
+            "value": "amount",
+            "label": "t:settings_schema.media_and_cards.settings.product_card_sale_style.options__3.label"
+          }
         ],
         "default": "percent"
       }
     ]
   },
-
   {
-    "name": "Motion",
+    "name": "t:settings_schema.motion.name",
     "settings": [
       {
         "type": "paragraph",
-        "content": "Flow Mode sets how expressive the whole storefront feels. Individual sections can still override their own animation."
+        "content": "t:settings_schema.motion.settings.paragraph__1.content"
       },
       {
         "type": "select",
         "id": "flow_mode",
-        "label": "Flow Mode",
+        "label": "t:settings_schema.motion.settings.flow_mode.label",
         "options": [
-          { "value": "off", "label": "Off" },
-          { "value": "subtle", "label": "Subtle" },
-          { "value": "balanced", "label": "Balanced" },
-          { "value": "expressive", "label": "Expressive" }
+          {
+            "value": "off",
+            "label": "t:settings_schema.motion.settings.flow_mode.options__1.label"
+          },
+          {
+            "value": "subtle",
+            "label": "t:settings_schema.motion.settings.flow_mode.options__2.label"
+          },
+          {
+            "value": "balanced",
+            "label": "t:settings_schema.motion.settings.flow_mode.options__3.label"
+          },
+          {
+            "value": "expressive",
+            "label": "t:settings_schema.motion.settings.flow_mode.options__4.label"
+          }
         ],
         "default": "balanced"
       },
       {
         "type": "header",
-        "content": "Defaults"
+        "content": "t:settings_schema.motion.settings.header__2.content"
       },
       {
         "type": "range",
         "id": "motion_duration",
-        "label": "Default duration",
+        "label": "t:settings_schema.motion.settings.motion_duration.label",
         "min": 200,
         "max": 1400,
         "step": 50,
@@ -526,96 +640,113 @@
       {
         "type": "select",
         "id": "motion_easing",
-        "label": "Default easing",
+        "label": "t:settings_schema.motion.settings.motion_easing.label",
         "options": [
-          { "value": "standard", "label": "Standard" },
-          { "value": "smooth", "label": "Smooth" },
-          { "value": "out", "label": "Ease out" },
-          { "value": "spring", "label": "Spring-like" }
+          {
+            "value": "standard",
+            "label": "t:settings_schema.motion.settings.motion_easing.options__1.label"
+          },
+          {
+            "value": "smooth",
+            "label": "t:settings_schema.motion.settings.motion_easing.options__2.label"
+          },
+          {
+            "value": "out",
+            "label": "t:settings_schema.motion.settings.motion_easing.options__3.label"
+          },
+          {
+            "value": "spring",
+            "label": "t:settings_schema.motion.settings.motion_easing.options__4.label"
+          }
         ],
         "default": "smooth"
       },
       {
         "type": "header",
-        "content": "Effects"
+        "content": "t:settings_schema.motion.settings.header__3.content"
       },
       {
         "type": "checkbox",
         "id": "motion_parallax",
-        "label": "Enable parallax media",
+        "label": "t:settings_schema.motion.settings.motion_parallax.label",
         "default": true
       },
       {
         "type": "checkbox",
         "id": "motion_hover",
-        "label": "Enable hover microinteractions",
+        "label": "t:settings_schema.motion.settings.motion_hover.label",
         "default": true
       },
       {
         "type": "checkbox",
         "id": "motion_section_transitions",
-        "label": "Enable section transitions",
+        "label": "t:settings_schema.motion.settings.motion_section_transitions.label",
         "default": false,
-        "info": "Lets a section round and overlap into the section below it."
+        "info": "t:settings_schema.motion.settings.motion_section_transitions.info"
       },
       {
         "type": "paragraph",
-        "content": "Motion always respects a reduced-motion preference, and content stays readable if JavaScript fails."
+        "content": "t:settings_schema.motion.settings.paragraph__4.content"
       }
     ]
   },
-
   {
-    "name": "Cart",
+    "name": "t:settings_schema.cart.name",
     "settings": [
       {
         "type": "select",
         "id": "cart_type",
-        "label": "Cart type",
+        "label": "t:settings_schema.cart.settings.cart_type.label",
         "options": [
-          { "value": "drawer", "label": "Slide-out drawer" },
-          { "value": "page", "label": "Go to the cart page" }
+          {
+            "value": "drawer",
+            "label": "t:settings_schema.cart.settings.cart_type.options__1.label"
+          },
+          {
+            "value": "page",
+            "label": "t:settings_schema.cart.settings.cart_type.options__2.label"
+          }
         ],
         "default": "drawer"
       },
       {
         "type": "checkbox",
         "id": "cart_show_note",
-        "label": "Let shoppers add an order note",
+        "label": "t:settings_schema.cart.settings.cart_show_note.label",
         "default": true
       },
       {
         "type": "header",
-        "content": "Free shipping progress"
+        "content": "t:settings_schema.cart.settings.header__1.content"
       },
       {
         "type": "checkbox",
         "id": "cart_free_shipping",
-        "label": "Show free shipping progress",
+        "label": "t:settings_schema.cart.settings.cart_free_shipping.label",
         "default": false,
-        "info": "Only turn this on if you actually offer free shipping at a threshold. Set the real rate up in Settings > Shipping."
+        "info": "t:settings_schema.cart.settings.cart_free_shipping.info"
       },
       {
         "type": "text",
         "id": "cart_free_shipping_threshold",
-        "label": "Free shipping threshold",
+        "label": "t:settings_schema.cart.settings.cart_free_shipping_threshold.label",
         "default": "75",
-        "info": "The amount in your store currency, without a symbol. For example: 75"
+        "info": "t:settings_schema.cart.settings.cart_free_shipping_threshold.info"
       },
       {
         "type": "header",
-        "content": "Recommendations"
+        "content": "t:settings_schema.cart.settings.header__2.content"
       },
       {
         "type": "checkbox",
         "id": "cart_recommendations",
-        "label": "Show recommended products in the cart",
+        "label": "t:settings_schema.cart.settings.cart_recommendations.label",
         "default": true
       },
       {
         "type": "range",
         "id": "cart_recommendations_count",
-        "label": "Number of recommendations",
+        "label": "t:settings_schema.cart.settings.cart_recommendations_count.label",
         "min": 2,
         "max": 6,
         "step": 1,
@@ -623,87 +754,112 @@
       }
     ]
   },
-
   {
-    "name": "Search",
+    "name": "t:settings_schema.search.name",
     "settings": [
       {
         "type": "checkbox",
         "id": "predictive_search_enabled",
-        "label": "Enable predictive search",
+        "label": "t:settings_schema.search.settings.predictive_search_enabled.label",
         "default": true
       },
       {
         "type": "checkbox",
         "id": "predictive_search_products",
-        "label": "Show product suggestions",
+        "label": "t:settings_schema.search.settings.predictive_search_products.label",
         "default": true
       },
       {
         "type": "checkbox",
         "id": "predictive_search_collections",
-        "label": "Show collection suggestions",
+        "label": "t:settings_schema.search.settings.predictive_search_collections.label",
         "default": true
       },
       {
         "type": "checkbox",
         "id": "predictive_search_pages",
-        "label": "Show page and article suggestions",
+        "label": "t:settings_schema.search.settings.predictive_search_pages.label",
         "default": true
       },
       {
         "type": "checkbox",
         "id": "predictive_search_queries",
-        "label": "Show suggested search terms",
+        "label": "t:settings_schema.search.settings.predictive_search_queries.label",
         "default": true
       }
     ]
   },
-
   {
-    "name": "Brand and social",
+    "name": "t:settings_schema.brand_and_social.name",
     "settings": [
       {
         "type": "image_picker",
         "id": "favicon",
-        "label": "Favicon",
-        "info": "Will be scaled down to 32 x 32px."
+        "label": "t:settings_schema.brand_and_social.settings.favicon.label",
+        "info": "t:settings_schema.brand_and_social.settings.favicon.info"
       },
       {
         "type": "image_picker",
         "id": "share_image",
-        "label": "Social sharing image",
-        "info": "Used when a page has no image of its own. 1200 x 630px recommended."
+        "label": "t:settings_schema.brand_and_social.settings.share_image.label",
+        "info": "t:settings_schema.brand_and_social.settings.share_image.info"
       },
       {
         "type": "text",
         "id": "brand_twitter_handle",
-        "label": "X (Twitter) handle",
-        "info": "Without the @ symbol. Used for social sharing cards."
+        "label": "t:settings_schema.brand_and_social.settings.brand_twitter_handle.label",
+        "info": "t:settings_schema.brand_and_social.settings.brand_twitter_handle.info"
       },
       {
         "type": "header",
-        "content": "Social accounts"
+        "content": "t:settings_schema.brand_and_social.settings.header__1.content"
       },
-      { "type": "text", "id": "social_instagram_link", "label": "Instagram" },
-      { "type": "text", "id": "social_tiktok_link", "label": "TikTok" },
-      { "type": "text", "id": "social_youtube_link", "label": "YouTube" },
-      { "type": "text", "id": "social_facebook_link", "label": "Facebook" },
-      { "type": "text", "id": "social_twitter_link", "label": "X (Twitter)" },
-      { "type": "text", "id": "social_pinterest_link", "label": "Pinterest" },
-      { "type": "text", "id": "social_linkedin_link", "label": "LinkedIn" }
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "t:settings_schema.brand_and_social.settings.social_instagram_link.label"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "t:settings_schema.brand_and_social.settings.social_tiktok_link.label"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "t:settings_schema.brand_and_social.settings.social_youtube_link.label"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "t:settings_schema.brand_and_social.settings.social_facebook_link.label"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "t:settings_schema.brand_and_social.settings.social_twitter_link.label"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest_link",
+        "label": "t:settings_schema.brand_and_social.settings.social_pinterest_link.label"
+      },
+      {
+        "type": "text",
+        "id": "social_linkedin_link",
+        "label": "t:settings_schema.brand_and_social.settings.social_linkedin_link.label"
+      }
     ]
   },
-
   {
-    "name": "Currency and localization",
+    "name": "t:settings_schema.currency_and_localization.name",
     "settings": [
       {
         "type": "checkbox",
         "id": "currency_code_enabled",
-        "label": "Show currency codes",
+        "label": "t:settings_schema.currency_and_localization.settings.currency_code_enabled.label",
         "default": true,
-        "info": "Displays $10.00 USD instead of $10.00."
+        "info": "t:settings_schema.currency_and_localization.settings.currency_code_enabled.info"
       }
     ]
   }

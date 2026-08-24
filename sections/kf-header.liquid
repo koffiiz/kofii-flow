@@ -266,26 +266,28 @@
 
 {% schema %}
 {
-  "name": "Header",
+  "name": "t:sections.kf-header.name",
   "tag": "header",
   "class": "kf-header-section",
   "enabled_on": {
-    "groups": ["header"]
+    "groups": [
+      "header"
+    ]
   },
   "settings": [
     {
       "type": "header",
-      "content": "Logo"
+      "content": "t:sections.kf-header.settings.header__1.content"
     },
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo image"
+      "label": "t:sections.kf-header.settings.logo.label"
     },
     {
       "type": "range",
       "id": "logo_width",
-      "label": "Logo width",
+      "label": "t:sections.kf-header.settings.logo_width.label",
       "min": 60,
       "max": 320,
       "step": 10,
@@ -295,7 +297,7 @@
     {
       "type": "range",
       "id": "logo_width_mobile",
-      "label": "Logo width on mobile",
+      "label": "t:sections.kf-header.settings.logo_width_mobile.label",
       "min": 50,
       "max": 200,
       "step": 10,
@@ -304,29 +306,35 @@
     },
     {
       "type": "header",
-      "content": "Navigation"
+      "content": "t:sections.kf-header.settings.header__2.content"
     },
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Menu",
+      "label": "t:sections.kf-header.settings.menu.label",
       "default": "main-menu",
-      "info": "Menu items with sub-items become dropdowns. Items with three levels become mega menus."
+      "info": "t:sections.kf-header.settings.menu.info"
     },
     {
       "type": "select",
       "id": "layout",
-      "label": "Layout",
+      "label": "t:sections.kf-header.settings.layout.label",
       "options": [
-        { "value": "logo-left", "label": "Logo left, menu beside it" },
-        { "value": "logo-center", "label": "Logo centered, menu below" }
+        {
+          "value": "logo-left",
+          "label": "t:sections.kf-header.settings.layout.options__1.label"
+        },
+        {
+          "value": "logo-center",
+          "label": "t:sections.kf-header.settings.layout.options__2.label"
+        }
       ],
       "default": "logo-left"
     },
     {
       "type": "range",
       "id": "mega_columns",
-      "label": "Mega menu columns",
+      "label": "t:sections.kf-header.settings.mega_columns.label",
       "min": 2,
       "max": 6,
       "step": 1,
@@ -334,53 +342,77 @@
     },
     {
       "type": "header",
-      "content": "Behaviour"
+      "content": "t:sections.kf-header.settings.header__3.content"
     },
     {
       "type": "select",
       "id": "sticky",
-      "label": "Sticky header",
+      "label": "t:sections.kf-header.settings.sticky.label",
       "options": [
-        { "value": "none", "label": "Off" },
-        { "value": "always", "label": "Always visible" },
-        { "value": "reveal", "label": "Hide on scroll down, show on scroll up" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-header.settings.sticky.options__1.label"
+        },
+        {
+          "value": "always",
+          "label": "t:sections.kf-header.settings.sticky.options__2.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:sections.kf-header.settings.sticky.options__3.label"
+        }
       ],
       "default": "reveal"
     },
     {
       "type": "checkbox",
       "id": "transparent",
-      "label": "Transparent over the first section",
+      "label": "t:sections.kf-header.settings.transparent.label",
       "default": false,
-      "info": "Best with a full-height hero. The header becomes solid as soon as the page scrolls."
+      "info": "t:sections.kf-header.settings.transparent.info"
     },
     {
       "type": "header",
-      "content": "Icons"
+      "content": "t:sections.kf-header.settings.header__4.content"
     },
-    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
-    { "type": "checkbox", "id": "show_account", "label": "Show account", "default": true },
-    { "type": "checkbox", "id": "show_cart", "label": "Show cart", "default": true },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "t:sections.kf-header.settings.show_search.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "t:sections.kf-header.settings.show_account.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "t:sections.kf-header.settings.show_cart.label",
+      "default": true
+    },
     {
       "type": "checkbox",
       "id": "show_localization",
-      "label": "Show country and language selectors",
+      "label": "t:sections.kf-header.settings.show_localization.label",
       "default": false
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-header.settings.header__5.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Color scheme",
+      "label": "t:sections.kf-header.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-header.settings.padding_top.label",
       "min": 0,
       "max": 48,
       "step": 2,
@@ -390,7 +422,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-header.settings.padding_bottom.label",
       "min": 0,
       "max": 48,
       "step": 2,
@@ -401,22 +433,38 @@
   "blocks": [
     {
       "type": "menu_promo",
-      "name": "Mega menu promo",
+      "name": "t:sections.kf-header.blocks.menu_promo.name",
       "settings": [
         {
           "type": "paragraph",
-          "content": "Adds a promotional card to one mega menu."
+          "content": "t:sections.kf-header.blocks.menu_promo.settings.paragraph__1.content"
         },
         {
           "type": "text",
           "id": "menu_item",
-          "label": "Menu item",
-          "info": "Type the exact top-level menu item title this promo belongs to."
+          "label": "t:sections.kf-header.blocks.menu_promo.settings.menu_item.label",
+          "info": "t:sections.kf-header.blocks.menu_promo.settings.menu_item.info"
         },
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "heading", "label": "Heading" },
-        { "type": "text", "id": "text", "label": "Text" },
-        { "type": "url", "id": "link", "label": "Link" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.kf-header.blocks.menu_promo.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.kf-header.blocks.menu_promo.settings.heading.label"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:sections.kf-header.blocks.menu_promo.settings.text.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.kf-header.blocks.menu_promo.settings.link.label"
+        }
       ]
     }
   ]

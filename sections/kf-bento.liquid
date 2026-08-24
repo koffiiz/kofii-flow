@@ -202,102 +202,132 @@
 
 {% schema %}
 {
-  "name": "Bento grid",
+  "name": "t:sections.kf-bento.name",
   "tag": "section",
   "class": "kf-bento-section",
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.kf-bento.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.kf-bento.settings.eyebrow.label"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.kf-bento.settings.heading.label",
       "default": "Everything in one place"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "Heading size",
+      "label": "t:sections.kf-bento.settings.heading_size.label",
       "options": [
-        { "value": "kf-h3", "label": "Small" },
-        { "value": "kf-h2", "label": "Medium" },
-        { "value": "kf-h1", "label": "Large" }
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-bento.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-bento.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-bento.settings.heading_size.options__3.label"
+        }
       ],
       "default": "kf-h2"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text"
+      "label": "t:sections.kf-bento.settings.text.label"
     },
     {
       "type": "select",
       "id": "alignment",
-      "label": "Heading alignment",
+      "label": "t:sections.kf-bento.settings.alignment.label",
       "options": [
-        { "value": "start", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "start",
+          "label": "t:sections.kf-bento.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-bento.settings.alignment.options__2.label"
+        }
       ],
       "default": "start"
     },
     {
       "type": "select",
       "id": "tile_heading_size",
-      "label": "Tile heading size",
+      "label": "t:sections.kf-bento.settings.tile_heading_size.label",
       "options": [
-        { "value": "kf-h6", "label": "Small" },
-        { "value": "kf-h5", "label": "Medium" },
-        { "value": "kf-h4", "label": "Large" }
+        {
+          "value": "kf-h6",
+          "label": "t:sections.kf-bento.settings.tile_heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h5",
+          "label": "t:sections.kf-bento.settings.tile_heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-bento.settings.tile_heading_size.options__3.label"
+        }
       ],
       "default": "kf-h5"
     },
     {
       "type": "header",
-      "content": "Grid"
+      "content": "t:sections.kf-bento.settings.header__2.content"
     },
     {
       "type": "range",
       "id": "columns",
-      "label": "Columns on desktop",
+      "label": "t:sections.kf-bento.settings.columns.label",
       "min": 2,
       "max": 6,
       "step": 1,
       "default": 4,
-      "info": "A tile set wider than this is trimmed to fit."
+      "info": "t:sections.kf-bento.settings.columns.info"
     },
     {
       "type": "select",
       "id": "columns_mobile",
-      "label": "Columns on mobile",
+      "label": "t:sections.kf-bento.settings.columns_mobile.label",
       "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
+        {
+          "value": "1",
+          "label": "t:sections.kf-bento.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.kf-bento.settings.columns_mobile.options__2.label"
+        }
       ],
       "default": "2",
-      "info": "Any tile wider than one column fills the row here."
+      "info": "t:sections.kf-bento.settings.columns_mobile.info"
     },
     {
       "type": "range",
       "id": "row_height",
-      "label": "Row height on desktop",
+      "label": "t:sections.kf-bento.settings.row_height.label",
       "min": 120,
       "max": 400,
       "step": 10,
       "unit": "px",
       "default": 220,
-      "info": "A minimum, not a cap. A tile with a lot of text grows rather than clipping it."
+      "info": "t:sections.kf-bento.settings.row_height.info"
     },
     {
       "type": "range",
       "id": "row_height_mobile",
-      "label": "Row height on mobile",
+      "label": "t:sections.kf-bento.settings.row_height_mobile.label",
       "min": 100,
       "max": 320,
       "step": 10,
@@ -307,7 +337,7 @@
     {
       "type": "range",
       "id": "gap",
-      "label": "Space between tiles",
+      "label": "t:sections.kf-bento.settings.gap.label",
       "min": 0,
       "max": 40,
       "step": 2,
@@ -316,94 +346,151 @@
     },
     {
       "type": "header",
-      "content": "Motion"
+      "content": "t:sections.kf-bento.settings.header__3.content"
     },
     {
       "type": "select",
       "id": "animation",
-      "label": "Tile animation",
+      "label": "t:sections.kf-bento.settings.animation.label",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "fade", "label": "Fade" },
-        { "value": "fade-up", "label": "Fade up" },
-        { "value": "scale-up", "label": "Scale" },
-        { "value": "blur-in", "label": "Blur" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-bento.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-bento.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-bento.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-bento.settings.animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-bento.settings.animation.options__5.label"
+        }
       ],
       "default": "fade-up",
-      "info": "Tiles arrive one after another in the order they are listed."
+      "info": "t:sections.kf-bento.settings.animation.info"
     },
     {
       "type": "range",
       "id": "animation_stagger_delay",
-      "label": "Stagger delay",
+      "label": "t:sections.kf-bento.settings.animation_stagger_delay.label",
       "min": 0,
       "max": 300,
       "step": 10,
       "unit": "ms",
       "default": 60,
-      "info": "Gap between each tile arriving. A large grid at a high value takes a long time to finish."
+      "info": "t:sections.kf-bento.settings.animation_stagger_delay.info"
     },
     {
       "type": "select",
       "id": "animation_duration",
-      "label": "Duration",
+      "label": "t:sections.kf-bento.settings.animation_duration.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "fast", "label": "Fast" },
-        { "value": "normal", "label": "Normal" },
-        { "value": "slow", "label": "Slow" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-bento.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-bento.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-bento.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-bento.settings.animation_duration.options__4.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_easing",
-      "label": "Easing",
+      "label": "t:sections.kf-bento.settings.animation_easing.label",
       "options": [
-        { "value": "theme", "label": "Theme default" },
-        { "value": "standard", "label": "Standard" },
-        { "value": "smooth", "label": "Smooth" },
-        { "value": "out", "label": "Ease out" },
-        { "value": "spring", "label": "Spring-like" }
+        {
+          "value": "theme",
+          "label": "t:sections.kf-bento.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-bento.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-bento.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-bento.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-bento.settings.animation_easing.options__5.label"
+        }
       ],
       "default": "theme"
     },
     {
       "type": "select",
       "id": "animation_trigger",
-      "label": "Trigger",
+      "label": "t:sections.kf-bento.settings.animation_trigger.label",
       "options": [
-        { "value": "scroll", "label": "On scroll" },
-        { "value": "load", "label": "On load" }
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-bento.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-bento.settings.animation_trigger.options__2.label"
+        }
       ],
       "default": "scroll"
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "t:sections.kf-bento.settings.header__4.content"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "Section color scheme",
+      "label": "t:sections.kf-bento.settings.color_scheme.label",
       "default": "scheme-1"
     },
     {
       "type": "select",
       "id": "section_transition",
-      "label": "Transition into the next section",
-      "info": "Requires section transitions to be enabled in Theme settings > Motion.",
+      "label": "t:sections.kf-bento.settings.section_transition.label",
+      "info": "t:sections.kf-bento.settings.section_transition.info",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "round", "label": "Round the next section over this one" },
-        { "value": "overlap", "label": "Overlap the next section" }
+        {
+          "value": "none",
+          "label": "t:sections.kf-bento.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-bento.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-bento.settings.section_transition.options__3.label"
+        }
       ],
       "default": "none"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "t:sections.kf-bento.settings.padding_top.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -413,7 +500,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "t:sections.kf-bento.settings.padding_bottom.label",
       "min": 0,
       "max": 200,
       "step": 4,
@@ -424,70 +511,82 @@
   "blocks": [
     {
       "type": "image",
-      "name": "Image tile",
+      "name": "t:sections.kf-bento.blocks.image.name",
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "t:sections.kf-bento.blocks.image.settings.image.label"
         },
         {
           "type": "inline_richtext",
           "id": "heading",
-          "label": "Heading"
+          "label": "t:sections.kf-bento.blocks.image.settings.heading.label"
         },
         {
           "type": "text",
           "id": "text",
-          "label": "Text"
+          "label": "t:sections.kf-bento.blocks.image.settings.text.label"
         },
         {
           "type": "select",
           "id": "text_position",
-          "label": "Text position",
+          "label": "t:sections.kf-bento.blocks.image.settings.text_position.label",
           "options": [
-            { "value": "top", "label": "Top" },
-            { "value": "bottom", "label": "Bottom" }
+            {
+              "value": "top",
+              "label": "t:sections.kf-bento.blocks.image.settings.text_position.options__1.label"
+            },
+            {
+              "value": "bottom",
+              "label": "t:sections.kf-bento.blocks.image.settings.text_position.options__2.label"
+            }
           ],
           "default": "bottom"
         },
         {
           "type": "range",
           "id": "overlay_opacity",
-          "label": "Overlay",
+          "label": "t:sections.kf-bento.blocks.image.settings.overlay_opacity.label",
           "min": 0,
           "max": 90,
           "step": 5,
           "unit": "%",
           "default": 25,
-          "info": "Needed behind any text on the image, and harmless without it."
+          "info": "t:sections.kf-bento.blocks.image.settings.overlay_opacity.info"
         },
         {
           "type": "select",
           "id": "overlay_style",
-          "label": "Overlay style",
+          "label": "t:sections.kf-bento.blocks.image.settings.overlay_style.label",
           "options": [
-            { "value": "solid", "label": "Solid" },
-            { "value": "gradient", "label": "Gradient" }
+            {
+              "value": "solid",
+              "label": "t:sections.kf-bento.blocks.image.settings.overlay_style.options__1.label"
+            },
+            {
+              "value": "gradient",
+              "label": "t:sections.kf-bento.blocks.image.settings.overlay_style.options__2.label"
+            }
           ],
           "default": "gradient"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "t:sections.kf-bento.blocks.image.settings.link.label"
         },
         {
           "type": "text",
           "id": "link_label",
-          "label": "Link description",
-          "info": "Not shown. Read out in place of the tile when someone uses a screen reader, so describe where the link goes.",
+          "label": "t:sections.kf-bento.blocks.image.settings.link_label.label",
+          "info": "t:sections.kf-bento.blocks.image.settings.link_label.info",
           "default": "Shop the collection"
         },
         {
           "type": "range",
           "id": "column_span",
-          "label": "Columns wide",
+          "label": "t:sections.kf-bento.blocks.image.settings.column_span.label",
           "min": 1,
           "max": 6,
           "step": 1,
@@ -496,7 +595,7 @@
         {
           "type": "range",
           "id": "row_span",
-          "label": "Rows tall",
+          "label": "t:sections.kf-bento.blocks.image.settings.row_span.label",
           "min": 1,
           "max": 3,
           "step": 1,
@@ -506,65 +605,80 @@
     },
     {
       "type": "text",
-      "name": "Text tile",
+      "name": "t:sections.kf-bento.blocks.text.name",
       "settings": [
         {
           "type": "text",
           "id": "eyebrow",
-          "label": "Eyebrow"
+          "label": "t:sections.kf-bento.blocks.text.settings.eyebrow.label"
         },
         {
           "type": "inline_richtext",
           "id": "heading",
-          "label": "Heading",
+          "label": "t:sections.kf-bento.blocks.text.settings.heading.label",
           "default": "Made to last"
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "Text"
+          "label": "t:sections.kf-bento.blocks.text.settings.text.label"
         },
         {
           "type": "select",
           "id": "text_position",
-          "label": "Text position",
+          "label": "t:sections.kf-bento.blocks.text.settings.text_position.label",
           "options": [
-            { "value": "top", "label": "Top" },
-            { "value": "bottom", "label": "Bottom" }
+            {
+              "value": "top",
+              "label": "t:sections.kf-bento.blocks.text.settings.text_position.options__1.label"
+            },
+            {
+              "value": "bottom",
+              "label": "t:sections.kf-bento.blocks.text.settings.text_position.options__2.label"
+            }
           ],
           "default": "bottom"
         },
         {
           "type": "text",
           "id": "link_label",
-          "label": "Link label"
+          "label": "t:sections.kf-bento.blocks.text.settings.link_label.label"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "t:sections.kf-bento.blocks.text.settings.link.label"
         },
         {
           "type": "select",
           "id": "link_style",
-          "label": "Link style",
+          "label": "t:sections.kf-bento.blocks.text.settings.link_style.label",
           "options": [
-            { "value": "plain", "label": "Text link" },
-            { "value": "secondary", "label": "Outlined button" },
-            { "value": "primary", "label": "Solid button" }
+            {
+              "value": "plain",
+              "label": "t:sections.kf-bento.blocks.text.settings.link_style.options__1.label"
+            },
+            {
+              "value": "secondary",
+              "label": "t:sections.kf-bento.blocks.text.settings.link_style.options__2.label"
+            },
+            {
+              "value": "primary",
+              "label": "t:sections.kf-bento.blocks.text.settings.link_style.options__3.label"
+            }
           ],
           "default": "plain"
         },
         {
           "type": "color_scheme",
           "id": "color_scheme",
-          "label": "Tile color scheme",
+          "label": "t:sections.kf-bento.blocks.text.settings.color_scheme.label",
           "default": "scheme-2"
         },
         {
           "type": "range",
           "id": "column_span",
-          "label": "Columns wide",
+          "label": "t:sections.kf-bento.blocks.text.settings.column_span.label",
           "min": 1,
           "max": 6,
           "step": 1,
@@ -573,7 +687,7 @@
         {
           "type": "range",
           "id": "row_span",
-          "label": "Rows tall",
+          "label": "t:sections.kf-bento.blocks.text.settings.row_span.label",
           "min": 1,
           "max": 3,
           "step": 1,
@@ -583,23 +697,23 @@
     },
     {
       "type": "product",
-      "name": "Product tile",
+      "name": "t:sections.kf-bento.blocks.product.name",
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "Product"
+          "label": "t:sections.kf-bento.blocks.product.settings.product.label"
         },
         {
           "type": "color_scheme",
           "id": "color_scheme",
-          "label": "Tile color scheme",
+          "label": "t:sections.kf-bento.blocks.product.settings.color_scheme.label",
           "default": "scheme-1"
         },
         {
           "type": "range",
           "id": "column_span",
-          "label": "Columns wide",
+          "label": "t:sections.kf-bento.blocks.product.settings.column_span.label",
           "min": 1,
           "max": 6,
           "step": 1,
@@ -608,7 +722,7 @@
         {
           "type": "range",
           "id": "row_span",
-          "label": "Rows tall",
+          "label": "t:sections.kf-bento.blocks.product.settings.row_span.label",
           "min": 1,
           "max": 3,
           "step": 1,
@@ -619,12 +733,36 @@
   ],
   "presets": [
     {
-      "name": "Bento grid",
+      "name": "t:sections.kf-bento.presets.name",
       "blocks": [
-        { "type": "image", "settings": { "column_span": 2, "row_span": 2 } },
-        { "type": "text", "settings": { "column_span": 2, "row_span": 1 } },
-        { "type": "image", "settings": { "column_span": 1, "row_span": 1 } },
-        { "type": "image", "settings": { "column_span": 1, "row_span": 1 } }
+        {
+          "type": "image",
+          "settings": {
+            "column_span": 2,
+            "row_span": 2
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "column_span": 2,
+            "row_span": 1
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "column_span": 1,
+            "row_span": 1
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "column_span": 1,
+            "row_span": 1
+          }
+        }
       ]
     }
   ]

@@ -38,16 +38,20 @@
 
 {% schema %}
 {
-  "name": "Share",
+  "name": "t:blocks.product-share.name",
   "tag": null,
   "settings": [
     {
       "type": "text",
       "id": "label",
-      "label": "Label",
-      "info": "Leave blank to use the theme default."
+      "label": "t:blocks.product-share.settings.label.label",
+      "info": "t:blocks.product-share.settings.label.info"
     }
   ],
-  "presets": [{ "name": "Share" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-share.presets.name"
+    }
+  ]
 }
 {% endschema %}

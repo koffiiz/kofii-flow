@@ -32,16 +32,30 @@
 
 {% schema %}
 {
-  "name": "Rating",
+  "name": "t:blocks.product-rating.name",
   "tag": null,
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows once a review app has written to the standard reviews metafields."
+      "content": "t:blocks.product-rating.settings.paragraph__1.content"
     },
-    { "type": "checkbox", "id": "show_value", "label": "Show the score", "default": true },
-    { "type": "checkbox", "id": "show_count", "label": "Show the review count", "default": true }
+    {
+      "type": "checkbox",
+      "id": "show_value",
+      "label": "t:blocks.product-rating.settings.show_value.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "t:blocks.product-rating.settings.show_count.label",
+      "default": true
+    }
   ],
-  "presets": [{ "name": "Rating" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-rating.presets.name"
+    }
+  ]
 }
 {% endschema %}

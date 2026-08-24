@@ -47,33 +47,46 @@
 
 {% schema %}
 {
-  "name": "Price",
+  "name": "t:blocks.product-price.name",
   "tag": null,
   "settings": [
     {
       "type": "checkbox",
       "id": "show_sale_badge",
-      "label": "Show sale badge",
+      "label": "t:blocks.product-price.settings.show_sale_badge.label",
       "default": true
     },
     {
       "type": "select",
       "id": "sale_badge_style",
-      "label": "Sale badge shows",
+      "label": "t:blocks.product-price.settings.sale_badge_style.label",
       "options": [
-        { "value": "text", "label": "Sale" },
-        { "value": "percent", "label": "Percentage saved" },
-        { "value": "amount", "label": "Amount saved" }
+        {
+          "value": "text",
+          "label": "t:blocks.product-price.settings.sale_badge_style.options__1.label"
+        },
+        {
+          "value": "percent",
+          "label": "t:blocks.product-price.settings.sale_badge_style.options__2.label"
+        },
+        {
+          "value": "amount",
+          "label": "t:blocks.product-price.settings.sale_badge_style.options__3.label"
+        }
       ],
       "default": "percent"
     },
     {
       "type": "checkbox",
       "id": "show_tax_note",
-      "label": "Show tax and shipping note",
+      "label": "t:blocks.product-price.settings.show_tax_note.label",
       "default": false
     }
   ],
-  "presets": [{ "name": "Price" }]
+  "presets": [
+    {
+      "name": "t:blocks.product-price.presets.name"
+    }
+  ]
 }
 {% endschema %}
