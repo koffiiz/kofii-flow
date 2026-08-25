@@ -5,14 +5,11 @@
   marquee, using the shared keyframes in kf-motion.css — the track is
   duplicated in markup so the loop is seamless with no JavaScript at all.
 
-  The scrolling case is wrapped in <kf-marquee>, which adds the pause control
-  WCAG 2.2 SC 2.2.2 requires for motion that starts on its own and runs past
-  five seconds. Pause-on-hover alone does not satisfy it: it does nothing for a
-  keyboard or touch visitor.
-
-  The duplicate track is aria-hidden AND inert. aria-hidden on its own hides
-  the copies from a screen reader while leaving their links focusable, which
-  strands a keyboard visitor on a control they cannot perceive.
+  The scrolling case renders `snippets/kf-marquee-track.liquid` — the same
+  viewport, tracks and pause button as the marquee section and the logo cloud.
+  <kf-marquee> adds the pause control WCAG 2.2 SC 2.2.2 requires for motion
+  that starts on its own and runs past five seconds; pause-on-hover alone does
+  not satisfy it, because it does nothing for a keyboard or touch visitor.
 
   Neither the component stylesheet nor the script loads for a single message,
   because a static bar has nothing to pause. This section renders on every page
@@ -27,8 +24,14 @@
     assign is_marquee = true
   endif
 
-  assign pause_label = 'general.accessibility.pause_animation' | t
-  assign play_label = 'general.accessibility.play_animation' | t
+  comment
+    Built here because render arguments accept neither filters nor
+    expressions. The scheme lands on <kf-marquee> itself: in this section the
+    element IS the bar, rather than sitting inside a section wrapper.
+  endcomment
+  assign bar_class = 'kf-scheme kf-scheme--' | append: s.color_scheme.id
+  assign bar_class = bar_class | append: ' kf-announcement kf-announcement--marquee'
+  assign bar_style = '--kf-marquee-duration: ' | append: s.speed | append: 's;'
 -%}
 
 {%- if is_marquee -%}
@@ -51,44 +54,13 @@
 
 {%- if messages.size > 0 -%}
   {%- if is_marquee -%}
-    <kf-marquee
-      class="kf-scheme kf-scheme--{{ s.color_scheme.id }} kf-announcement kf-announcement--marquee"
-      style="--kf-marquee-duration: {{ s.speed }}s;"
-      {% if s.pause_on_hover %}data-kf-pause-hover{% endif %}
-    >
-      <div class="kf-marquee{% if s.edge_fade %} kf-marquee--fade{% endif %}" data-kf-marquee>
-        {%- for pass in (1..2) -%}
-          <div
-            class="kf-marquee__track"
-            data-kf-marquee-track
-            {% if pass == 2 %}aria-hidden="true" inert{% endif %}
-          >
-            {{ announcement_messages }}
-          </div>
-        {%- endfor -%}
-      </div>
-
-      {%- comment -%}
-        Hidden until <kf-marquee> reveals it — a button that cannot work
-        without the script should not be offered at all.
-      {%- endcomment -%}
-      <button
-        class="kf-marquee-toggle"
-        type="button"
-        data-kf-marquee-toggle
-        data-pause-label="{{ pause_label | escape }}"
-        data-play-label="{{ play_label | escape }}"
-        aria-label="{{ pause_label | escape }}"
-        hidden
-      >
-        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--pause">
-          {%- render 'kf-icon', name: 'pause', size: 'sm' -%}
-        </span>
-        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--play">
-          {%- render 'kf-icon', name: 'play', size: 'sm' -%}
-        </span>
-      </button>
-    </kf-marquee>
+    {%- render 'kf-marquee-track',
+      items: announcement_messages,
+      pause_on_hover: s.pause_on_hover,
+      edge_fade: s.edge_fade,
+      host_class: bar_class,
+      host_style: bar_style
+    -%}
   {%- else -%}
     <div class="kf-scheme kf-scheme--{{ s.color_scheme.id }} kf-announcement">
       {%- for block in messages -%}

@@ -242,6 +242,14 @@ Open the section with:
 
 which requires `color_scheme`, `padding_top`, `padding_bottom` settings (and optionally `section_transition`).
 
+**A custom property that a component declares on itself cannot be set from a section.** A declaration beats an inherited value, so `--kf-x: <default>` written on the component's own element silently shadows anything an ancestor sets. Defaults belong in the *consumer's* `var()` fallback instead — `animation: … var(--kf-marquee-duration, 30s)` — which leaves the property free to be set from anywhere above.
+
+This is not hypothetical: `.kf-marquee` declared `--kf-marquee-duration: 30s` on itself, and all three sections exposing a speed setting (marquee, announcement bar, logo cloud) set it on an ancestor. Every one of them animated at 30s regardless. `--kf-marquee-gap` and `--kf-marquee-direction` were always written as consumer fallbacks, which is exactly why those two worked. Measured before and after.
+
+**A section whose product comes from a setting cannot use the product theme blocks.** Blocks in `/blocks` read `closest.product`, which resolves from the *template's* product — on the home page there is none, so `closest.product` is nil and every product block renders empty. Such a section renders the shared snippets directly instead (`kf-price`, `kf-variant-picker`, `kf-buy-buttons`, `kf-stars`), which is what `quick-add.liquid` and `kf-product-spotlight.liquid` both do. That is not a second implementation: the snippets *are* the single implementation, and the product page's blocks are thin wrappers around them.
+
+To make such a section re-render on a variant change it needs three things: `[data-kf-product-root][data-kf-section-id="{{ section.id }}"]` around the content (the picker reads the section id from there and refuses to run without it), `update_url: false` (it is not the product page and must not rewrite the address bar), and a `scope` that differs from `Product` and `QuickAdd` so input ids cannot collide.
+
 **Where a component's CSS goes.** This has bitten the theme more than once, so the rule is explicit:
 
 | The markup is rendered by | Its CSS belongs in |
@@ -320,7 +328,7 @@ Then check by hand:
 
 ## 10. Current state and roadmap
 
-**Phase 4 — marketing library (in progress).** Built so far: rich text, image with text (five layouts), featured collection (grid / carousel / horizontal scroll) with quick add, scrolling story, timeline, lookbook (hotspots or a scroll-driven guided tour that zooms to each product), marquee, stacking cards (pure `position: sticky`, no JavaScript), product recommendations, FAQ with FAQPage structured data, before/after comparison, newsletter, a bento grid, tabs, and testimonials. Shared components added along the way: <kf-slider>, <kf-quick-add>, <kf-scroll-story>, <kf-marquee>, <kf-tabs>, the star rating extracted into `snippets/kf-stars.liquid`, the slider arrows and pagination extracted into `snippets/kf-slider-controls.liquid` and `snippets/kf-slider-pagination.liquid`, and the variant picker / buy buttons extracted into snippets so quick add and the product page share one implementation. Sections are being added one at a time.
+**Phase 4 — marketing library (in progress).** Built so far: rich text, image with text (five layouts), featured collection (grid / carousel / horizontal scroll) with quick add, scrolling story, timeline, lookbook (hotspots or a scroll-driven guided tour that zooms to each product), marquee, stacking cards (pure `position: sticky`, no JavaScript), product recommendations, FAQ with FAQPage structured data, before/after comparison, newsletter, a bento grid, tabs, testimonials, a product spotlight, and a logo cloud (static grid or continuous scroll). Shared components added along the way: the marquee shell extracted into `snippets/kf-marquee-track.liquid` (rendered by the marquee section, the logo cloud and the announcement bar — the `<kf-marquee>` markup contract exists in exactly one place, because kf-marquee.js reads those hooks by name and a section that drifted from them would lose its pause button with no visible error), <kf-slider>, <kf-quick-add>, <kf-scroll-story>, <kf-marquee>, <kf-tabs>, the star rating extracted into `snippets/kf-stars.liquid`, the slider arrows and pagination extracted into `snippets/kf-slider-controls.liquid` and `snippets/kf-slider-pagination.liquid`, and the variant picker / buy buttons extracted into snippets so quick add and the product page share one implementation. Sections are being added one at a time.
 
 **Phase 3b — collection (complete).** `main-collection-product-grid.liquid` with Shopify native storefront filtering and sorting, `main-collection-banner.liquid`, `main-list-collections.liquid`, `<kf-facets>`, and the `collection` / `list-collections` templates. Products render through the shared product card.
 
@@ -346,7 +354,7 @@ Then check by hand:
 
 **Not built yet — do not pretend otherwise:**
 
-- Sections: the rest of the marketing library (product spotlight, logo cloud, comparison, video, stats, image reveal).
+- Sections: the rest of the marketing library (comparison, video, stats, image reveal).
 - Featured collection has grid, carousel and horizontal-scroll layouts. An editorial layout (oversized first product) is not built.
 - Timeline has vertical and alternating layouts. A horizontal (scrolling) timeline is not built — it needs a second spine orientation rather than a reuse of the existing CSS.
 - Components: none outstanding.

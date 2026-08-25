@@ -1,0 +1,193 @@
+/* ==========================================================================
+   Kofii Flow — Logo cloud
+   Loaded by sections/kf-logo-cloud.liquid.
+
+   Height-led sizing throughout. Logos arrive at every aspect ratio there is,
+   and the only thing that makes a row of them look deliberate is a shared
+   height with each width derived from it.
+   ========================================================================== */
+
+.kf-logos__header {
+  display: grid;
+  gap: var(--kf-space-2xs);
+  margin-block-end: var(--kf-space-md);
+}
+
+.kf-logos__heading {
+  margin: 0;
+}
+
+.kf-logos__text {
+  max-width: 54ch;
+}
+
+.kf-logos--align-center .kf-logos__header {
+  justify-items: center;
+  text-align: center;
+}
+
+.kf-logos__grid {
+  --kf-grid-gap: var(--kf-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kf-logos__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kf-space-3xs);
+  min-inline-size: 0;
+  /* Every cell reserves the logo height whether or not its image fills it, so
+     a short mark and a tall one still sit on one baseline. */
+  min-block-size: var(--kf-logo-height, 48px);
+}
+
+.kf-logos__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kf-space-3xs);
+  text-decoration: none;
+  color: inherit;
+  /* The mark is usually well under the 44px minimum on its own. */
+  min-block-size: 44px;
+  justify-content: center;
+  /* Load-bearing. Without it a wide wordmark escapes its column entirely:
+     the link is a flex item sized to its content, so the frame's own
+     `max-inline-size: 100%` would resolve against a parent that had already
+     grown to match it — 100% of itself, which clamps nothing. Measured: a
+     10:1 mark at a 48px height rendered 480px wide in a 213px track and bled
+     134px into the cells on either side. Anchoring the link to the track
+     gives the percentage below something real to resolve against. */
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* The frame derives its width from the height and its own aspect ratio, which
+   is what keeps a wordmark and a roundel visually equal.
+
+   `.kf-media` paints `--kf-color-surface` behind every frame. That is right
+   for a photo and wrong here: logos are overwhelmingly transparent PNGs and
+   SVGs, and the tint would show through as a box behind each one. */
+.kf-logos__media {
+  block-size: var(--kf-logo-height, 48px);
+  inline-size: auto;
+  max-inline-size: 100%;
+  background-color: transparent;
+}
+
+/* Once the width is clamped, the frame is no longer the image's aspect ratio,
+   so `object-fit: contain` letterboxes the mark inside it. That is the right
+   outcome: the row keeps one baseline and an over-wide logo simply renders
+   smaller, rather than overlapping the logos beside it. A merchant who wants
+   it bigger reduces the column count. */
+.kf-logos__media .kf-media__img {
+  object-fit: contain;
+}
+
+.kf-logos__name {
+  text-align: center;
+}
+
+/* Monochrome ---------------------------------------------------------------
+   The resting state is a merchant-set opacity plus full desaturation, so a
+   wall of clashing brand colors reads as one quiet row. Hover and keyboard
+   focus both restore it — the focus case matters, because otherwise a
+   keyboard user never sees the state a mouse user gets. */
+
+.kf-logos--monochrome .kf-logos__media {
+  filter: grayscale(1);
+  opacity: calc(var(--kf-logo-rest, 60%) / 100%);
+  transition: filter var(--kf-motion-normal) var(--kf-ease-out),
+              opacity var(--kf-motion-normal) var(--kf-ease-out);
+}
+
+.kf-logos--monochrome .kf-logos__link:hover .kf-logos__media,
+.kf-logos--monochrome .kf-logos__link:focus-visible .kf-logos__media {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* An unlinked logo has no hover state of its own, so the whole row lifts when
+   the grid is pointed at. Without this the treatment would look broken on a
+   cloud where nothing links anywhere. */
+.kf-logos--monochrome .kf-logos__grid:hover .kf-logos__item:not(:has(.kf-logos__link)) .kf-logos__media {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-logos--monochrome .kf-logos__media {
+    transition: none;
+  }
+}
+
+/* Dividing lines -----------------------------------------------------------
+   The grid gap is painted with the border color and each cell repaints the
+   background over it, so the lines fall between cells at any column count
+   without a single border declaration to keep in sync.
+
+   Consequence worth knowing: the cells must match the section background, so
+   this reads `--kf-color-background` from the scheme rather than setting a
+   color of its own. */
+
+.kf-logos--divided .kf-logos__grid {
+  --kf-grid-gap: 1px;
+  background-color: var(--kf-color-border);
+}
+
+.kf-logos--divided .kf-logos__item {
+  background-color: var(--kf-color-background);
+  padding: var(--kf-space-sm);
+}
+
+/* Placeholder --------------------------------------------------------------
+   Shown only before any logo is added. Held back so it reads as an empty slot
+   rather than as a real mark. */
+
+.kf-logos__item--placeholder .kf-logos__media {
+  opacity: 0.35;
+}
+
+/* ==========================================================================
+   Continuous scroll
+
+   The band, the tracks and the pause chip are all the shared marquee — see
+   component-marquee.css and the keyframes in kf-motion.css. Only the items
+   are styled here, and they need almost nothing: the track is already a flex
+   row with the gap and the animation on it.
+   ========================================================================== */
+
+.kf-logos--marquee .kf-logos__item {
+  /* A flex item in the track, so it must not be squeezed to fit — the track
+     is deliberately wider than the viewport. */
+  flex: 0 0 auto;
+  min-block-size: 0;
+}
+
+/* Height-led still, but with no column to clamp against the width is left to
+   the aspect ratio alone. That is the right behaviour in a scrolling band:
+   nothing sits beside a logo for it to collide with, and a wide wordmark
+   simply takes longer to pass. */
+.kf-logos--marquee .kf-logos__media {
+  max-inline-size: none;
+}
+
+.kf-logos--marquee .kf-logos__link {
+  max-inline-size: none;
+}
+
+/* The dividing lines are a grid device — there are no cells to divide in a
+   scrolling band, so the setting is simply inert here rather than drawing
+   stray rules between moving logos. */
+.kf-logos--marquee.kf-logos--divided .kf-logos__grid {
+  background-color: transparent;
+}
+
+.kf-logos--marquee.kf-logos--divided .kf-logos__item {
+  background-color: transparent;
+  padding: 0;
+}

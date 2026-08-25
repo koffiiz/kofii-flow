@@ -1,0 +1,829 @@
+{%- comment -%}
+  Kofii Flow — Product spotlight
+  ---------------------------------------------------------------------------
+  One product, given a full band of the page: large media, live price, working
+  variant picker and add to cart. The difference from image-with-text is that
+  everything here is real product data — a price that follows the variant, a
+  button that knows it is sold out — rather than copy a merchant retypes.
+
+  Three compositions:
+    media-left / media-right  two columns
+    overlay                   full-bleed media with the buy card floating over it
+
+  WHY THE INFO COLUMN IS NOT THEME BLOCKS
+  main-product builds its column from /blocks, which read `closest.product`.
+  That resolves from the *template's* product, and this section's product comes
+  from a setting — on the home page there is no product context for a block to
+  find. So the column renders the shared snippets directly, exactly as
+  quick-add.liquid does. There is still only one variant picker and one buy
+  button implementation in the theme.
+
+  VARIANT RE-RENDERING
+  <kf-variant-picker> asks Shopify to re-render this section at the product's
+  own URL and swaps `[data-kf-variant-region]`. It reads the section id from
+  `[data-kf-product-root]`, so that attribute is load-bearing — without it the
+  picker refuses to run and the price would sit still while the variant
+  changed. `update_url: false` because a spotlight is not the product page and
+  must not rewrite the address bar.
+
+  `scope: 'Spotlight'` keeps input ids clear of a product page or a quick add
+  panel in the same document.
+{%- endcomment -%}
+
+{{ 'section-product-spotlight.css' | asset_url | stylesheet_tag }}
+{{ 'component-quantity.css' | asset_url | stylesheet_tag }}
+{{ 'component-variant-picker.css' | asset_url | stylesheet_tag }}
+{{ 'component-buy-buttons.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-product-form.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-quantity.js' | asset_url }}" defer></script>
+<script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign product = s.product
+  assign variant = product.selected_or_first_available_variant
+  assign form_id = 'KfSpotlightForm-' | append: section.id
+
+  assign layout_class = 'kf-spotlight kf-spotlight--' | append: s.layout
+  assign layout_class = layout_class | append: ' kf-spotlight--align-' | append: s.alignment
+
+  case s.media_width
+    when 'small'
+      assign media_track = '0.85fr'
+    when 'large'
+      assign media_track = '1.35fr'
+    else
+      assign media_track = '1.1fr'
+  endcase
+
+  assign parallax_strength = s.media_parallax | divided_by: 100.0
+
+  comment
+    Render arguments accept neither filters nor expressions, so every derived
+    value is resolved before the markup starts.
+  endcomment
+  assign root_style = '--kf-spot-media: ' | append: media_track | append: '; --kf-spot-align: ' | append: s.content_position | append: ';'
+
+  comment
+    The merchant's own image wins; otherwise the product's featured image is
+    the obvious subject. Falling through to a placeholder keeps the Theme
+    Editor looking intentional before a product is chosen.
+  endcomment
+  assign media_image = s.image
+  if media_image == blank
+    assign media_image = product.featured_media.preview_image
+  endif
+
+  assign hover_image = blank
+  if s.show_second_image and s.image == blank and product.media.size > 1
+    assign hover_image = product.media[1].preview_image
+  endif
+
+  if s.layout == 'overlay'
+    assign media_sizes = '100vw'
+  else
+    assign media_sizes = '(min-width: 990px) 55vw, 100vw'
+  endif
+
+  assign full_details = 'products.product.view_full_details' | t
+  assign choose_options = 'products.product.choose_options' | t
+
+  comment
+    The product description can be long enough to swamp the section, so the
+    merchant picks between it, their own copy, or nothing at all.
+  endcomment
+  assign body = blank
+  if s.description_source == 'product'
+    assign body = product.description
+  elsif s.description_source == 'custom'
+    assign body = s.description
+  endif
+
+  assign body_class = 'kf-rte kf-spotlight__body'
+  if s.truncate_description
+    assign body_class = body_class | append: ' kf-spotlight__body--clamp'
+  endif
+
+  comment
+    Only the overlay layout floats the panel over the image, so only that
+    layout gives it a scheme of its own. In the two column layouts the panel
+    is a plain column and must inherit the section's colors, or a merchant
+    would have to keep two schemes in sync to change one background.
+  endcomment
+  assign panel_class = 'kf-spotlight__panel'
+  if s.layout == 'overlay'
+    assign panel_class = panel_class | append: ' kf-scheme'
+    if s.card_color_scheme.id != blank
+      assign panel_class = panel_class | append: ' kf-scheme--' | append: s.card_color_scheme.id
+    endif
+    if s.card_color_scheme.settings.background_gradient != blank
+      assign panel_class = panel_class | append: ' kf-scheme--gradient'
+    endif
+  endif
+-%}
+
+<div
+  {% render 'kf-section-attrs',
+    s: section.settings,
+    extra_class: layout_class,
+    style: root_style %}
+>
+  <div class="kf-container">
+    {%- comment -%}
+      The product root wraps BOTH columns: the price sits in the content
+      column and the picker in the same column, but a future region in the
+      media column would still be found from here.
+    {%- endcomment -%}
+    <div class="kf-spotlight__inner" data-kf-product-root data-kf-section-id="{{ section.id }}">
+      <div
+        class="kf-spotlight__media"
+        {% render 'kf-motion-attrs',
+          animation: s.media_animation,
+          duration: s.animation_duration,
+          easing: s.animation_easing,
+          trigger: s.animation_trigger,
+          delay: s.media_animation_delay %}
+      >
+        {%- render 'kf-media',
+          image: media_image,
+          hover_image: hover_image,
+          ratio: s.media_ratio,
+          sizes: media_sizes,
+          parallax: parallax_strength,
+          zoom: s.media_zoom,
+          placeholder: 'product-apparel-2'
+        -%}
+      </div>
+
+      <div class="{{ panel_class }}">
+        <div
+          class="kf-spotlight__content"
+          {%- comment -%}
+            Stagger container only. `playGroup()` plays the container itself
+            when it also carries `data-kf-animate`, so passing the whole
+            settings object here would fade the column up at the same time as
+            every row inside it. The rows own the animation; this element only
+            decides when the sequence starts.
+          {%- endcomment -%}
+          {% render 'kf-motion-attrs',
+            stagger: s.animation_stagger,
+            stagger_delay: s.animation_stagger_delay,
+            trigger: s.animation_trigger %}
+        >
+          {%- if s.eyebrow != blank -%}
+            <p class="kf-label kf-spotlight__eyebrow" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+              {{- s.eyebrow | escape -}}
+            </p>
+          {%- endif -%}
+
+          {%- if s.show_vendor and product.vendor != blank -%}
+            <p class="kf-text-sm kf-text-muted kf-spotlight__vendor" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+              {{- product.vendor | escape -}}
+            </p>
+          {%- endif -%}
+
+          <h2 class="kf-spotlight__title {{ s.heading_size }}" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+            {%- if product != blank -%}
+              <a class="kf-spotlight__title-link" href="{{ product.url }}">{{ product.title | escape }}</a>
+            {%- else -%}
+              {{ 'products.product.placeholder_title' | t }}
+            {%- endif -%}
+          </h2>
+
+          {%- if s.show_rating -%}
+            {%- liquid
+              assign rating = product.metafields.reviews.rating.value
+              assign rating_count = product.metafields.reviews.rating_count.value
+            -%}
+            {%- comment -%}
+              Nothing is drawn without a score. An empty five-star row reads as
+              a rating of zero, which is worse than no rating at all.
+            {%- endcomment -%}
+            {%- if rating.rating != blank and rating_count > 0 -%}
+              <div class="kf-cluster kf-spotlight__rating" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {%- render 'kf-stars', rating: rating.rating, scale_max: rating.scale_max -%}
+                <span class="kf-text-sm kf-text-muted">
+                  {{- 'products.product.rating_count' | t: count: rating_count -}}
+                </span>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if s.show_price -%}
+            <div
+              class="kf-spotlight__price"
+              data-kf-variant-region="price"
+              {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}
+            >
+              {%- if product != blank -%}
+                {%- render 'kf-price', product: product, variant: variant, show_from: false -%}
+              {%- else -%}
+                <div class="kf-price"><span class="kf-price__regular kf-text-muted">{{ 1999 | money }}</span></div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if body != blank -%}
+            <div class="{{ body_class }}" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+              {{ body }}
+            </div>
+          {%- endif -%}
+
+          {%- if product != blank -%}
+            {%- if s.show_variant_picker -%}
+              <div {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {%- render 'kf-variant-picker',
+                  product: product,
+                  form_id: form_id,
+                  scope: 'Spotlight',
+                  style: s.variant_style,
+                  show_selected_value: true,
+                  update_url: false
+                -%}
+              </div>
+            {%- endif -%}
+
+            {%- if s.show_buy_buttons -%}
+              <div {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {%- render 'kf-buy-buttons',
+                  product: product,
+                  form_id: form_id,
+                  scope: 'Spotlight',
+                  show_quantity: s.show_quantity,
+                  show_dynamic_checkout: s.show_dynamic_checkout,
+                  show_payment_terms: s.show_payment_terms
+                -%}
+              </div>
+            {%- else -%}
+              {%- comment -%}
+                With the buy area off, the section still has to lead somewhere,
+                so the product link becomes the primary action.
+              {%- endcomment -%}
+              <div class="kf-button-group" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {%- render 'kf-button', label: choose_options, href: product.url, style: 'primary' -%}
+              </div>
+            {%- endif -%}
+
+            {%- if s.show_view_link and s.show_buy_buttons -%}
+              <a class="kf-link kf-spotlight__full" href="{{ product.url }}" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {{- full_details -}}
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- comment -%}
+            Extra content below the buy area — trust rows, a note, an app
+            block. Optional by design: the section is complete without it.
+          {%- endcomment -%}
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.kf-product-spotlight.name",
+  "tag": "section",
+  "class": "kf-spotlight-section",
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.kf-product-spotlight.settings.header__1.content"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:sections.kf-product-spotlight.settings.product.label"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:sections.kf-product-spotlight.settings.eyebrow.label",
+      "info": "t:sections.kf-product-spotlight.settings.eyebrow.info"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.kf-product-spotlight.settings.heading_size.label",
+      "options": [
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-product-spotlight.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-product-spotlight.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-product-spotlight.settings.heading_size.options__3.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-product-spotlight.settings.heading_size.options__4.label"
+        }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "select",
+      "id": "description_source",
+      "label": "t:sections.kf-product-spotlight.settings.description_source.label",
+      "options": [
+        {
+          "value": "product",
+          "label": "t:sections.kf-product-spotlight.settings.description_source.options__1.label"
+        },
+        {
+          "value": "custom",
+          "label": "t:sections.kf-product-spotlight.settings.description_source.options__2.label"
+        },
+        {
+          "value": "none",
+          "label": "t:sections.kf-product-spotlight.settings.description_source.options__3.label"
+        }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.kf-product-spotlight.settings.description.label",
+      "info": "t:sections.kf-product-spotlight.settings.description.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "truncate_description",
+      "label": "t:sections.kf-product-spotlight.settings.truncate_description.label",
+      "default": true,
+      "info": "t:sections.kf-product-spotlight.settings.truncate_description.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-product-spotlight.settings.header__2.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "t:sections.kf-product-spotlight.settings.show_vendor.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "t:sections.kf-product-spotlight.settings.show_rating.label",
+      "default": false,
+      "info": "t:sections.kf-product-spotlight.settings.show_rating.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "t:sections.kf-product-spotlight.settings.show_price.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_picker",
+      "label": "t:sections.kf-product-spotlight.settings.show_variant_picker.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "variant_style",
+      "label": "t:sections.kf-product-spotlight.settings.variant_style.label",
+      "options": [
+        {
+          "value": "auto",
+          "label": "t:sections.kf-product-spotlight.settings.variant_style.options__1.label"
+        },
+        {
+          "value": "buttons",
+          "label": "t:sections.kf-product-spotlight.settings.variant_style.options__2.label"
+        },
+        {
+          "value": "swatches",
+          "label": "t:sections.kf-product-spotlight.settings.variant_style.options__3.label"
+        },
+        {
+          "value": "dropdown",
+          "label": "t:sections.kf-product-spotlight.settings.variant_style.options__4.label"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_buttons",
+      "label": "t:sections.kf-product-spotlight.settings.show_buy_buttons.label",
+      "default": true,
+      "info": "t:sections.kf-product-spotlight.settings.show_buy_buttons.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "t:sections.kf-product-spotlight.settings.show_quantity.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:sections.kf-product-spotlight.settings.show_dynamic_checkout.label",
+      "default": false,
+      "info": "t:sections.kf-product-spotlight.settings.show_dynamic_checkout.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_terms",
+      "label": "t:sections.kf-product-spotlight.settings.show_payment_terms.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_link",
+      "label": "t:sections.kf-product-spotlight.settings.show_view_link.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-product-spotlight.settings.header__3.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.kf-product-spotlight.settings.layout.label",
+      "options": [
+        {
+          "value": "media-left",
+          "label": "t:sections.kf-product-spotlight.settings.layout.options__1.label"
+        },
+        {
+          "value": "media-right",
+          "label": "t:sections.kf-product-spotlight.settings.layout.options__2.label"
+        },
+        {
+          "value": "overlay",
+          "label": "t:sections.kf-product-spotlight.settings.layout.options__3.label"
+        }
+      ],
+      "default": "media-left"
+    },
+    {
+      "type": "select",
+      "id": "media_width",
+      "label": "t:sections.kf-product-spotlight.settings.media_width.label",
+      "info": "t:sections.kf-product-spotlight.settings.media_width.info",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.kf-product-spotlight.settings.media_width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.kf-product-spotlight.settings.media_width.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.kf-product-spotlight.settings.media_width.options__3.label"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:sections.kf-product-spotlight.settings.content_position.label",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.kf-product-spotlight.settings.content_position.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-product-spotlight.settings.content_position.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-product-spotlight.settings.content_position.options__3.label"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:sections.kf-product-spotlight.settings.alignment.label",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.kf-product-spotlight.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-product-spotlight.settings.alignment.options__2.label"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-product-spotlight.settings.header__4.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.kf-product-spotlight.settings.image.label",
+      "info": "t:sections.kf-product-spotlight.settings.image.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_second_image",
+      "label": "t:sections.kf-product-spotlight.settings.show_second_image.label",
+      "default": false,
+      "info": "t:sections.kf-product-spotlight.settings.show_second_image.info"
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "t:sections.kf-product-spotlight.settings.media_ratio.label",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.kf-product-spotlight.settings.media_ratio.options__1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.kf-product-spotlight.settings.media_ratio.options__2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.kf-product-spotlight.settings.media_ratio.options__3.label"
+        },
+        {
+          "value": "tall",
+          "label": "t:sections.kf-product-spotlight.settings.media_ratio.options__4.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.kf-product-spotlight.settings.media_ratio.options__5.label"
+        },
+        {
+          "value": "wide",
+          "label": "t:sections.kf-product-spotlight.settings.media_ratio.options__6.label"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "media_zoom",
+      "label": "t:sections.kf-product-spotlight.settings.media_zoom.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "media_parallax",
+      "label": "t:sections.kf-product-spotlight.settings.media_parallax.label",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-product-spotlight.settings.header__5.content"
+    },
+    {
+      "type": "select",
+      "id": "media_animation",
+      "label": "t:sections.kf-product-spotlight.settings.media_animation.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-product-spotlight.settings.media_animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-product-spotlight.settings.media_animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-product-spotlight.settings.media_animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-product-spotlight.settings.media_animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-product-spotlight.settings.media_animation.options__5.label"
+        },
+        {
+          "value": "clip-up",
+          "label": "t:sections.kf-product-spotlight.settings.media_animation.options__6.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:sections.kf-product-spotlight.settings.media_animation.options__7.label"
+        }
+      ],
+      "default": "reveal"
+    },
+    {
+      "type": "range",
+      "id": "media_animation_delay",
+      "label": "t:sections.kf-product-spotlight.settings.media_animation_delay.label",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.kf-product-spotlight.settings.paragraph__6.content"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "t:sections.kf-product-spotlight.settings.animation.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-product-spotlight.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-product-spotlight.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-product-spotlight.settings.animation.options__3.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-product-spotlight.settings.animation.options__4.label"
+        }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "t:sections.kf-product-spotlight.settings.animation_stagger.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "t:sections.kf-product-spotlight.settings.animation_stagger_delay.label",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 70
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "t:sections.kf-product-spotlight.settings.animation_duration.label",
+      "options": [
+        {
+          "value": "theme",
+          "label": "t:sections.kf-product-spotlight.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-product-spotlight.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-product-spotlight.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-product-spotlight.settings.animation_duration.options__4.label"
+        }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "t:sections.kf-product-spotlight.settings.animation_easing.label",
+      "options": [
+        {
+          "value": "theme",
+          "label": "t:sections.kf-product-spotlight.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-product-spotlight.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-product-spotlight.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-product-spotlight.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-product-spotlight.settings.animation_easing.options__5.label"
+        }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "t:sections.kf-product-spotlight.settings.animation_trigger.label",
+      "options": [
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-product-spotlight.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-product-spotlight.settings.animation_trigger.options__2.label"
+        }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-product-spotlight.settings.header__7.content"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.kf-product-spotlight.settings.color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_color_scheme",
+      "label": "t:sections.kf-product-spotlight.settings.card_color_scheme.label",
+      "info": "t:sections.kf-product-spotlight.settings.card_color_scheme.info",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "t:sections.kf-product-spotlight.settings.section_transition.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-product-spotlight.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-product-spotlight.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-product-spotlight.settings.section_transition.options__3.label"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:sections.kf-product-spotlight.settings.padding_top.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:sections.kf-product-spotlight.settings.padding_bottom.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.kf-product-spotlight.presets.name"
+    }
+  ]
+}
+{% endschema %}

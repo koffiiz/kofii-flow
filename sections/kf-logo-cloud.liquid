@@ -1,0 +1,642 @@
+{%- comment -%}
+  Kofii Flow — Logo cloud
+  ---------------------------------------------------------------------------
+  A wall of brand marks: "as seen in", "trusted by", stockists, certifications.
+
+  Two layouts: a static grid, and a continuous scroll.
+
+  The scroll is NOT a second marquee. It renders `snippets/kf-marquee-track.liquid`
+  — the same viewport, tracks and pause button the marquee section uses, driven
+  by the same <kf-marquee> element and the same CSS keyframes. All this section
+  supplies is the items. The pause control WCAG 2.2 SC 2.2.2 requires, and the
+  repeat logic that fills a wide viewport, come with it.
+
+  Motion attributes are deliberately omitted from the items in the scrolling
+  layout. <kf-marquee> clones the track's children to fill the viewport, and a
+  clone carrying `data-kf-animate` would be claimed by the reveal engine but
+  never observed — leaving it hidden for good.
+
+  Height-led sizing, not width-led. Logos arrive at wildly different aspect
+  ratios, and the only way a row of them looks deliberate is to fix the height
+  and let each width fall out of it.
+
+  Blocks are section-local. A logo is an image, a name and a link — not a
+  content unit any other section would want.
+{%- endcomment -%}
+
+{{ 'section-logo-cloud.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  The marquee's component CSS and element are requested only by the layout
+  that needs them, so a static logo grid downloads neither.
+{%- endcomment -%}
+{%- if section.settings.layout == 'marquee' -%}
+  {{ 'component-marquee.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'kf-marquee.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- liquid
+  assign s = section.settings
+
+  assign is_marquee = false
+  if s.layout == 'marquee'
+    assign is_marquee = true
+  endif
+
+  assign root_class = 'kf-logos'
+  assign root_class = root_class | append: ' kf-logos--' | append: s.layout
+  assign root_class = root_class | append: ' kf-logos--' | append: s.logo_style
+  assign root_class = root_class | append: ' kf-logos--align-' | append: s.alignment
+  if s.show_dividers
+    assign root_class = root_class | append: ' kf-logos--divided'
+  endif
+
+  comment
+    Tablet sits between the two rather than carrying a setting of its own —
+    with up to eight desktop columns a fixed tablet count would be wrong at
+    both ends. Integer division, then clamped so it never drops below two.
+  endcomment
+  assign columns_tablet = s.columns_desktop | divided_by: 2
+  if columns_tablet < 2
+    assign columns_tablet = 2
+  endif
+
+  assign grid_style = '--kf-grid-cols: ' | append: s.columns_desktop
+  assign grid_style = grid_style | append: '; --kf-grid-cols-tablet: ' | append: columns_tablet
+  assign grid_style = grid_style | append: '; --kf-grid-cols-mobile: ' | append: s.columns_mobile | append: ';'
+
+  comment
+    A logo is small and rarely the widest thing on screen, so the srcset is
+    capped well below the theme default rather than shipping a 1600px file
+    to fill a 48px-tall slot.
+  endcomment
+  assign logo_sizes = '(min-width: 990px) 15vw, (min-width: 750px) 25vw, 40vw'
+  assign logo_widths = '120,200,300,400,600'
+
+  comment
+    The shared keyframes always travel one way; `animation-direction` is what
+    reverses them, so there is only ever one set of keyframes.
+  endcomment
+  assign scroll_direction = 'normal'
+  if s.scroll_direction == 'right'
+    assign scroll_direction = 'reverse'
+  endif
+
+  assign root_style = '--kf-logo-height: ' | append: s.logo_height | append: 'px'
+  assign root_style = root_style | append: '; --kf-logo-rest: ' | append: s.logo_opacity | append: '%'
+  assign root_style = root_style | append: '; --kf-marquee-duration: ' | append: s.scroll_speed | append: 's'
+  assign root_style = root_style | append: '; --kf-marquee-direction: ' | append: scroll_direction
+  assign root_style = root_style | append: '; --kf-marquee-gap: ' | append: s.scroll_gap | append: 'px;'
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: root_class, style: root_style %}>
+  <div class="kf-container">
+    {%- if s.heading != blank or s.text != blank -%}
+      <header class="kf-logos__header" {% render 'kf-motion-attrs', motion: section.settings %}>
+        {%- if s.heading != blank -%}
+          <h2 class="kf-logos__heading {{ s.heading_size }}">{{ s.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="kf-rte kf-text-muted kf-logos__text">{{ s.text }}</div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- comment -%}
+      One loop, both layouts. The wrapper element differs — list items in the
+      grid, plain divs in the track, because <kf-marquee> clones the track's
+      direct children and a nested list would be cloned whole — but the logo
+      inside it is rendered once, in one place.
+    {%- endcomment -%}
+    {%- capture logo_items -%}
+      {%- for block in section.blocks -%}
+        {%- liquid
+          comment
+            The name is the logo's accessible name, so it is what a linked mark
+            announces. The image's own alt text is the fallback for a merchant
+            who set it on the asset instead.
+          endcomment
+          assign logo_alt = block.settings.name | default: block.settings.image.alt
+        -%}
+        {%- if is_marquee -%}
+          <div class="kf-logos__item" {{ block.shopify_attributes }}>
+        {%- else -%}
+          <li
+            class="kf-logos__item"
+            {% render 'kf-motion-attrs',
+              animation: s.animation,
+              duration: s.animation_duration,
+              easing: s.animation_easing %}
+            {{ block.shopify_attributes }}
+          >
+        {%- endif -%}
+
+        {%- if block.settings.link != blank -%}
+          <a class="kf-logos__link" href="{{ block.settings.link }}">
+        {%- endif -%}
+
+        {%- render 'kf-media',
+          image: block.settings.image,
+          alt: logo_alt,
+          ratio: 'adapt',
+          fit: 'contain',
+          flush: true,
+          sizes: logo_sizes,
+          widths: logo_widths,
+          placeholder: 'image',
+          class: 'kf-logos__media'
+        -%}
+
+        {%- if s.show_names and block.settings.name != blank -%}
+          <span class="kf-text-xs kf-text-muted kf-logos__name">{{ block.settings.name | escape }}</span>
+        {%- endif -%}
+
+        {%- if block.settings.link != blank -%}
+          </a>
+        {%- endif -%}
+
+        {%- if is_marquee -%}</div>{%- else -%}</li>{%- endif -%}
+      {%- else -%}
+        {%- comment -%}
+          Nothing configured yet. Placeholder marks keep the section looking
+          intentional in the Theme Editor instead of collapsing to a bare
+          heading over empty space.
+        {%- endcomment -%}
+        {%- for i in (1..5) -%}
+          {%- if is_marquee -%}
+            <div class="kf-logos__item kf-logos__item--placeholder">
+          {%- else -%}
+            <li class="kf-logos__item kf-logos__item--placeholder">
+          {%- endif -%}
+          {%- render 'kf-media',
+            ratio: 'adapt',
+            fit: 'contain',
+            flush: true,
+            placeholder: 'image',
+            class: 'kf-logos__media'
+          -%}
+          {%- if is_marquee -%}</div>{%- else -%}</li>{%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if is_marquee -%}
+      {%- render 'kf-marquee-track',
+        items: logo_items,
+        pause_on_hover: s.pause_on_hover,
+        edge_fade: s.edge_fade,
+        class: 'kf-logos__marquee'
+      -%}
+    {%- else -%}
+      <ul
+        class="kf-grid kf-logos__grid"
+        role="list"
+        style="{{ grid_style }}"
+        {% render 'kf-motion-attrs',
+          stagger: s.animation_stagger,
+          stagger_delay: s.animation_stagger_delay,
+          trigger: s.animation_trigger %}
+      >
+        {{ logo_items }}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.kf-logo-cloud.name",
+  "tag": "section",
+  "class": "kf-logo-cloud-section",
+  "max_blocks": 24,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.kf-logo-cloud.settings.header__1.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.kf-logo-cloud.settings.heading.label",
+      "default": "As seen in"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.kf-logo-cloud.settings.heading_size.label",
+      "options": [
+        {
+          "value": "kf-label",
+          "label": "t:sections.kf-logo-cloud.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h5",
+          "label": "t:sections.kf-logo-cloud.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-logo-cloud.settings.heading_size.options__3.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-logo-cloud.settings.heading_size.options__4.label"
+        }
+      ],
+      "default": "kf-label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.kf-logo-cloud.settings.text.label"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:sections.kf-logo-cloud.settings.alignment.label",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.kf-logo-cloud.settings.alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-logo-cloud.settings.alignment.options__2.label"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-logo-cloud.settings.header__2.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.kf-logo-cloud.settings.layout.label",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:sections.kf-logo-cloud.settings.layout.options__1.label"
+        },
+        {
+          "value": "marquee",
+          "label": "t:sections.kf-logo-cloud.settings.layout.options__2.label"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "t:sections.kf-logo-cloud.settings.columns_desktop.label",
+      "info": "t:sections.kf-logo-cloud.settings.columns_desktop.info",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:sections.kf-logo-cloud.settings.columns_mobile.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:sections.kf-logo-cloud.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "3",
+          "label": "t:sections.kf-logo-cloud.settings.columns_mobile.options__2.label"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "t:sections.kf-logo-cloud.settings.logo_height.label",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "t:sections.kf-logo-cloud.settings.show_dividers.label",
+      "default": false,
+      "info": "t:sections.kf-logo-cloud.settings.show_dividers.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_names",
+      "label": "t:sections.kf-logo-cloud.settings.show_names.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-logo-cloud.settings.header__3.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.kf-logo-cloud.settings.paragraph__4.content"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "t:sections.kf-logo-cloud.settings.scroll_speed.label",
+      "info": "t:sections.kf-logo-cloud.settings.scroll_speed.info",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "t:sections.kf-logo-cloud.settings.scroll_direction.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.kf-logo-cloud.settings.scroll_direction.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.kf-logo-cloud.settings.scroll_direction.options__2.label"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "scroll_gap",
+      "label": "t:sections.kf-logo-cloud.settings.scroll_gap.label",
+      "min": 16,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "t:sections.kf-logo-cloud.settings.pause_on_hover.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "edge_fade",
+      "label": "t:sections.kf-logo-cloud.settings.edge_fade.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-logo-cloud.settings.header__3.content"
+    },
+    {
+      "type": "select",
+      "id": "logo_style",
+      "label": "t:sections.kf-logo-cloud.settings.logo_style.label",
+      "options": [
+        {
+          "value": "full-color",
+          "label": "t:sections.kf-logo-cloud.settings.logo_style.options__1.label"
+        },
+        {
+          "value": "monochrome",
+          "label": "t:sections.kf-logo-cloud.settings.logo_style.options__2.label"
+        }
+      ],
+      "default": "monochrome"
+    },
+    {
+      "type": "range",
+      "id": "logo_opacity",
+      "label": "t:sections.kf-logo-cloud.settings.logo_opacity.label",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-logo-cloud.settings.header__4.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.kf-logo-cloud.settings.paragraph__5.content"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "t:sections.kf-logo-cloud.settings.animation.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-logo-cloud.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-logo-cloud.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-logo-cloud.settings.animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-logo-cloud.settings.animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-logo-cloud.settings.animation.options__5.label"
+        }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "t:sections.kf-logo-cloud.settings.animation_stagger.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "t:sections.kf-logo-cloud.settings.animation_stagger_delay.label",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "t:sections.kf-logo-cloud.settings.animation_duration.label",
+      "options": [
+        {
+          "value": "theme",
+          "label": "t:sections.kf-logo-cloud.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-logo-cloud.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-logo-cloud.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-logo-cloud.settings.animation_duration.options__4.label"
+        }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "t:sections.kf-logo-cloud.settings.animation_easing.label",
+      "options": [
+        {
+          "value": "theme",
+          "label": "t:sections.kf-logo-cloud.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-logo-cloud.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-logo-cloud.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-logo-cloud.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-logo-cloud.settings.animation_easing.options__5.label"
+        }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "t:sections.kf-logo-cloud.settings.animation_trigger.label",
+      "options": [
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-logo-cloud.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-logo-cloud.settings.animation_trigger.options__2.label"
+        }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-logo-cloud.settings.header__6.content"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.kf-logo-cloud.settings.color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "t:sections.kf-logo-cloud.settings.section_transition.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-logo-cloud.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-logo-cloud.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-logo-cloud.settings.section_transition.options__3.label"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:sections.kf-logo-cloud.settings.padding_top.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:sections.kf-logo-cloud.settings.padding_bottom.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "t:sections.kf-logo-cloud.blocks.logo.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.kf-logo-cloud.blocks.logo.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "t:sections.kf-logo-cloud.blocks.logo.settings.name.label",
+          "info": "t:sections.kf-logo-cloud.blocks.logo.settings.name.info"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.kf-logo-cloud.blocks.logo.settings.link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.kf-logo-cloud.presets.name",
+      "blocks": [
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

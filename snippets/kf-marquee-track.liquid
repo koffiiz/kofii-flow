@@ -1,0 +1,89 @@
+{%- comment -%}
+  Kofii Flow — Marquee shell
+  ---------------------------------------------------------------------------
+  The <kf-marquee> markup contract in one place: the viewport, the two tracks,
+  and the pause control. Rendered by the marquee section and by the logo
+  cloud's scrolling layout — the structure must never exist twice, because
+  kf-marquee.js reads these exact hooks and a section that drifted from them
+  would lose its pause button with no visible error.
+
+  The scrolling itself is not here and never was: `@keyframes kf-marquee` in
+  kf-motion.css animates two duplicated tracks with no JavaScript at all.
+
+  Item styling is the caller's. A marquee message, a band item and a logo look
+  nothing alike, so this snippet takes the items already rendered.
+
+  The caller must load `component-marquee.css` and `kf-marquee.js`.
+
+  Usage:
+    {%- capture items -%}...{%- endcapture -%}
+    {% render 'kf-marquee-track', items: items, pause_on_hover: true %}
+
+  Parameters:
+    items          (string, required)  the item markup, already rendered
+    pause_on_hover (boolean)  convenience on top of the button, never instead
+    edge_fade      (boolean)  fade the band out at both ends
+    class          (string)   extra classes on the viewport
+    host_class     (string)   classes on <kf-marquee> itself — the announcement
+                              bar puts its color scheme here, because the
+                              element IS the bar rather than sitting inside one
+    host_style     (string)   inline custom properties on <kf-marquee>
+{%- endcomment -%}
+
+{%- liquid
+  assign viewport_class = 'kf-marquee'
+  if edge_fade
+    assign viewport_class = viewport_class | append: ' kf-marquee--fade'
+  endif
+  if class != blank
+    assign viewport_class = viewport_class | append: ' ' | append: class
+  endif
+
+  assign pause_label = 'general.accessibility.pause_animation' | t
+  assign play_label = 'general.accessibility.play_animation' | t
+-%}
+
+<kf-marquee
+  {% if host_class != blank %}class="{{ host_class }}"{% endif %}
+  {% if host_style != blank %}style="{{ host_style }}"{% endif %}
+  {% if pause_on_hover %}data-kf-pause-hover{% endif %}
+>
+  <div class="{{ viewport_class }}" data-kf-marquee>
+    {%- comment -%}
+      Pass 2 is the duplicate that makes the loop seamless. It is `inert` as
+      well as aria-hidden so its links do not collect a second set of tab
+      stops — aria-hidden alone would hide them from a screen reader while
+      leaving them focusable, which is worse than either.
+    {%- endcomment -%}
+    {%- for pass in (1..2) -%}
+      <div
+        class="kf-marquee__track"
+        data-kf-marquee-track
+        {% if pass == 2 %}aria-hidden="true" inert{% endif %}
+      >
+        {{ items }}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%}
+    Hidden until <kf-marquee> reveals it: without the element there is nothing
+    to pause, and offering a dead button is worse than offering none.
+  {%- endcomment -%}
+  <button
+    class="kf-marquee-toggle"
+    type="button"
+    data-kf-marquee-toggle
+    data-pause-label="{{ pause_label | escape }}"
+    data-play-label="{{ play_label | escape }}"
+    aria-label="{{ pause_label | escape }}"
+    hidden
+  >
+    <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--pause">
+      {%- render 'kf-icon', name: 'pause', size: 'sm' -%}
+    </span>
+    <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--play">
+      {%- render 'kf-icon', name: 'play', size: 'sm' -%}
+    </span>
+  </button>
+</kf-marquee>

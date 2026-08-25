@@ -1646,6 +1646,235 @@
         "name": "Image with text"
       }
     },
+    "kf-logo-cloud": {
+      "name": "Logo cloud",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Eyebrow"
+          },
+          "options__2": {
+            "label": "Small"
+          },
+          "options__3": {
+            "label": "Medium"
+          },
+          "options__4": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "alignment": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Grid"
+          },
+          "options__2": {
+            "label": "Continuous scroll"
+          }
+        },
+        "columns_desktop": {
+          "label": "Logos per row on desktop",
+          "info": "Applies to the grid layout."
+        },
+        "columns_mobile": {
+          "label": "Logos per row on mobile",
+          "options__1": {
+            "label": "2 columns"
+          },
+          "options__2": {
+            "label": "3 columns"
+          }
+        },
+        "logo_height": {
+          "label": "Logo height"
+        },
+        "show_dividers": {
+          "label": "Show dividing lines",
+          "info": "Draws a bordered grid around each logo."
+        },
+        "show_names": {
+          "label": "Show logo names"
+        },
+        "header__3": {
+          "content": "Logo treatment"
+        },
+        "paragraph__4": {
+          "content": "These settings apply to the continuous scroll layout. A pause button is always shown so visitors can stop the motion."
+        },
+        "scroll_speed": {
+          "label": "Speed",
+          "info": "Seconds for one full pass. A higher number scrolls more slowly."
+        },
+        "scroll_direction": {
+          "label": "Direction",
+          "options__1": {
+            "label": "Right to left"
+          },
+          "options__2": {
+            "label": "Left to right"
+          }
+        },
+        "scroll_gap": {
+          "label": "Space between logos"
+        },
+        "pause_on_hover": {
+          "label": "Pause on hover"
+        },
+        "edge_fade": {
+          "label": "Fade the edges"
+        },
+        "logo_style": {
+          "label": "Logo style",
+          "options__1": {
+            "label": "Full color"
+          },
+          "options__2": {
+            "label": "Monochrome, color on hover"
+          }
+        },
+        "logo_opacity": {
+          "label": "Resting opacity"
+        },
+        "header__4": {
+          "content": "Motion"
+        },
+        "paragraph__5": {
+          "content": "For a moving band of logos, use the Marquee section instead."
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger children"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__6": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Section transition",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Rounded"
+          },
+          "options__3": {
+            "label": "Overlap"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "logo": {
+          "name": "Logo",
+          "settings": {
+            "image": {
+              "label": "Logo"
+            },
+            "name": {
+              "label": "Name",
+              "info": "Used as the logo's alt text, and shown below it when logo names are turned on."
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Logo cloud"
+      }
+    },
     "kf-lookbook": {
       "name": "Lookbook",
       "settings": {
@@ -2193,6 +2422,318 @@
       },
       "presets": {
         "name": "Product recommendations"
+      }
+    },
+    "kf-product-spotlight": {
+      "name": "Product spotlight",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "product": {
+          "label": "Product"
+        },
+        "eyebrow": {
+          "label": "Eyebrow",
+          "info": "A short line above the product name, such as \"Product of the month\"."
+        },
+        "heading_size": {
+          "label": "Product name size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          },
+          "options__4": {
+            "label": "Extra large"
+          }
+        },
+        "description_source": {
+          "label": "Description",
+          "options__1": {
+            "label": "Use the product description"
+          },
+          "options__2": {
+            "label": "Write your own"
+          },
+          "options__3": {
+            "label": "Hide"
+          }
+        },
+        "description": {
+          "label": "Custom description",
+          "info": "Shown when the description is set to \"Write your own\"."
+        },
+        "truncate_description": {
+          "label": "Shorten long descriptions",
+          "info": "Limits the description to four lines so it does not overwhelm the section."
+        },
+        "header__2": {
+          "content": "Product details"
+        },
+        "show_vendor": {
+          "label": "Show vendor"
+        },
+        "show_rating": {
+          "label": "Show rating",
+          "info": "Reads the rating metafields that most review apps write to. Hidden until a product has reviews."
+        },
+        "show_price": {
+          "label": "Show price"
+        },
+        "show_variant_picker": {
+          "label": "Show variant picker"
+        },
+        "variant_style": {
+          "label": "Variant picker style",
+          "options__1": {
+            "label": "Automatic"
+          },
+          "options__2": {
+            "label": "Buttons"
+          },
+          "options__3": {
+            "label": "Swatches"
+          },
+          "options__4": {
+            "label": "Dropdowns"
+          }
+        },
+        "show_buy_buttons": {
+          "label": "Show add to cart",
+          "info": "Turn this off to link to the product page instead."
+        },
+        "show_quantity": {
+          "label": "Show quantity selector"
+        },
+        "show_dynamic_checkout": {
+          "label": "Show accelerated checkout buttons",
+          "info": "Shop Pay, Apple Pay and other wallets the store has enabled."
+        },
+        "show_payment_terms": {
+          "label": "Show Shop Pay Installments"
+        },
+        "show_view_link": {
+          "label": "Show link to the product page"
+        },
+        "header__3": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Image left"
+          },
+          "options__2": {
+            "label": "Image right"
+          },
+          "options__3": {
+            "label": "Card over image"
+          }
+        },
+        "media_width": {
+          "label": "Image width",
+          "info": "Applies to the two column layouts.",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "content_position": {
+          "label": "Content position",
+          "options__1": {
+            "label": "Top"
+          },
+          "options__2": {
+            "label": "Middle"
+          },
+          "options__3": {
+            "label": "Bottom"
+          }
+        },
+        "alignment": {
+          "label": "Content alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          }
+        },
+        "header__4": {
+          "content": "Image"
+        },
+        "image": {
+          "label": "Image",
+          "info": "Replaces the product's featured image. Useful for a lifestyle shot."
+        },
+        "show_second_image": {
+          "label": "Reveal the second product image on hover",
+          "info": "Ignored when a custom image is chosen."
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Adapt to image"
+          },
+          "options__2": {
+            "label": "Square"
+          },
+          "options__3": {
+            "label": "Portrait"
+          },
+          "options__4": {
+            "label": "Tall"
+          },
+          "options__5": {
+            "label": "Landscape"
+          },
+          "options__6": {
+            "label": "Wide"
+          }
+        },
+        "media_zoom": {
+          "label": "Zoom the image on hover"
+        },
+        "media_parallax": {
+          "label": "Image parallax"
+        },
+        "header__5": {
+          "content": "Motion"
+        },
+        "media_animation": {
+          "label": "Image animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          },
+          "options__6": {
+            "label": "Clip reveal"
+          },
+          "options__7": {
+            "label": "Editorial reveal"
+          }
+        },
+        "media_animation_delay": {
+          "label": "Image delay"
+        },
+        "paragraph__6": {
+          "content": "The details below animate in sequence."
+        },
+        "animation": {
+          "label": "Detail animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger children"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__7": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "card_color_scheme": {
+          "label": "Card color scheme",
+          "info": "Applies to the floating card in the \"Card over image\" layout."
+        },
+        "section_transition": {
+          "label": "Section transition",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Rounded"
+          },
+          "options__3": {
+            "label": "Overlap"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Product spotlight"
       }
     },
     "kf-rich-text": {

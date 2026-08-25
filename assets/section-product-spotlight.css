@@ -1,0 +1,176 @@
+/* ==========================================================================
+   Kofii Flow — Product spotlight
+   Loaded by sections/kf-product-spotlight.liquid.
+
+   Two children, three compositions. Mobile is one stacked column in all
+   three: a card floating over an image has nowhere to float on a phone, so
+   the overlay layout resolves to the same stack as the others and only
+   becomes an overlay from 990px up.
+   ========================================================================== */
+
+.kf-spotlight__inner {
+  display: grid;
+  gap: var(--kf-space-md);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: var(--kf-spot-align, center);
+}
+
+.kf-spotlight__media {
+  min-width: 0;
+}
+
+.kf-spotlight__media .kf-media {
+  width: 100%;
+}
+
+.kf-spotlight__panel {
+  min-width: 0;
+}
+
+.kf-spotlight__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+  min-width: 0;
+}
+
+/* The eyebrow and vendor sit tight to the name they introduce, rather than
+   taking the column's full rhythm. */
+.kf-spotlight__eyebrow + .kf-spotlight__title,
+.kf-spotlight__vendor + .kf-spotlight__title {
+  margin-block-start: calc(var(--kf-space-sm) * -0.6);
+}
+
+.kf-spotlight__title {
+  margin: 0;
+}
+
+/* The name links to the product, but it is a heading first — it should not
+   read as a link until it is pointed at. */
+.kf-spotlight__title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kf-spotlight__title-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.kf-spotlight__price .kf-price {
+  font-size: var(--kf-text-lg);
+}
+
+/* A product description written for the product page can run for paragraphs.
+   The clamp keeps the section's proportions without truncating anything the
+   shopper cannot reach — the product link is right below it. */
+.kf-spotlight__body--clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kf-spotlight__full {
+  align-self: start;
+}
+
+/* Alignment ---------------------------------------------------------------- */
+
+.kf-spotlight--align-center .kf-spotlight__content {
+  align-items: center;
+  text-align: center;
+}
+
+/* Flex containers do not inherit text-align, so they are centred directly. */
+.kf-spotlight--align-center .kf-button-group,
+.kf-spotlight--align-center .kf-cluster,
+.kf-spotlight--align-center .kf-buy-buttons,
+.kf-spotlight--align-center .kf-variant-picker {
+  justify-content: center;
+  align-self: stretch;
+}
+
+.kf-spotlight--align-center .kf-spotlight__full {
+  align-self: center;
+}
+
+/* ==========================================================================
+   Two columns
+   ========================================================================== */
+
+@media (min-width: 990px) {
+  .kf-spotlight--media-left .kf-spotlight__inner,
+  .kf-spotlight--media-right .kf-spotlight__inner {
+    grid-template-columns: var(--kf-spot-media, 1.1fr) minmax(0, 1fr);
+    gap: var(--kf-space-lg);
+  }
+
+  /* `order` moves the item but NOT its track: with the media in column 2 and
+     a media track of 1.35fr on column 1, the image would be laid out in the
+     narrower track and visibly shrink. The columns are reversed instead, so
+     the track travels with the element. */
+  .kf-spotlight--media-right .kf-spotlight__inner {
+    grid-template-columns: minmax(0, 1fr) var(--kf-spot-media, 1.1fr);
+  }
+
+  .kf-spotlight--media-right .kf-spotlight__media {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .kf-spotlight--media-right .kf-spotlight__panel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+/* ==========================================================================
+   Card over image
+
+   Both children share one grid cell rather than being absolutely positioned.
+   Nothing here creates a containing block, so the section stays safe for any
+   fixed-position UI a block might introduce.
+   ========================================================================== */
+
+@media (min-width: 990px) {
+  .kf-spotlight--overlay .kf-spotlight__inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .kf-spotlight--overlay .kf-spotlight__media,
+  .kf-spotlight--overlay .kf-spotlight__panel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .kf-spotlight--overlay .kf-spotlight__panel {
+    z-index: 1;
+    inline-size: min(30rem, 42%);
+    padding: var(--kf-space-md);
+    border-radius: var(--kf-radius-lg);
+    box-shadow: var(--kf-shadow-lg);
+    margin-inline: var(--kf-space-md);
+  }
+
+  /* The card follows the content position rather than always hugging the
+     left edge, so the merchant can put it clear of the subject of the shot. */
+  .kf-spotlight--overlay.kf-spotlight--align-center .kf-spotlight__panel {
+    justify-self: center;
+  }
+}
+
+/* The card needs the full width of a phone, and the image behind it would
+   only make the text harder to read, so below 990px the two simply stack.
+
+   The panel still carries `.kf-scheme` from Liquid, which paints a background
+   of its own — that has to be undone explicitly here, or the stacked layout
+   shows a colour band the two column layouts do not. */
+@media (max-width: 989px) {
+  .kf-spotlight--overlay .kf-spotlight__panel {
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+  }
+}

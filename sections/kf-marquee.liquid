@@ -8,6 +8,9 @@
   announcement bar uses — two tracks duplicated in the markup, animated with
   `@keyframes kf-marquee`. It runs with no JavaScript at all.
 
+  The viewport, tracks and pause button are `snippets/kf-marquee-track.liquid`,
+  shared with the logo cloud's scrolling layout.
+
   <kf-marquee> adds the two things CSS cannot: the pause control that WCAG 2.2
   SC 2.2.2 requires for self-starting motion, and enough repeats of a short
   item list to fill the viewport (the track carries `min-width: 100%`, so three
@@ -31,11 +34,6 @@
   assign band_class = 'kf-marquee-band'
   if s.uppercase
     assign band_class = band_class | append: ' kf-marquee-band--uppercase'
-  endif
-
-  assign marquee_class = 'kf-marquee'
-  if s.edge_fade
-    assign marquee_class = marquee_class | append: ' kf-marquee--fade'
   endif
 
   comment
@@ -63,12 +61,6 @@
       assign separator_mark = ''
   endcase
 
-  comment
-    Resolved once here rather than inline, so the filter runs a single time
-    and the values are ready to use as plain attribute values below.
-  endcomment
-  assign pause_label = 'general.accessibility.pause_animation' | t
-  assign play_label = 'general.accessibility.play_animation' | t
   assign image_sizes = '(min-width: 750px) 20vw, 40vw'
 -%}
 
@@ -114,46 +106,11 @@
   {%- if section.blocks.size > 0 -%}
     {%- unless s.full_width -%}<div class="kf-container">{%- endunless -%}
 
-    <kf-marquee {% if s.pause_on_hover %}data-kf-pause-hover{% endif %}>
-      <div class="{{ marquee_class }}" data-kf-marquee>
-        {%- comment -%}
-          Pass 2 is the duplicate that makes the loop seamless. It is `inert`
-          as well as aria-hidden so its links do not collect a second set of
-          tab stops — aria-hidden alone would hide them from a screen reader
-          while leaving them focusable, which is worse than either.
-        {%- endcomment -%}
-        {%- for pass in (1..2) -%}
-          <div
-            class="kf-marquee__track"
-            data-kf-marquee-track
-            {% if pass == 2 %}aria-hidden="true" inert{% endif %}
-          >
-            {{ marquee_items }}
-          </div>
-        {%- endfor -%}
-      </div>
-
-      {%- comment -%}
-        Hidden until <kf-marquee> reveals it: without the element there is
-        nothing to pause, and offering a dead button is worse than none.
-      {%- endcomment -%}
-      <button
-        class="kf-marquee-toggle"
-        type="button"
-        data-kf-marquee-toggle
-        data-pause-label="{{ pause_label | escape }}"
-        data-play-label="{{ play_label | escape }}"
-        aria-label="{{ pause_label | escape }}"
-        hidden
-      >
-        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--pause">
-          {%- render 'kf-icon', name: 'pause', size: 'sm' -%}
-        </span>
-        <span class="kf-marquee-toggle__icon kf-marquee-toggle__icon--play">
-          {%- render 'kf-icon', name: 'play', size: 'sm' -%}
-        </span>
-      </button>
-    </kf-marquee>
+    {%- render 'kf-marquee-track',
+      items: marquee_items,
+      pause_on_hover: s.pause_on_hover,
+      edge_fade: s.edge_fade
+    -%}
 
     {%- unless s.full_width -%}</div>{%- endunless -%}
   {%- endif -%}

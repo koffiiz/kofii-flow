@@ -212,9 +212,17 @@
   display: flex;
   overflow: hidden;
   gap: 0;
-  --kf-marquee-duration: 30s;
 }
 
+/* The default is a `var()` fallback on the consumer, NOT a declaration on
+   `.kf-marquee`. It was the latter, and that silently shadowed every speed
+   setting in the theme: all three sections that expose one — the marquee, the
+   announcement bar and the logo cloud — set the property on an ancestor of
+   `.kf-marquee`, and a declaration on the element itself beats an inherited
+   value every time. Measured: a section asking for 40s animated at 30s.
+
+   `--kf-marquee-gap` and `--kf-marquee-direction` were always written this
+   way, which is why those two settings worked and speed did not. */
 .kf-marquee__track {
   display: flex;
   align-items: center;
@@ -222,7 +230,7 @@
   padding-inline-end: var(--kf-marquee-gap, var(--kf-space-md));
   flex: 0 0 auto;
   min-width: 100%;
-  animation: kf-marquee var(--kf-marquee-duration) linear infinite;
+  animation: kf-marquee var(--kf-marquee-duration, 30s) linear infinite;
   animation-direction: var(--kf-marquee-direction, normal);
 }
 
