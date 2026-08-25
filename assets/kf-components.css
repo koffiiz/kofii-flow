@@ -52,6 +52,56 @@
     box-shadow var(--kf-motion-fast) var(--kf-ease-standard);
 }
 
+/* Button loading state and the "added" confirmation.
+   -------------------------------------------------------------------------
+   These live here rather than in component-buy-buttons.css because more than
+   one component now uses them: the product form, the quick add panel and the
+   buy-together section all put a button into a loading state and all report
+   success the same way. Left in a section stylesheet they would look correct
+   on the product page and render unstyled everywhere else.
+
+   The label dimming is keyed off the button alone. It used to require a
+   `kf-product-form[data-loading]` ancestor, which meant any other host — such
+   as <kf-bundle> — got the spinner over a full-strength label. `is-loading` is
+   only ever set while loading, so the ancestor added nothing. */
+.kf-button.is-loading .kf-button__label {
+  opacity: 0.35;
+}
+
+.kf-button.is-loading::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  width: 1.1em;
+  height: 1.1em;
+  margin: -0.55em 0 0 -0.55em;
+  z-index: 3;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: kf-spin 700ms linear infinite;
+}
+
+@keyframes kf-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-button.is-loading::before {
+    animation-duration: 2s;
+  }
+}
+
+.kf-form-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--kf-text-sm);
+  color: var(--kf-color-accent);
+}
+
+
 .kf-button--sm {
   --kf-btn-pad-x: 1.1em;
   --kf-btn-pad-y: 0.6em;
@@ -428,10 +478,17 @@
   color: var(--kf-color-muted);
 }
 
+/* The 44px floor is explicit rather than emergent. Padding and line-height
+   are em-based, so at the default type scale these controls resolve to 43px —
+   one pixel under the theme's own minimum hit area, on every form in the
+   store: contact, login, register, addresses, the cart note and every variant
+   dropdown. Measured, not assumed. `.kf-textarea` overrides it below with its
+   own larger floor. */
 .kf-input,
 .kf-select,
 .kf-textarea {
   width: 100%;
+  min-height: 2.75rem;
   padding: 0.85em 1em;
   border: var(--kf-border-width) solid var(--kf-color-border);
   border-radius: var(--kf-input-radius);

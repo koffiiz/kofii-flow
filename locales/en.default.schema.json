@@ -384,6 +384,163 @@
         "name": "Bento grid"
       }
     },
+    "kf-bundle": {
+      "name": "Buy together",
+      "settings": {
+        "header__1": {
+          "content": "Content"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Row with summary beside it"
+          },
+          "options__2": {
+            "label": "Row with summary below it"
+          }
+        },
+        "media_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Square"
+          },
+          "options__2": {
+            "label": "Portrait"
+          },
+          "options__3": {
+            "label": "Landscape"
+          }
+        },
+        "header__3": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger children"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__4": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Section transition",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Rounded"
+          },
+          "options__3": {
+            "label": "Overlap"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "item": {
+          "name": "Product",
+          "settings": {
+            "product": {
+              "label": "Product"
+            },
+            "label": {
+              "label": "Label",
+              "info": "A short line above the product name, such as \"This item\" or \"Pairs with\"."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Buy together"
+      }
+    },
     "kf-compare": {
       "name": "Before and after",
       "settings": {
@@ -3731,6 +3888,221 @@
       },
       "presets": {
         "name": "Timeline"
+      }
+    },
+    "kf-video": {
+      "name": "Video with buy button",
+      "settings": {
+        "header__1": {
+          "content": "Video"
+        },
+        "video": {
+          "label": "Video",
+          "info": "A video hosted by Shopify. Used in preference to a video link."
+        },
+        "video_url": {
+          "label": "Video link",
+          "info": "Used when no hosted video is chosen. The player loads only after the visitor presses play."
+        },
+        "poster": {
+          "label": "Cover image",
+          "info": "Shown before the video plays. Falls back to the hosted video's own thumbnail."
+        },
+        "video_ratio": {
+          "label": "Video shape",
+          "options__1": {
+            "label": "Widescreen"
+          },
+          "options__2": {
+            "label": "Classic"
+          },
+          "options__3": {
+            "label": "Square"
+          },
+          "options__4": {
+            "label": "Vertical"
+          }
+        },
+        "header__2": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "text": {
+          "label": "Text"
+        },
+        "header__3": {
+          "content": "Buy button"
+        },
+        "product": {
+          "label": "Product",
+          "info": "Shows the price and an add to cart button. Leave empty to use a plain link instead."
+        },
+        "show_variant_picker": {
+          "label": "Show variant picker"
+        },
+        "show_dynamic_checkout": {
+          "label": "Show accelerated checkout buttons"
+        },
+        "button_label": {
+          "label": "Button label",
+          "info": "Used when no product is chosen."
+        },
+        "button_link": {
+          "label": "Button link"
+        },
+        "header__4": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Layout",
+          "options__1": {
+            "label": "Video beside the text"
+          },
+          "options__2": {
+            "label": "Video above the text"
+          }
+        },
+        "panel_position": {
+          "label": "Text position",
+          "info": "Applies to the side by side layout.",
+          "options__1": {
+            "label": "Right"
+          },
+          "options__2": {
+            "label": "Left"
+          }
+        },
+        "header__5": {
+          "content": "Motion"
+        },
+        "media_animation": {
+          "label": "Video animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Scale"
+          },
+          "options__5": {
+            "label": "Blur"
+          },
+          "options__6": {
+            "label": "Editorial reveal"
+          }
+        },
+        "animation": {
+          "label": "Text animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_stagger": {
+          "label": "Stagger children"
+        },
+        "animation_stagger_delay": {
+          "label": "Stagger delay"
+        },
+        "animation_duration": {
+          "label": "Duration",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Fast"
+          },
+          "options__3": {
+            "label": "Normal"
+          },
+          "options__4": {
+            "label": "Slow"
+          }
+        },
+        "animation_easing": {
+          "label": "Easing",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Standard"
+          },
+          "options__3": {
+            "label": "Smooth"
+          },
+          "options__4": {
+            "label": "Ease out"
+          },
+          "options__5": {
+            "label": "Spring-like"
+          }
+        },
+        "animation_trigger": {
+          "label": "Trigger",
+          "options__1": {
+            "label": "On scroll"
+          },
+          "options__2": {
+            "label": "On load"
+          }
+        },
+        "header__6": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Section transition",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Rounded"
+          },
+          "options__3": {
+            "label": "Overlap"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Video with buy button"
       }
     },
     "main-404": {

@@ -82,11 +82,21 @@
 {%- else -%}
   {%- liquid
     assign card_variant = product.selected_or_first_available_variant
+
+    comment
+      The badge describes the SAME variant the price below it describes, which
+      is the one the card is showing. It used to compare the product's minimum
+      compare-at against the product's minimum price — two figures that need
+      not belong to the same variant — so a card could claim a saving the
+      shopper would not get on the variant they were looking at, and now that
+      kf-price no longer borrows a sibling's compare-at, that badge would sit
+      next to a price with no strikethrough at all.
+    endcomment
     assign on_sale = false
-    if product.compare_at_price > product.price
+    if card_variant.compare_at_price > card_variant.price
       assign on_sale = true
-      assign savings = product.compare_at_price | minus: product.price
-      assign savings_percent = savings | times: 100 | divided_by: product.compare_at_price
+      assign savings = card_variant.compare_at_price | minus: card_variant.price
+      assign savings_percent = savings | times: 100 | divided_by: card_variant.compare_at_price
     endif
 
     assign hover_image = blank

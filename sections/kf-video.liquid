@@ -1,0 +1,614 @@
+{%- comment -%}
+  Kofii Flow — Video with buy CTA
+  ---------------------------------------------------------------------------
+  A product demo next to something to buy. The video does the persuading and
+  the panel beside it closes, so the shopper never has to go looking for the
+  product they were just shown.
+
+  CLICK TO PLAY, ALWAYS. The player is rendered inside a <template>, which is
+  inert — an iframe in there makes no request — so a YouTube or Vimeo embed
+  costs nothing until someone asks for it. <kf-video> clones it out on click.
+  Nothing here autoplays: a marketing page that starts talking on its own is a
+  worse experience than one that waits, and the embed is usually the heaviest
+  thing on the route.
+
+  Two sources, both of Shopify's own setting types:
+    video      a video hosted by Shopify, rendered with `video_tag`
+    video_url  YouTube or Vimeo, rendered as an iframe built here
+
+  THE BUY PANEL is the shared snippets rendered directly — `kf-price`,
+  `kf-variant-picker`, `kf-buy-buttons` — the same composition quick-add and
+  the product spotlight use, and for the same reason: the product comes from a
+  setting, so `closest.product` is nil and the product theme blocks would all
+  render empty. The snippets are the single implementation; only the
+  arrangement repeats.
+
+  Without JavaScript the poster stays, and the play control is a real link to
+  the video's own page rather than a button that cannot do anything.
+{%- endcomment -%}
+
+{{ 'section-video.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-video.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign product = s.product
+
+  comment
+    A Shopify-hosted video wins when both are set — it is the one the merchant
+    uploaded to this store, and it carries no third-party cookies.
+  endcomment
+  assign source = 'none'
+  if s.video != blank
+    assign source = 'shopify'
+  elsif s.video_url != blank
+    assign source = 'external'
+  endif
+
+  comment
+    Built here rather than inline: the embed needs autoplay, because the click
+    that reveals it is the whole interaction and a second click on the player
+    would be a poor joke. `playsinline` keeps iOS from taking over the screen.
+  endcomment
+  assign embed_url = ''
+  if source == 'external'
+    if s.video_url.type == 'youtube'
+      assign embed_url = 'https://www.youtube.com/embed/' | append: s.video_url.id | append: '?autoplay=1&playsinline=1&rel=0'
+    elsif s.video_url.type == 'vimeo'
+      assign embed_url = 'https://player.vimeo.com/video/' | append: s.video_url.id | append: '?autoplay=1&playsinline=1'
+    endif
+  endif
+
+  comment
+    The poster is the merchant's image, then the Shopify video's own preview,
+    then a placeholder — so the section looks deliberate before anything is
+    configured.
+  endcomment
+  assign poster = s.poster
+  if poster == blank and source == 'shopify'
+    assign poster = s.video.preview_image
+  endif
+
+  assign play_label = 'video.play' | t
+  if s.heading != blank
+    assign play_label = 'video.play_named' | t: title: s.heading
+  endif
+  assign playing_label = 'video.playing' | t
+
+  assign variant = product.selected_or_first_available_variant
+  assign form_id = 'KfVideoForm-' | append: section.id
+
+  assign root_class = 'kf-video kf-video--' | append: s.layout
+  assign root_class = root_class | append: ' kf-video--panel-' | append: s.panel_position
+
+  assign root_style = '--kf-video-ratio: ' | append: s.video_ratio | append: ';'
+
+  comment
+    A poster in the split layout shares the row with the panel, so it never
+    needs the full viewport. Full-width plays the whole band.
+  endcomment
+  if s.layout == 'split'
+    assign poster_sizes = '(min-width: 990px) 60vw, 100vw'
+  else
+    assign poster_sizes = '100vw'
+  endif
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: root_class, style: root_style %}>
+  <div class="kf-container">
+    <div class="kf-video__inner">
+      <kf-video
+        class="kf-video__player"
+        data-playing-label="{{ playing_label | escape }}"
+        {% render 'kf-motion-attrs',
+          animation: s.media_animation,
+          duration: s.animation_duration,
+          easing: s.animation_easing,
+          trigger: s.animation_trigger %}
+      >
+        <div class="kf-video__frame" data-kf-video-frame>
+          {%- render 'kf-media',
+            image: poster,
+            ratio: 'adapt',
+            custom_ratio: s.video_ratio,
+            sizes: poster_sizes,
+            placeholder: 'lifestyle-2',
+            class: 'kf-video__poster'
+          -%}
+
+          {%- comment -%}
+            A link until <kf-video> upgrades it to a button. Without the script
+            there is no player to reveal, so sending the visitor to the video
+            itself beats a control that silently does nothing. `data-kf-video-play`
+            is what the element looks for.
+          {%- endcomment -%}
+          {%- liquid
+            assign fallback_href = '#'
+            if source == 'external'
+              assign fallback_href = s.video_url
+            endif
+          -%}
+          <a
+            class="kf-video__play"
+            href="{{ fallback_href }}"
+            data-kf-video-play
+            aria-label="{{ play_label | escape }}"
+            {% if source == 'external' %}target="_blank" rel="noopener"{% endif %}
+          >
+            {%- render 'kf-icon', name: 'play' -%}
+          </a>
+        </div>
+
+        {%- comment -%}
+          Inert until cloned. Nothing in here loads.
+        {%- endcomment -%}
+        <template data-kf-video-player>
+          {%- if source == 'shopify' -%}
+            {{
+              s.video
+              | video_tag:
+                class: 'kf-video__media',
+                controls: true,
+                autoplay: true,
+                playsinline: true,
+                image_size: '1600x'
+            }}
+          {%- elsif embed_url != blank -%}
+            <iframe
+              class="kf-video__media"
+              src="{{ embed_url }}"
+              title="{{ play_label | escape }}"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowfullscreen
+            ></iframe>
+          {%- endif -%}
+        </template>
+      </kf-video>
+
+      {%- if s.heading != blank or s.text != blank or product != blank -%}
+        <div
+          class="kf-video__panel"
+          {% render 'kf-motion-attrs',
+            stagger: s.animation_stagger,
+            stagger_delay: s.animation_stagger_delay,
+            trigger: s.animation_trigger %}
+        >
+          {%- comment -%}
+            The picker re-renders this section at the product's own URL and
+            swaps `[data-kf-variant-region]`. It reads the section id from
+            `[data-kf-product-root]`, so that attribute is load-bearing, and
+            `update_url: false` because this is not the product page.
+          {%- endcomment -%}
+          <div data-kf-product-root data-kf-section-id="{{ section.id }}">
+            {%- if s.eyebrow != blank -%}
+              <p class="kf-label kf-text-muted" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {{- s.eyebrow | escape -}}
+              </p>
+            {%- endif -%}
+
+            {%- if s.heading != blank -%}
+              <h2 class="kf-video__heading {{ s.heading_size }}" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {{- s.heading | escape -}}
+              </h2>
+            {%- endif -%}
+
+            {%- if s.text != blank -%}
+              <div class="kf-rte kf-text-muted kf-video__text" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {{ s.text }}
+              </div>
+            {%- endif -%}
+
+            {%- if product != blank -%}
+              <div class="kf-video__product" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                <h3 class="kf-video__product-title kf-text-sm">
+                  <a class="kf-video__product-link" href="{{ product.url }}">{{ product.title | escape }}</a>
+                </h3>
+
+                <div data-kf-variant-region="price">
+                  {%- render 'kf-price', product: product, variant: variant, show_from: false -%}
+                </div>
+              </div>
+
+              {%- if s.show_variant_picker -%}
+                <div {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                  {%- render 'kf-variant-picker',
+                    product: product,
+                    form_id: form_id,
+                    scope: 'Video',
+                    style: 'auto',
+                    show_selected_value: true,
+                    update_url: false
+                  -%}
+                </div>
+              {%- endif -%}
+
+              <div {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {%- render 'kf-buy-buttons',
+                  product: product,
+                  form_id: form_id,
+                  scope: 'Video',
+                  show_quantity: false,
+                  show_dynamic_checkout: s.show_dynamic_checkout,
+                  show_payment_terms: false
+                -%}
+              </div>
+            {%- elsif s.button_label != blank -%}
+              <div class="kf-button-group" {% render 'kf-motion-attrs', animation: s.animation, duration: s.animation_duration, easing: s.animation_easing %}>
+                {%- render 'kf-button', label: s.button_label, href: s.button_link, style: 'primary' -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.kf-video.name",
+  "tag": "section",
+  "class": "kf-video-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.kf-video.settings.header__1.content"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.kf-video.settings.video.label",
+      "info": "t:sections.kf-video.settings.video.info"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "t:sections.kf-video.settings.video_url.label",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "info": "t:sections.kf-video.settings.video_url.info"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "t:sections.kf-video.settings.poster.label",
+      "info": "t:sections.kf-video.settings.poster.info"
+    },
+    {
+      "type": "select",
+      "id": "video_ratio",
+      "label": "t:sections.kf-video.settings.video_ratio.label",
+      "options": [
+        {
+          "value": "16 / 9",
+          "label": "t:sections.kf-video.settings.video_ratio.options__1.label"
+        },
+        {
+          "value": "4 / 3",
+          "label": "t:sections.kf-video.settings.video_ratio.options__2.label"
+        },
+        {
+          "value": "1 / 1",
+          "label": "t:sections.kf-video.settings.video_ratio.options__3.label"
+        },
+        {
+          "value": "9 / 16",
+          "label": "t:sections.kf-video.settings.video_ratio.options__4.label"
+        }
+      ],
+      "default": "16 / 9"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-video.settings.header__2.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:sections.kf-video.settings.eyebrow.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.kf-video.settings.heading.label",
+      "default": "See it in action"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.kf-video.settings.heading_size.label",
+      "options": [
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-video.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-video.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-video.settings.heading_size.options__3.label"
+        }
+      ],
+      "default": "kf-h3"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.kf-video.settings.text.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-video.settings.header__3.content"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:sections.kf-video.settings.product.label",
+      "info": "t:sections.kf-video.settings.product.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_picker",
+      "label": "t:sections.kf-video.settings.show_variant_picker.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:sections.kf-video.settings.show_dynamic_checkout.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.kf-video.settings.button_label.label",
+      "info": "t:sections.kf-video.settings.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.kf-video.settings.button_link.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-video.settings.header__4.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.kf-video.settings.layout.label",
+      "options": [
+        {
+          "value": "split",
+          "label": "t:sections.kf-video.settings.layout.options__1.label"
+        },
+        {
+          "value": "stacked",
+          "label": "t:sections.kf-video.settings.layout.options__2.label"
+        }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "select",
+      "id": "panel_position",
+      "label": "t:sections.kf-video.settings.panel_position.label",
+      "info": "t:sections.kf-video.settings.panel_position.info",
+      "options": [
+        {
+          "value": "end",
+          "label": "t:sections.kf-video.settings.panel_position.options__1.label"
+        },
+        {
+          "value": "start",
+          "label": "t:sections.kf-video.settings.panel_position.options__2.label"
+        }
+      ],
+      "default": "end"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-video.settings.header__5.content"
+    },
+    {
+      "type": "select",
+      "id": "media_animation",
+      "label": "t:sections.kf-video.settings.media_animation.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-video.settings.media_animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-video.settings.media_animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-video.settings.media_animation.options__3.label"
+        },
+        {
+          "value": "scale-up",
+          "label": "t:sections.kf-video.settings.media_animation.options__4.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-video.settings.media_animation.options__5.label"
+        },
+        {
+          "value": "reveal",
+          "label": "t:sections.kf-video.settings.media_animation.options__6.label"
+        }
+      ],
+      "default": "reveal"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "t:sections.kf-video.settings.animation.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-video.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-video.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-video.settings.animation.options__3.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-video.settings.animation.options__4.label"
+        }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "checkbox",
+      "id": "animation_stagger",
+      "label": "t:sections.kf-video.settings.animation_stagger.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger_delay",
+      "label": "t:sections.kf-video.settings.animation_stagger_delay.label",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "default": 70
+    },
+    {
+      "type": "select",
+      "id": "animation_duration",
+      "label": "t:sections.kf-video.settings.animation_duration.label",
+      "options": [
+        {
+          "value": "theme",
+          "label": "t:sections.kf-video.settings.animation_duration.options__1.label"
+        },
+        {
+          "value": "fast",
+          "label": "t:sections.kf-video.settings.animation_duration.options__2.label"
+        },
+        {
+          "value": "normal",
+          "label": "t:sections.kf-video.settings.animation_duration.options__3.label"
+        },
+        {
+          "value": "slow",
+          "label": "t:sections.kf-video.settings.animation_duration.options__4.label"
+        }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "t:sections.kf-video.settings.animation_easing.label",
+      "options": [
+        {
+          "value": "theme",
+          "label": "t:sections.kf-video.settings.animation_easing.options__1.label"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.kf-video.settings.animation_easing.options__2.label"
+        },
+        {
+          "value": "smooth",
+          "label": "t:sections.kf-video.settings.animation_easing.options__3.label"
+        },
+        {
+          "value": "out",
+          "label": "t:sections.kf-video.settings.animation_easing.options__4.label"
+        },
+        {
+          "value": "spring",
+          "label": "t:sections.kf-video.settings.animation_easing.options__5.label"
+        }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select",
+      "id": "animation_trigger",
+      "label": "t:sections.kf-video.settings.animation_trigger.label",
+      "options": [
+        {
+          "value": "scroll",
+          "label": "t:sections.kf-video.settings.animation_trigger.options__1.label"
+        },
+        {
+          "value": "load",
+          "label": "t:sections.kf-video.settings.animation_trigger.options__2.label"
+        }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-video.settings.header__6.content"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.kf-video.settings.color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "t:sections.kf-video.settings.section_transition.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-video.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-video.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-video.settings.section_transition.options__3.label"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:sections.kf-video.settings.padding_top.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:sections.kf-video.settings.padding_bottom.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.kf-video.presets.name"
+    }
+  ]
+}
+{% endschema %}

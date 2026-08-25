@@ -37,43 +37,6 @@ kf-product-form {
   flex: 1;
 }
 
-kf-product-form[data-loading] .kf-button.is-loading .kf-button__label {
-  opacity: 0.35;
-}
-
-.kf-button.is-loading::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: 50%;
-  inset-block-start: 50%;
-  width: 1.1em;
-  height: 1.1em;
-  margin: -0.55em 0 0 -0.55em;
-  z-index: 3;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: kf-spin 700ms linear infinite;
-}
-
-@keyframes kf-spin {
-  to { transform: rotate(360deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .kf-button.is-loading::before {
-    animation-duration: 2s;
-  }
-}
-
-.kf-form-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  font-size: var(--kf-text-sm);
-  color: var(--kf-color-accent);
-}
-
 /* Shopify renders the dynamic checkout buttons; keep them on our rhythm. */
 .shopify-payment-button__button {
   border-radius: var(--kf-button-radius) !important;

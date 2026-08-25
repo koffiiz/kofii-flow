@@ -1,0 +1,145 @@
+/* ==========================================================================
+   Kofii Flow — Buy together
+   Loaded by sections/kf-bundle.liquid.
+
+   A row of products and a summary. The row is a grid rather than a flex line
+   so every item gets an equal track regardless of how long its title runs —
+   the point of the layout is that the items read as one set.
+   ========================================================================== */
+
+.kf-bundle__header {
+  display: grid;
+  gap: var(--kf-space-2xs);
+  margin-block-end: var(--kf-space-md);
+}
+
+.kf-bundle__heading {
+  margin: 0;
+}
+
+.kf-bundle__text {
+  max-width: 54ch;
+}
+
+.kf-bundle__inner {
+  display: grid;
+  gap: var(--kf-space-md);
+  align-items: center;
+}
+
+.kf-bundle__items {
+  display: grid;
+  gap: var(--kf-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* Two per row on a phone. Three narrow columns turn every product image into
+     a thumbnail, and the images are what carry the idea. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 750px) {
+  .kf-bundle__items {
+    grid-template-columns: repeat(var(--kf-bundle-cols, 3), minmax(0, 1fr));
+  }
+}
+
+.kf-bundle__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  min-inline-size: 0;
+}
+
+.kf-bundle__media {
+  display: block;
+  text-decoration: none;
+}
+
+.kf-bundle__eyebrow {
+  margin: 0;
+}
+
+.kf-bundle__title {
+  margin: 0;
+}
+
+.kf-bundle__title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kf-bundle__title-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* The select sits at the bottom of its item whatever the title length above
+   it, so a row of them lines up. */
+.kf-bundle__variant {
+  margin-block-start: auto;
+  inline-size: 100%;
+}
+
+/* A sold-out item stays in the row — removing it would silently change the
+   bundle the merchant configured — but reads as excluded. */
+.kf-bundle__item--unavailable {
+  opacity: 0.55;
+}
+
+.kf-bundle__sold-out {
+  align-self: flex-start;
+}
+
+/* Summary ------------------------------------------------------------------ */
+
+.kf-bundle__summary {
+  display: grid;
+  gap: var(--kf-space-2xs);
+  justify-items: start;
+}
+
+.kf-bundle__totals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-bundle__total {
+  display: flex;
+  align-items: baseline;
+  gap: var(--kf-space-3xs);
+}
+
+.kf-bundle__now {
+  font-size: var(--kf-text-xl);
+}
+
+.kf-bundle__add {
+  inline-size: 100%;
+}
+
+/* Row with the summary beside it --------------------------------------------
+   The summary is a column of its own from 990px, which is where a five-item
+   row plus a price and a button stop fitting on one line. Below that both
+   layouts are the same stack. */
+
+@media (min-width: 990px) {
+  .kf-bundle--row .kf-bundle__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 18rem);
+    gap: var(--kf-space-lg);
+  }
+
+  .kf-bundle--row .kf-bundle__add {
+    inline-size: 100%;
+  }
+}
+
+/* Row with the summary below it --------------------------------------------
+   The button shrinks to its content here rather than spanning the whole
+   section: full width under a five-column row is a very long button. */
+
+.kf-bundle--stacked .kf-bundle__add {
+  inline-size: auto;
+}

@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Kofii Flow — Video with buy CTA
+   Loaded by sections/kf-video.liquid.
+
+   The frame owns the aspect ratio and everything inside it fills that frame
+   absolutely — poster, play control and, once it exists, the player. That is
+   what stops the band from jumping height when the facade is replaced: the
+   box is already the right size before anything is cloned into it.
+   ========================================================================== */
+
+.kf-video__inner {
+  display: grid;
+  gap: var(--kf-space-md);
+  align-items: center;
+}
+
+.kf-video__player {
+  display: block;
+  min-inline-size: 0;
+}
+
+.kf-video__frame {
+  position: relative;
+  aspect-ratio: var(--kf-video-ratio, 16 / 9);
+  overflow: hidden;
+  border-radius: var(--kf-media-radius);
+  background-color: var(--kf-color-surface);
+}
+
+.kf-video__frame > * {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.kf-video__poster {
+  /* The frame already carries the ratio; the poster must fill it rather than
+     assert a second one. */
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+.kf-video__media {
+  border: 0;
+  object-fit: cover;
+}
+
+/* Play control -------------------------------------------------------------
+   A link before the script upgrades it, a button after. Either way it covers
+   the whole poster, so the target is the video rather than a small disc — the
+   disc is only where the eye is told to look. */
+
+.kf-video__play {
+  display: grid;
+  place-items: center;
+  color: inherit;
+  cursor: pointer;
+  border: 0;
+  background: none;
+  /* Sits over the poster's own gradient rather than under it. */
+  z-index: 1;
+}
+
+.kf-video__play::before {
+  content: "";
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  border-radius: var(--kf-radius-circle);
+  background-color: var(--kf-color-background);
+  opacity: 0.9;
+  transition: transform var(--kf-motion-normal) var(--kf-ease-out),
+              opacity var(--kf-motion-normal) var(--kf-ease-out);
+}
+
+.kf-video__play .kf-icon {
+  position: absolute;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  /* Optical centring: a play triangle reads as off-centre when its bounding
+     box is centred, because its mass sits left of centre. */
+  margin-inline-start: 0.2rem;
+}
+
+.kf-video__play:hover::before {
+  transform: scale(1.06);
+  opacity: 1;
+}
+
+.kf-video__play:focus-visible {
+  outline: var(--kf-focus-width) solid var(--kf-color-focus);
+  outline-offset: -4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-video__play::before {
+    transition: none;
+  }
+}
+
+/* Panel -------------------------------------------------------------------- */
+
+.kf-video__panel {
+  min-inline-size: 0;
+}
+
+.kf-video__panel > [data-kf-product-root] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-sm);
+}
+
+.kf-video__heading {
+  margin: 0;
+}
+
+.kf-video__text {
+  max-width: 54ch;
+}
+
+.kf-video__product {
+  display: grid;
+  gap: var(--kf-space-3xs);
+}
+
+.kf-video__product-title {
+  margin: 0;
+}
+
+.kf-video__product-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kf-video__product-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* Side by side -------------------------------------------------------------
+   Only from 990px. Below that a video and a buy panel in two columns leaves
+   both too narrow to be worth the arrangement. */
+
+@media (min-width: 990px) {
+  .kf-video--split .kf-video__inner {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: var(--kf-space-lg);
+  }
+
+  /* `order` would move the panel without moving its track, so the columns are
+     reversed instead and the wider track travels with the video. */
+  .kf-video--split.kf-video--panel-start .kf-video__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  }
+
+  .kf-video--split.kf-video--panel-start .kf-video__player {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .kf-video--split.kf-video--panel-start .kf-video__panel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+/* Stacked ------------------------------------------------------------------ */
+
+.kf-video--stacked .kf-video__panel {
+  max-width: var(--kf-content-width);
+}

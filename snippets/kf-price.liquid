@@ -18,7 +18,24 @@
 {%- liquid
   assign target = variant | default: product.selected_or_first_available_variant | default: product
   assign price = target.price | default: product.price
-  assign compare_at = target.compare_at_price | default: product.compare_at_price
+
+  comment
+    The product-level compare-at is only a fallback when NO variant was named.
+
+    `product.compare_at_price` is the minimum compare-at across every variant,
+    so it is set whenever any one of them is discounted. Reaching for it after
+    an explicit variant came back empty made a full-price variant borrow its
+    sibling's sale: pick the size that is not reduced and it still rendered a
+    strikethrough and the on-sale colour. A variant carrying no compare-at is
+    not on sale, full stop.
+
+    With no variant in hand the fallback is right and is kept — a product card
+    showing the range wants the product's own figures.
+  endcomment
+  assign compare_at = target.compare_at_price
+  if compare_at == blank and variant == blank
+    assign compare_at = product.compare_at_price
+  endif
 
   assign money_filter = 'money'
   if settings.currency_code_enabled

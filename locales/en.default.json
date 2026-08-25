@@ -284,6 +284,22 @@
     "shipping_remaining_html": "You are {{ amount }} away from free shipping",
     "shipping_progress": "Progress towards free shipping"
   },
+  "bundle": {
+    "total": "Total",
+    "add": "Add bundle to cart",
+    "added": "Bundle added to cart",
+    "save": "Save {{ amount }}",
+    "this_item": "This item",
+    "sold_out": "Sold out",
+    "unavailable_note": "Sold out items are not added to the cart.",
+    "variant_label": "{{ product }} options",
+    "nothing_available": "This bundle is currently unavailable."
+  },
+  "video": {
+    "play": "Play video",
+    "play_named": "Play video: {{ title }}",
+    "playing": "Video playing"
+  },
   "newsletter": {
     "label": "Email",
     "placeholder": "Your email address",
