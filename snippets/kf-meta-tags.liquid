@@ -33,15 +33,15 @@
   <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
 {%- endif -%}
 
+{%- comment -%}
+  `page_image` is Shopify's own object: it resolves to the product's featured
+  image, the collection image, the article image or the page's featured image
+  depending on the template, with no per-template branching here. The theme
+  setting is only the fallback for templates that have no image of their own.
+{%- endcomment -%}
 {%- liquid
-  assign share_image = null
-  if request.page_type == 'product' and product.featured_media
-    assign share_image = product.featured_media.preview_image
-  elsif request.page_type == 'article' and article.image
-    assign share_image = article.image
-  elsif request.page_type == 'collection' and collection.image
-    assign share_image = collection.image
-  elsif settings.share_image
+  assign share_image = page_image
+  if share_image == blank
     assign share_image = settings.share_image
   endif
 -%}

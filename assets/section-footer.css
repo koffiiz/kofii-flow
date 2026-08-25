@@ -141,3 +141,9 @@
   height: auto;
   border-radius: var(--kf-radius-xs);
 }
+
+/* Follow on Shop. Shopify owns the button's own styling; the theme only gives
+   it room away from the social row above it. */
+.kf-footer__follow {
+  margin-block-start: var(--kf-space-sm);
+}

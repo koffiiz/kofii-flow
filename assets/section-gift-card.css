@@ -82,6 +82,33 @@
    render as a grey box on paper.
    ========================================================================== */
 
+/* QR code
+   -------------------------------------------------------------------------
+   qrcode.js draws both a <canvas> and a fallback <img> into the container and
+   leaves whichever it could not use in place, so the child is sized rather
+   than the container, and the pair is centred as one block.
+
+   White background regardless of scheme: a scanner needs the light modules to
+   be light, and a dark color scheme would otherwise invert them. The padding
+   is the quiet zone. */
+.kf-giftcard__qr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  inline-size: fit-content;
+  margin-inline: auto;
+  padding: var(--kf-space-xs);
+  background: #fff;
+  border-radius: var(--kf-radius-md);
+}
+
+.kf-giftcard__qr canvas,
+.kf-giftcard__qr img {
+  display: block;
+  inline-size: 160px;
+  block-size: 160px;
+}
+
 @media print {
   .kf-giftcard-layout {
     min-height: 0;
@@ -96,5 +123,12 @@
   .kf-giftcard__actions,
   .kf-giftcard__print {
     display: none;
+  }
+
+  /* The QR is the whole point of a printed card — force the browser to keep
+     its ink rather than dropping the background it is drawn on. */
+  .kf-giftcard__qr {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

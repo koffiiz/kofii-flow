@@ -34,6 +34,17 @@
   <script src="{{ 'kf-sticky-atc.js' | asset_url }}" defer></script>
 {%- endif -%}
 
+{%- comment -%}
+  3D media. Both the viewer stylesheet and the loader are Shopify's own, and
+  they are requested only when this product actually has a model — a store
+  selling nothing in 3D never downloads either.
+{%- endcomment -%}
+{%- assign model_media = product.media | where: 'media_type', 'model' -%}
+{%- if model_media.size > 0 -%}
+  {{ 'component-model-viewer-ui.css' | shopify_asset_url | stylesheet_tag }}
+  <script src="{{ 'kf-product-model.js' | asset_url }}" defer></script>
+{%- endif -%}
+
 {%- liquid
   assign s = section.settings
   assign variant = product.selected_or_first_available_variant
@@ -181,6 +192,30 @@
               </dialog>
             {%- endif -%}
           </kf-product-gallery>
+
+          {%- comment -%}
+            Augmented reality. ShopifyXR reads the model list from the JSON
+            below and reveals the button only on a device that can actually
+            open it — `data-shopify-xr-hidden` keeps it out of the way
+            everywhere else, including when the feature never loads.
+          {%- endcomment -%}
+          {%- if model_media.size > 0 -%}
+            <script type="application/json" data-kf-model-json>
+              {{ model_media | json }}
+            </script>
+
+            <button
+              type="button"
+              class="kf-button kf-button--secondary kf-product__xr"
+              data-shopify-xr
+              data-shopify-model3d-id="{{ model_media.first.id }}"
+              data-shopify-title="{{ product.title | escape }}"
+              data-shopify-xr-hidden
+            >
+              {%- render 'kf-icon', name: 'globe', size: 'sm' -%}
+              <span class="kf-button__label">{{ 'products.product.view_in_space' | t }}</span>
+            </button>
+          {%- endif -%}
         {%- else -%}
           {%- comment -%} Theme Editor / new product: keep the layout intact. {%- endcomment -%}
           {%- render 'kf-media',

@@ -426,3 +426,17 @@ kf-sticky-atc[data-visible] {
   gap: var(--kf-space-3xs);
   font-size: var(--kf-text-sm);
 }
+
+/* "View in your space". ShopifyXR unhides this once it knows the device can
+   open the model, so it is laid out as if visible and simply never shown
+   otherwise. */
+.kf-product__xr {
+  margin-block-start: var(--kf-space-xs);
+  inline-size: 100%;
+}
+
+@media (min-width: 750px) {
+  .kf-product__xr {
+    inline-size: auto;
+  }
+}

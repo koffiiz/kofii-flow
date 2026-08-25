@@ -109,12 +109,25 @@
       {%- endif -%}
 
       {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
-        <a class="kf-icon-button kf-hide-mobile" href="{{ routes.account_url }}">
-          {%- render 'kf-icon', name: 'account' -%}
-          <span class="kf-visually-hidden">
-            {%- if customer -%}{{ 'customer.account' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+        {%- comment -%}
+          Shopify's own account component. It opens the account sheet in place
+          instead of navigating away, and Shopify updates it independently of
+          the theme — so it is used as shipped rather than restyled, with only
+          the signed-out avatar slotted to match the rest of the icon row.
+
+          Visible at every width, which is what the Theme Store asks for. The
+          plain link in the mobile drawer's footer stays as the path that still
+          works if the component's script never loads.
+        {%- endcomment -%}
+        <shopify-account
+          class="kf-header__account"
+          menu="{{ section.settings.customer_account_menu.handle | default: 'customer-account-main-menu' }}"
+        >
+          <span slot="signed-out-avatar" class="kf-icon-button">
+            {%- render 'kf-icon', name: 'account' -%}
+            <span class="kf-visually-hidden">{{ 'customer.log_in' | t }}</span>
           </span>
-        </a>
+        </shopify-account>
       {%- endif -%}
 
       {%- if section.settings.show_cart -%}
@@ -386,6 +399,12 @@
       "id": "show_account",
       "label": "t:sections.kf-header.settings.show_account.label",
       "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "customer_account_menu",
+      "label": "t:sections.kf-header.settings.customer_account_menu.label",
+      "info": "t:sections.kf-header.settings.customer_account_menu.info"
     },
     {
       "type": "checkbox",

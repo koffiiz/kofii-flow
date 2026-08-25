@@ -94,9 +94,32 @@
                     <a class="kf-link kf-text-xs" href="{{ line_item.fulfillment.tracking_url }}">{{ tracking_label }}</a>
                   {%- endif -%}
                 {%- endif -%}
+
+                {%- comment -%}
+                  The price columns already show the discounted figure, which
+                  on its own reads as the item simply costing less. Naming the
+                  discount and its amount is what tells the customer a saving
+                  was applied — and it is what the Theme Store asks for at the
+                  line level as well as the order level.
+                {%- endcomment -%}
+                {%- if line_item.line_level_discount_allocations.size > 0 -%}
+                  <ul class="kf-account__discounts" role="list">
+                    {%- for allocation in line_item.line_level_discount_allocations -%}
+                      <li class="kf-badge kf-badge--accent">
+                        {{ allocation.discount_application.title }}
+                        (&minus;{{ allocation.amount | money }})
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
               </th>
               <td>{{ line_item.sku }}</td>
-              <td class="kf-account__cell--end">{{ line_item.final_price | money }}</td>
+              <td class="kf-account__cell--end">
+                {%- if line_item.original_price > line_item.final_price -%}
+                  <s class="kf-text-muted">{{ line_item.original_price | money }}</s>
+                {%- endif -%}
+                {{ line_item.final_price | money }}
+              </td>
               <td class="kf-account__cell--end">{{ line_item.quantity }}</td>
               <td class="kf-account__cell--end">{{ line_item.final_line_price | money }}</td>
             </tr>

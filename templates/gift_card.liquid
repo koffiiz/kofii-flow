@@ -7,12 +7,13 @@
   an email and it should carry no navigation, no cart and nothing to click away
   into. It is also frequently printed.
 
-  NO QR CODE. Every theme that shows one generates it in the browser with a
-  bundled QR library — Shopify does not render one server-side, and there is no
-  official image endpoint to point an <img> at. Adding a library would break
-  rule 8, and inventing a URL that might 404 would be worse than leaving it
-  out. The code is instead set large and selectable, which is what a cashier
-  keying it in actually needs. See the roadmap in CLAUDE.md.
+  The QR code is drawn by `vendor/qrcode.js`, which Shopify hosts and serves
+  through `shopify_asset_url` — the same arrangement as the model-viewer UI on
+  the product page. It is not a bundled dependency and does not touch rule 8.
+
+  It is rendered at 160px, comfortably over the 120px minimum, and the code is
+  still printed underneath in full: a scanner reads the square, a cashier keys
+  in the text, and if the script never loads the card is still usable.
 
   The expired and disabled states come before the balance, because a recipient
   needs to know the card is unusable before they read a number that suggests
@@ -52,6 +53,7 @@
       assign shop_link = 'gift_card.shop_link' | t
       assign print_label = 'gift_card.print' | t
       assign wallet_label = 'gift_card.add_to_wallet' | t
+      assign qr_alt = 'gift_card.qr_alt' | t
 
       comment
         A partly spent card shows both figures; an untouched one would just be
@@ -89,6 +91,13 @@
         </p>
       {%- endif -%}
 
+      {%- comment -%}
+        The container is empty until the script fills it, so it is `hidden`
+        until then — an empty bordered box on a printed gift card looks like a
+        fault. Nothing else on the page depends on it.
+      {%- endcomment -%}
+      <div class="kf-giftcard__qr" data-kf-qr hidden></div>
+
       <div class="kf-giftcard__code-block">
         <p class="kf-label kf-text-muted">{{ code_label }}</p>
         {%- comment -%}
@@ -119,6 +128,23 @@
       <div class="kf-giftcard__print" hidden data-kf-print>
         {%- render 'kf-button', label: print_label, style: 'plain' -%}
       </div>
+
+      <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+
+      <script>
+        window.addEventListener('load', function () {
+          var target = document.querySelector('[data-kf-qr]');
+          if (!target || typeof window.QRCode !== 'function') return;
+
+          target.hidden = false;
+          new window.QRCode(target, {
+            text: {{ gift_card.qr_identifier | json }},
+            width: 160,
+            height: 160,
+            imageAltText: {{ qr_alt | json }}
+          });
+        });
+      </script>
 
       <script>
         (function () {

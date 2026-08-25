@@ -29,6 +29,30 @@
         }
       }
     },
+    "custom-liquid": {
+      "name": "Custom Liquid",
+      "settings": {
+        "code": {
+          "label": "Liquid code",
+          "info": "Add app snippets or other Liquid code to create advanced customizations."
+        },
+        "full_width": {
+          "label": "Make section full width"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Custom Liquid"
+      }
+    },
     "kf-announcement-bar": {
       "name": "Announcement bar",
       "settings": {
@@ -467,6 +491,86 @@
         "name": "Before and after"
       }
     },
+    "kf-contact-form": {
+      "name": "Contact form",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "text": {
+          "label": "Text"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__1": {
+          "content": "Layout"
+        },
+        "alignment": {
+          "label": "Alignment",
+          "options__1": {
+            "label": "Center"
+          },
+          "options__2": {
+            "label": "Left"
+          }
+        },
+        "show_phone": {
+          "label": "Show phone number field"
+        },
+        "message_rows": {
+          "label": "Message field height in rows"
+        },
+        "button_full": {
+          "label": "Make button full width"
+        },
+        "header__2": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        },
+        "header__3": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "presets": {
+        "name": "Contact form"
+      }
+    },
     "kf-faq": {
       "name": "FAQ",
       "settings": {
@@ -857,6 +961,10 @@
             },
             "show_social": {
               "label": "Show social links"
+            },
+            "show_follow_on_shop": {
+              "label": "Show Follow on Shop button",
+              "info": "Lets customers follow the store in the Shop app."
             }
           }
         },
@@ -976,6 +1084,10 @@
         },
         "show_account": {
           "label": "Show account"
+        },
+        "customer_account_menu": {
+          "label": "Customer account menu",
+          "info": "Shown inside the account sheet. Defaults to the customer account main menu."
         },
         "show_cart": {
           "label": "Show cart"
@@ -1968,7 +2080,7 @@
         },
         "intent": {
           "label": "Recommendation type",
-          "info": "Related products are chosen by Shopify automatically. Complementary products show nothing until you pick them in the Search & Discovery app. Add the section twice to show both.",
+          "info": "Related products are chosen by Shopify automatically. Complementary products show nothing until you pick them in the Search and Discovery app. Add the section twice to show both.",
           "options__1": {
             "label": "Related products"
           },
@@ -3566,7 +3678,7 @@
           "content": "Filtering and sorting"
         },
         "paragraph__3": {
-          "content": "Filters come from Shopify. Add and configure them in Search & Discovery, then they appear here automatically."
+          "content": "Filters come from Shopify. Add and configure them in Search and Discovery, then they appear here automatically."
         },
         "enable_filtering": {
           "label": "Enable filtering"
@@ -4535,6 +4647,10 @@
         "show_dynamic_checkout": {
           "label": "Show dynamic checkout buttons",
           "info": "Shows the payment methods available to each shopper, such as Shop Pay, PayPal or Google Pay."
+        },
+        "show_payment_terms": {
+          "label": "Show Shop Pay Installments",
+          "info": "Shows the customer that they can pay in installments. Appears only when the store and the price qualify."
         }
       },
       "presets": {

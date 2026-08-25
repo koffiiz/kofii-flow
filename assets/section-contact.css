@@ -1,0 +1,52 @@
+/* Kofii Flow — Contact form
+   -------------------------------------------------------------------------
+   Layout only. Every field, label, message and button style is already global
+   in kf-components.css; this file exists so the form has a readable measure
+   and a consistent rhythm without inventing a second input system. */
+
+.kf-contact {
+  display: grid;
+  gap: var(--kf-space-lg);
+  max-inline-size: 44rem;
+  margin-inline: auto;
+}
+
+.kf-contact--start {
+  margin-inline: 0;
+}
+
+.kf-contact__header {
+  display: grid;
+  gap: var(--kf-space-2xs);
+}
+
+.kf-contact__form {
+  display: grid;
+  gap: var(--kf-space-md);
+}
+
+/* The name and email pair up once there is room for two comfortable columns. */
+.kf-contact__row {
+  display: grid;
+  gap: var(--kf-space-md);
+}
+
+@media (min-width: 750px) {
+  .kf-contact__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.kf-contact__form .kf-button {
+  justify-self: start;
+}
+
+.kf-contact__form--full .kf-button {
+  justify-self: stretch;
+}
+
+/* The success notice replaces the form, so it carries the section on its own
+   and needs more presence than an inline field message. */
+.kf-contact__success {
+  padding: var(--kf-space-md);
+}

@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "show_title": true,
+        "title_size": "kf-h1",
+        "width": "narrow",
+        "alignment": "start",
+        "animation": "fade-up",
+        "animation_trigger": "load",
+        "color_scheme": "scheme-1",
+        "padding_top": 64,
+        "padding_bottom": 24
+      }
+    },
+    "contact_form": {
+      "type": "kf-contact-form",
+      "settings": {
+        "heading": "",
+        "heading_size": "kf-h3",
+        "alignment": "start",
+        "show_phone": true,
+        "message_rows": 5,
+        "button_full": false,
+        "animation": "fade-up",
+        "animation_delay": 0,
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "main",
+    "contact_form"
+  ]
+}

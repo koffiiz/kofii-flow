@@ -77,6 +77,16 @@
       <span class="kf-button__label">{{ 'cart.checkout' | t }}</span>
     </button>
 
+    {%- comment -%}
+      Accelerated checkout. Shopify renders whichever wallets the shop has
+      enabled — Shop Pay, Apple Pay, Google Pay, PayPal — and owns their
+      markup entirely. It outputs nothing when none are enabled, so the block
+      needs no guard.
+    {%- endcomment -%}
+    <div class="kf-cart-summary__accelerated">
+      {{ content_for_additional_checkout_buttons }}
+    </div>
+
     {%- if compact -%}
       <a class="kf-link kf-cart-summary__view" href="{{ routes.cart_url }}">
         {{ 'cart.view_cart' | t }}

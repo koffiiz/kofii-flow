@@ -45,6 +45,17 @@
                   {%- render 'kf-social-icons', class: 'kf-footer__social' -%}
                 {%- endif -%}
 
+                {%- comment -%}
+                  Follow on Shop. Shopify renders and styles the button itself
+                  from the `login_button` filter — there is no theme markup to
+                  wrap it in, and it is left alone deliberately.
+                {%- endcomment -%}
+                {%- if block.settings.show_follow_on_shop -%}
+                  <div class="kf-footer__follow">
+                    {{ shop | login_button: action: 'follow' }}
+                  </div>
+                {%- endif -%}
+
               {%- when 'menu' -%}
                 {%- if block.settings.heading != blank -%}
                   <h2 class="kf-label kf-footer__heading">{{ block.settings.heading | escape }}</h2>
@@ -236,6 +247,13 @@
           "id": "show_social",
           "label": "t:sections.kf-footer.blocks.brand.settings.show_social.label",
           "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_follow_on_shop",
+          "label": "t:sections.kf-footer.blocks.brand.settings.show_follow_on_shop.label",
+          "default": true,
+          "info": "t:sections.kf-footer.blocks.brand.settings.show_follow_on_shop.info"
         }
       ]
     },

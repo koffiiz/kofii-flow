@@ -86,3 +86,9 @@ kf-product-form[data-loading] .kf-button.is-loading .kf-button__label {
   font-size: var(--kf-text-sm);
 }
 
+
+/* Shop Pay Installments. Shopify's own element carries its own type styles;
+   this only keeps it off the button above it. */
+.kf-buy-buttons__terms {
+  margin-block-start: var(--kf-space-2xs);
+}

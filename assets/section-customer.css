@@ -385,3 +385,14 @@
 .kf-address__empty {
   padding-block: var(--kf-space-lg);
 }
+
+/* Line-level discounts inside the order table. A row cell is narrow, so the
+   badges wrap rather than forcing the column wider. */
+.kf-account__discounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kf-space-3xs);
+  margin: var(--kf-space-3xs) 0 0;
+  padding: 0;
+  list-style: none;
+}

@@ -315,3 +315,10 @@ kf-cart-recommendations:empty {
 .kf-product-card--mini .kf-product-card__title {
   font-size: var(--kf-text-xs);
 }
+
+/* Accelerated checkout wallets. Shopify owns the buttons inside; the wrapper
+   only spaces them and collapses to nothing when no wallet is enabled, so an
+   empty container never leaves a gap above the summary's footer. */
+.kf-cart-summary__accelerated:not(:empty) {
+  margin-block-start: var(--kf-space-2xs);
+}

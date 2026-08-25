@@ -79,7 +79,8 @@ function flattenLocaleKeys(node, prefix = '', out = new Set()) {
  * Shopify rejects a theme upload when a range setting is malformed, and the
  * error message is not always specific about which setting is at fault.
  * Rules: min < max, step > 0, (max - min) must be divisible by step, at least
- * 3 and at most 101 steps, and the default must sit inside the range.
+ * 3 and at most 101 steps, the default must sit inside the range and land on a
+ * step, and `unit` is capped at three characters.
  *
  * The lower bound is the one that is easy to miss. A two-position range looks
  * perfectly reasonable in a schema — "1 or 2 columns on mobile" — and Shopify
@@ -127,6 +128,21 @@ function checkRange(setting, relPath, scope) {
       fail(
         relPath,
         `${where} has default ${value}, which is not a step of ${step} from ${min} — use ${below} or ${below + step}`
+      );
+    }
+  }
+
+  // `unit` is a short suffix drawn next to the value, not a word: Shopify caps
+  // it at three characters and rejects the upload otherwise. "px", "ms", "%"
+  // and "s" all fit; "rows" does not. When the unit is what carries the
+  // meaning, put the word in the label instead.
+  if (setting.unit !== undefined) {
+    if (typeof setting.unit !== 'string') {
+      fail(relPath, `${where} has a non-string unit`);
+    } else if (setting.unit.length > 3) {
+      fail(
+        relPath,
+        `${where} has unit "${setting.unit}" (${setting.unit.length} characters); Shopify allows at most 3 — move the word into the label`
       );
     }
   }

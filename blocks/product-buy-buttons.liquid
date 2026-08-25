@@ -20,7 +20,8 @@
       product: target,
       form_id: form_id,
       scope: 'Product',
-      show_dynamic_checkout: block.settings.show_dynamic_checkout
+      show_dynamic_checkout: block.settings.show_dynamic_checkout,
+      show_payment_terms: block.settings.show_payment_terms
     -%}
   </div>
 {%- endif -%}
@@ -36,6 +37,13 @@
       "label": "t:blocks.product-buy-buttons.settings.show_dynamic_checkout.label",
       "default": true,
       "info": "t:blocks.product-buy-buttons.settings.show_dynamic_checkout.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_terms",
+      "label": "t:blocks.product-buy-buttons.settings.show_payment_terms.label",
+      "default": true,
+      "info": "t:blocks.product-buy-buttons.settings.show_payment_terms.info"
     }
   ],
   "presets": [

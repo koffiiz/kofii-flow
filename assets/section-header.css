@@ -586,3 +586,15 @@ kf-predictive-search[data-loading] .kf-search__results {
     grid-template-columns: 1fr auto 1fr;
   }
 }
+
+/* Shopify's account component. An unknown element is inline by default, so it
+   needs a display of its own to sit on the icon row's baseline — and it keeps
+   the row's hit area whether or not its script has upgraded it. */
+.kf-header__account {
+  display: inline-flex;
+  align-items: center;
+}
+
+.kf-header__account [slot="signed-out-avatar"] {
+  cursor: pointer;
+}

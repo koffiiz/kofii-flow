@@ -16,6 +16,7 @@
     product   (product, required)
     form_id   (string, required)
     show_dynamic_checkout (boolean)
+    show_payment_terms   (boolean) Shop Pay Installments banner
     show_quantity (boolean)  render a quantity field inside the form
     scope     (string)       id prefix for the quantity field
 {%- endcomment -%}
@@ -114,6 +115,18 @@
 
         {%- if show_dynamic_checkout and is_available -%}
           {{ form | payment_button }}
+        {%- endif -%}
+
+        {%- comment -%}
+          Shop Pay Installments. `payment_terms` only reaches for the form's
+          current variant, so it has to live inside the form tag — and it emits
+          nothing at all when the shop is not eligible or the price falls
+          outside the installment range, so it needs no guard of its own.
+        {%- endcomment -%}
+        {%- if show_payment_terms and is_available -%}
+          <div class="kf-buy-buttons__terms">
+            {{ form | payment_terms }}
+          </div>
         {%- endif -%}
 
         <p class="kf-form-message kf-form-message--error" data-kf-form-error role="alert" hidden></p>

@@ -1,0 +1,79 @@
+{%- comment -%}
+  Kofii Flow — Custom Liquid
+  ---------------------------------------------------------------------------
+  A whole section whose body is whatever the merchant types. The Theme Store
+  requires this as a *section*, not only as a block: an agency has to be able
+  to drop arbitrary Liquid onto any template without a container block being
+  available first.
+
+  `blocks/custom-liquid.liquid` still exists and is the better choice inside an
+  existing layout. This one is for standalone markup that needs its own band of
+  the page — so it carries the standard scheme and padding attributes.
+
+  Deliberately unwrapped and unescaped. Whatever is entered here is the
+  merchant's code, running with full Liquid access, and the point is to output
+  it exactly.
+{%- endcomment -%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: 'kf-custom-liquid-section' %}>
+  {%- if section.settings.full_width == false -%}
+    <div class="kf-container">
+      {{ section.settings.code }}
+    </div>
+  {%- else -%}
+    {{ section.settings.code }}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.custom-liquid.name",
+  "tag": "section",
+  "class": "kf-section",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "code",
+      "label": "t:sections.custom-liquid.settings.code.label",
+      "info": "t:sections.custom-liquid.settings.code.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.custom-liquid.settings.full_width.label",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.custom-liquid.settings.color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:sections.custom-liquid.settings.padding_top.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:sections.custom-liquid.settings.padding_bottom.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom-liquid.presets.name"
+    }
+  ]
+}
+{% endschema %}
