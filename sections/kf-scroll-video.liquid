@@ -1,0 +1,564 @@
+{%- comment -%}
+  Kofii Flow — Scroll-driven video
+  ---------------------------------------------------------------------------
+  The video's timeline is tied to scroll position. Scroll down and it advances,
+  scroll back and it reverses, stop and it holds. Captions fade in over it as
+  their stretch of the timeline arrives.
+
+  SHOPIFY-HOSTED VIDEO ONLY, and that is a hard constraint rather than a
+  shortcut. YouTube and Vimeo expose no frame-accurate seek without loading
+  their own JavaScript SDK, which would be a bundled third-party dependency.
+  A hosted video is a plain <video> element the browser can seek directly.
+
+  SMOOTH SCRUBBING IS A PROPERTY OF THE FILE. A browser seeks between
+  keyframes, so a normally-encoded video jumps in visible steps however good
+  the code driving it is. Encoding with frequent keyframes is a content
+  requirement, and the setting says so rather than letting it read as a bug.
+
+  Blocks are section-local, not theme blocks: the section has to read each
+  caption's start percentage to build its timeline, and `{% content_for
+  'blocks' %}` renders blocks without letting the section see their settings.
+
+  Degradation, in order of severity:
+    no JavaScript   the pinned layout is never applied — an ordinary video
+                    with controls, captions stacked beneath it in order
+    small screens   the same stacked sequence. Scroll-seeking on touch fires
+                    many seeks per second against momentum scrolling, which
+                    stutters badly; a working player beats a janky effect
+    reduced motion  the same again. A picture that moves in lockstep with the
+                    scroll is exactly the coupling WCAG 2.3.3 is about, so the
+                    effect is withdrawn rather than softened
+
+  No scroll-jacking anywhere. See assets/kf-scroll-video.js.
+{%- endcomment -%}
+
+{{ 'section-scroll-video.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kf-scroll-video.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+
+  assign scrub_class = 'kf-scrub'
+  if s.show_progress
+    assign scrub_class = scrub_class | append: ' kf-scrub--progress'
+  endif
+
+  comment
+    Drops the 750px floor so the pinned, full-screen layout applies on phones
+    too. Off by default: scroll-seeking against touch momentum is the most
+    fragile part of the effect, and it depends on how the merchant's video was
+    encoded, so it is theirs to switch on once they have looked at it.
+  endcomment
+  if s.enable_small
+    assign scrub_class = scrub_class | append: ' kf-scrub--small'
+  endif
+
+  assign root_style = '--kf-scrub-length: ' | append: s.scroll_length
+  assign root_style = root_style | append: '; --kf-scrub-ratio: ' | append: s.video_ratio
+  assign root_style = root_style | append: '; --kf-scrub-align: ' | append: s.caption_position
+  assign root_style = root_style | append: '; --kf-scrub-align-x: ' | append: s.caption_alignment
+
+  assign root_style = root_style | append: ';'
+
+  comment
+    The cover image stands in until the video has decoded a frame, so the
+    stage is never an empty box — and it is what the Theme Editor shows before
+    a video is chosen.
+  endcomment
+  assign poster = s.poster
+  if poster == blank
+    assign poster = s.video.preview_image
+  endif
+-%}
+
+<div {% render 'kf-section-attrs', s: section.settings, extra_class: scrub_class, style: root_style %}>
+  {%- if s.heading != blank or s.eyebrow != blank -%}
+    <div class="kf-container">
+      <header class="kf-section-header" {% render 'kf-motion-attrs', motion: section.settings %}>
+        {%- if s.eyebrow != blank -%}
+          <p class="kf-label kf-section-header__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="{{ s.heading_size }}">{{ s.heading }}</h2>
+        {%- endif -%}
+      </header>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}
+    Trim values are handed over raw and resolved in the browser. They are
+    seconds, and the duration they have to be clamped against is not known
+    until the video's metadata loads — Liquid never sees it.
+  {%- endcomment -%}
+  <kf-scroll-video
+    class="kf-scrub__root"
+    {% if s.trim_start != blank %}data-trim-start="{{ s.trim_start }}"{% endif %}
+    {% if s.trim_end != blank %}data-trim-end="{{ s.trim_end }}"{% endif %}
+    data-smoothing="{{ s.smoothing }}"
+    data-rest="{{ s.rest_playback }}"
+  >
+    <div class="kf-scrub__region" data-kf-scrub-region>
+      <div class="kf-scrub__stage" data-kf-scrub-stage>
+        <div class="kf-scrub__frame">
+          {%- if s.video != blank -%}
+            {%- comment -%}
+              Controls are rendered ON, deliberately. Without the script this
+              is an ordinary video and a player with no controls could not be
+              played at all; <kf-scroll-video> removes them at the moment it
+              takes over the timeline, which is the moment they stop being
+              true.
+
+              `preload: metadata` keeps a video off the critical path of a page
+              nobody has scrolled to. The element upgrades it to `auto` as the
+              region approaches.
+            {%- endcomment -%}
+            {{
+              s.video
+              | video_tag:
+                class: 'kf-scrub__video',
+                controls: true,
+                autoplay: false,
+                loop: false,
+                muted: true,
+                playsinline: true,
+                preload: 'metadata',
+                image_size: '1600x'
+            }}
+          {%- else -%}
+            {%- render 'kf-media',
+              image: poster,
+              ratio: 'adapt',
+              custom_ratio: s.video_ratio,
+              sizes: '100vw',
+              placeholder: 'lifestyle-2',
+              class: 'kf-scrub__poster'
+            -%}
+          {%- endif -%}
+
+          {%- if section.blocks.size > 0 -%}
+            <div class="kf-scrub__captions">
+              {%- for block in section.blocks -%}
+                <div
+                  class="kf-scrub__caption"
+                  data-kf-scrub-caption
+                  data-start="{{ block.settings.start }}"
+                  {% if forloop.first %}data-active{% endif %}
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if s.show_numbers -%}
+                    {%- assign caption_number = forloop.index | prepend: '0' | slice: -2, 2 -%}
+                    <span class="kf-scrub__number kf-label" aria-hidden="true">{{ caption_number }}</span>
+                  {%- endif -%}
+
+                  {%- if block.settings.eyebrow != blank -%}
+                    <p class="kf-label">{{ block.settings.eyebrow | escape }}</p>
+                  {%- endif -%}
+
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="kf-scrub__heading {{ s.caption_heading_size }}">{{ block.settings.heading }}</h3>
+                  {%- endif -%}
+
+                  {%- if block.settings.text != blank -%}
+                    <div class="kf-rte kf-scrub__text">{{ block.settings.text }}</div>
+                  {%- endif -%}
+
+                  {%- if block.settings.link_label != blank -%}
+                    {%- render 'kf-button',
+                      label: block.settings.link_label,
+                      href: block.settings.link,
+                      style: 'plain',
+                      icon: 'arrow'
+                    -%}
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div class="kf-scrub__progress" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </kf-scroll-video>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.kf-scroll-video.name",
+  "tag": "section",
+  "class": "kf-scrub-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.kf-scroll-video.settings.header__1.content"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.kf-scroll-video.settings.video.label",
+      "info": "t:sections.kf-scroll-video.settings.video.info"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.kf-scroll-video.settings.paragraph__2.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "t:sections.kf-scroll-video.settings.poster.label",
+      "info": "t:sections.kf-scroll-video.settings.poster.info"
+    },
+    {
+      "type": "select",
+      "id": "video_ratio",
+      "label": "t:sections.kf-scroll-video.settings.video_ratio.label",
+      "info": "t:sections.kf-scroll-video.settings.video_ratio.info",
+      "options": [
+        {
+          "value": "16 / 9",
+          "label": "t:sections.kf-scroll-video.settings.video_ratio.options__1.label"
+        },
+        {
+          "value": "4 / 3",
+          "label": "t:sections.kf-scroll-video.settings.video_ratio.options__2.label"
+        },
+        {
+          "value": "1 / 1",
+          "label": "t:sections.kf-scroll-video.settings.video_ratio.options__3.label"
+        },
+        {
+          "value": "9 / 16",
+          "label": "t:sections.kf-scroll-video.settings.video_ratio.options__4.label"
+        }
+      ],
+      "default": "16 / 9"
+    },
+    {
+      "type": "number",
+      "id": "trim_start",
+      "label": "t:sections.kf-scroll-video.settings.trim_start.label",
+      "info": "t:sections.kf-scroll-video.settings.trim_start.info"
+    },
+    {
+      "type": "number",
+      "id": "trim_end",
+      "label": "t:sections.kf-scroll-video.settings.trim_end.label",
+      "info": "t:sections.kf-scroll-video.settings.trim_end.info"
+    },
+    {
+      "type": "range",
+      "id": "scroll_length",
+      "label": "t:sections.kf-scroll-video.settings.scroll_length.label",
+      "info": "t:sections.kf-scroll-video.settings.scroll_length.info",
+      "min": 200,
+      "max": 1500,
+      "step": 50,
+      "unit": "%",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "rest_playback",
+      "label": "t:sections.kf-scroll-video.settings.rest_playback.label",
+      "info": "t:sections.kf-scroll-video.settings.rest_playback.info",
+      "min": 0,
+      "max": 1000,
+      "step": 100,
+      "unit": "ms",
+      "default": 300
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_small",
+      "label": "t:sections.kf-scroll-video.settings.enable_small.label",
+      "info": "t:sections.kf-scroll-video.settings.enable_small.info",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "smoothing",
+      "label": "t:sections.kf-scroll-video.settings.smoothing.label",
+      "info": "t:sections.kf-scroll-video.settings.smoothing.info",
+      "min": 0,
+      "max": 90,
+      "step": 10,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-scroll-video.settings.header__3.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:sections.kf-scroll-video.settings.eyebrow.label"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:sections.kf-scroll-video.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.kf-scroll-video.settings.heading_size.label",
+      "options": [
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-scroll-video.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-scroll-video.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h1",
+          "label": "t:sections.kf-scroll-video.settings.heading_size.options__3.label"
+        }
+      ],
+      "default": "kf-h2"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-scroll-video.settings.header__4.content"
+    },
+    {
+      "type": "select",
+      "id": "caption_position",
+      "label": "t:sections.kf-scroll-video.settings.caption_position.label",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.kf-scroll-video.settings.caption_position.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-scroll-video.settings.caption_position.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-scroll-video.settings.caption_position.options__3.label"
+        }
+      ],
+      "default": "end"
+    },
+    {
+      "type": "select",
+      "id": "caption_alignment",
+      "label": "t:sections.kf-scroll-video.settings.caption_alignment.label",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.kf-scroll-video.settings.caption_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.kf-scroll-video.settings.caption_alignment.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.kf-scroll-video.settings.caption_alignment.options__3.label"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "caption_heading_size",
+      "label": "t:sections.kf-scroll-video.settings.caption_heading_size.label",
+      "options": [
+        {
+          "value": "kf-h4",
+          "label": "t:sections.kf-scroll-video.settings.caption_heading_size.options__1.label"
+        },
+        {
+          "value": "kf-h3",
+          "label": "t:sections.kf-scroll-video.settings.caption_heading_size.options__2.label"
+        },
+        {
+          "value": "kf-h2",
+          "label": "t:sections.kf-scroll-video.settings.caption_heading_size.options__3.label"
+        }
+      ],
+      "default": "kf-h3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "t:sections.kf-scroll-video.settings.show_numbers.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress",
+      "label": "t:sections.kf-scroll-video.settings.show_progress.label",
+      "default": true,
+      "info": "t:sections.kf-scroll-video.settings.show_progress.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-scroll-video.settings.header__5.content"
+    },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "t:sections.kf-scroll-video.settings.animation.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-scroll-video.settings.animation.options__1.label"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.kf-scroll-video.settings.animation.options__2.label"
+        },
+        {
+          "value": "fade-up",
+          "label": "t:sections.kf-scroll-video.settings.animation.options__3.label"
+        },
+        {
+          "value": "blur-in",
+          "label": "t:sections.kf-scroll-video.settings.animation.options__4.label"
+        }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "t:sections.kf-scroll-video.settings.animation_delay.label",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.kf-scroll-video.settings.header__6.content"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.kf-scroll-video.settings.color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_transition",
+      "label": "t:sections.kf-scroll-video.settings.section_transition.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.kf-scroll-video.settings.section_transition.options__1.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.kf-scroll-video.settings.section_transition.options__2.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.kf-scroll-video.settings.section_transition.options__3.label"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:sections.kf-scroll-video.settings.padding_top.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:sections.kf-scroll-video.settings.padding_bottom.label",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "caption",
+      "name": "t:sections.kf-scroll-video.blocks.caption.name",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "range",
+          "id": "start",
+          "label": "t:sections.kf-scroll-video.blocks.caption.settings.start.label",
+          "info": "t:sections.kf-scroll-video.blocks.caption.settings.start.info",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 0
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "t:sections.kf-scroll-video.blocks.caption.settings.eyebrow.label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:sections.kf-scroll-video.blocks.caption.settings.heading.label",
+          "default": "The first moment"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.kf-scroll-video.blocks.caption.settings.text.label",
+          "default": "<p>One thought per caption. It has to land while its stretch of the video is on screen.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "t:sections.kf-scroll-video.blocks.caption.settings.link_label.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.kf-scroll-video.blocks.caption.settings.link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.kf-scroll-video.presets.name",
+      "blocks": [
+        {
+          "type": "caption",
+          "settings": {
+            "start": 0,
+            "heading": "It starts here"
+          }
+        },
+        {
+          "type": "caption",
+          "settings": {
+            "start": 35,
+            "heading": "Then this happens"
+          }
+        },
+        {
+          "type": "caption",
+          "settings": {
+            "start": 70,
+            "heading": "And it ends here"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

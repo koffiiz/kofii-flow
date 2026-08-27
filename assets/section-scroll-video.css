@@ -1,0 +1,343 @@
+/* ==========================================================================
+   Kofii Flow — Scroll-driven video
+   Loaded by sections/kf-scroll-video.liquid.
+
+   THE FALLBACK IS THE DEFAULT. Every layout property below is written once, on
+   the element it belongs to, reading a custom property whose default is the
+   fallback value: an ordinary video with its controls and captions stacked
+   beneath it in reading order. Nothing has to be undone for no-JavaScript or
+   for reduced motion, because neither ever turns anything on.
+
+   Pinning is therefore a matter of reassigning those switches, and only two
+   conditions do it:
+
+     from 750px, with `.kf-js` and no reduced-motion preference
+     at any width when the merchant opted the section in on small screens
+
+   Both blocks set the same switches — they are values, not rules, so the
+   structure cannot drift between them. Writing it this way is what keeps the
+   pinned and stacked layouts from being two parallel stylesheets.
+   ========================================================================== */
+
+.kf-scrub {
+  /* Off. Each of these is turned on together, below. */
+  --sv-region-height: auto;
+  --sv-stage-position: static;
+  --sv-stage-height: auto;
+  --sv-stage-display: grid;
+  --sv-frame-ratio: var(--kf-scrub-ratio, 16 / 9);
+  --sv-frame-height: auto;
+  --sv-frame-radius: var(--kf-media-radius);
+  --sv-captions-position: static;
+  --sv-captions-display: flex;
+  --sv-captions-padding: 0;
+  --sv-captions-gap: var(--kf-space-lg);
+  --sv-caption-opacity: 1;
+  --sv-caption-visibility: visible;
+  --sv-caption-width: none;
+  --sv-overlay-display: none;
+
+  /* Caption text sits on the section background when stacked and over the
+     video when pinned, so its colour is a switch too. Setting it outside the
+     pinned blocks would paint background-on-background in the stacked
+     layout — invisible rather than merely wrong. */
+  --sv-caption-color: inherit;
+  --sv-number-color: var(--kf-color-accent);
+  --sv-caption-shadow: none;
+  --sv-rule-opacity: 0;
+
+  /* Headings, links and the plain button all declare a colour of their own, so
+     none of them inherits the caption colour above. Each therefore needs a
+     switch as well, or the pinned caption goes white around a heading that
+     stays the scheme's dark heading colour. */
+  --sv-heading-color: var(--kf-color-heading);
+  --sv-link-color: var(--kf-color-accent);
+  /* Mirrors `.kf-button--plain`'s own default, so the stacked caption's button
+     looks exactly as it does anywhere else in the theme. It only diverges once
+     pinned, where it has to read over a picture. */
+  --sv-button-color: var(--kf-color-heading);
+}
+
+.kf-scrub__region {
+  position: relative;
+  block-size: var(--sv-region-height);
+}
+
+.kf-scrub__stage {
+  display: var(--sv-stage-display);
+  gap: var(--kf-space-md);
+  position: var(--sv-stage-position);
+  top: var(--kf-sticky-offset, 0px);
+  block-size: var(--sv-stage-height);
+}
+
+.kf-scrub__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--sv-frame-radius);
+  background-color: var(--kf-color-surface);
+  aspect-ratio: var(--sv-frame-ratio);
+  block-size: var(--sv-frame-height);
+}
+
+.kf-scrub__video,
+.kf-scrub__poster {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.kf-scrub__video {
+  border: 0;
+  /* A seek repaints the frame; letting the browser promote it once avoids a
+     fresh layer on every scroll tick. */
+  will-change: transform;
+}
+
+.kf-scrub__poster {
+  /* The frame already carries the ratio; the poster must fill it rather than
+     assert a second one. */
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+/* Captions ---------------------------------------------------------------- */
+
+/* `--kf-scrub-align` places the stack vertically and `--kf-scrub-align-x`
+   horizontally. Both take start / center / end, which are valid for grid
+   alignment, for flex alignment and — for the horizontal one — for
+   `text-align` as logical keywords, so a single value drives all three and
+   cannot fall out of step with itself. */
+.kf-scrub__captions {
+  position: var(--sv-captions-position);
+  inset: 0;
+  display: var(--sv-captions-display);
+  flex-direction: column;
+  align-content: var(--kf-scrub-align, end);
+  justify-items: var(--kf-scrub-align-x, start);
+  /* The flex fallback reads this one; the pinned grid reads justify-items. */
+  align-items: var(--kf-scrub-align-x, start);
+  padding: var(--sv-captions-padding);
+  gap: var(--sv-captions-gap);
+  min-inline-size: 0;
+  /* Once pinned these sit over the video and must not swallow taps meant for
+     it; the caption itself takes them back so its links stay reachable. */
+  pointer-events: none;
+}
+
+.kf-scrub__caption {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kf-space-2xs);
+  align-items: var(--kf-scrub-align-x, start);
+  text-align: var(--kf-scrub-align-x, start);
+  min-inline-size: 0;
+  grid-area: 1 / 1;
+  max-inline-size: var(--sv-caption-width);
+  color: var(--sv-caption-color);
+  /* The only thing between the text and a bright frame, now that there is no
+     overlay. Tuned to the glyphs rather than washing the picture: one tight
+     offset for edge contrast, one wide and soft to lift the text off whatever
+     is behind it. */
+  text-shadow: var(--sv-caption-shadow);
+  pointer-events: auto;
+
+  /* `visibility` and not opacity alone. An opacity-0 caption is still in the
+     accessibility tree and still collects tab stops, so every caption would be
+     announced at once and a link inside an invisible one would be reachable.
+     Visibility is discrete, so it is delayed out and instant in — which is why
+     the two transitions are declared separately. */
+  opacity: var(--sv-caption-opacity);
+  visibility: var(--sv-caption-visibility);
+  transition: opacity var(--kf-motion-slow) var(--kf-ease-smooth),
+              visibility 0s linear var(--kf-motion-slow);
+}
+
+.kf-scrub__caption[data-active] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--kf-motion-slow) var(--kf-ease-smooth),
+              visibility 0s;
+}
+
+/* A short rule under the number reads as a chapter mark rather than a stray
+   figure. It is only drawn when pinned, where there is a picture behind it to
+   sit against. */
+.kf-scrub__number {
+  display: flex;
+  align-items: center;
+  gap: var(--kf-space-2xs);
+  color: var(--sv-number-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.kf-scrub__number::after {
+  content: "";
+  inline-size: 2rem;
+  block-size: 1px;
+  background-color: currentColor;
+  opacity: var(--sv-rule-opacity);
+}
+
+.kf-scrub__heading {
+  margin: 0;
+  /* `h1`–`h6` and every `.kf-h*` set `color: var(--kf-color-heading)` in
+     kf-base.css, which beats anything inherited from the caption. */
+  color: var(--sv-heading-color);
+  /* Headings here are short and land over a picture, so an even shape matters
+     more than filling the line. */
+  text-wrap: balance;
+  line-height: calc(var(--kf-heading-leading) * 0.94);
+}
+
+.kf-scrub__text {
+  /* A measure, not a width: the caption box can be wider than the text should
+     ever run. */
+  max-inline-size: 42ch;
+  text-wrap: pretty;
+}
+
+/* Centred and right-aligned stacks need their measure centred on the same
+   axis, or the text hangs off one side of the heading above it. */
+.kf-scrub__caption > * {
+  margin-inline: 0;
+}
+
+/* `.kf-rte a` is accent-coloured, which is right on a page and wrong over
+   video — the underline is what marks it as a link there. */
+.kf-scrub__text a {
+  color: var(--sv-link-color);
+}
+
+/* `.kf-button--plain` declares `--kf-btn-fg` on itself, so an ancestor cannot
+   set it — see the custom-property rule in CLAUDE.md. Overriding it on the
+   button, at higher specificity, is the way through. */
+.kf-scrub__caption .kf-button {
+  --kf-btn-fg: var(--sv-button-color);
+}
+
+/* Progress rail ------------------------------------------------------------
+   Orientation inside a pinned region: without it there is no cue for how much
+   scrolling is left. In the stacked layout there is no single stretch of
+   scroll for it to describe, so it is not drawn. Scale rather than width, to
+   stay off the layout path on every tick. */
+
+.kf-scrub__progress {
+  display: none;
+}
+
+.kf-scrub--progress .kf-scrub__progress {
+  display: var(--sv-overlay-display);
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 3px;
+  background-color: color-mix(in oklab, var(--kf-color-background) 25%, transparent);
+}
+
+.kf-scrub--progress .kf-scrub__progress::after {
+  content: "";
+  display: block;
+  block-size: 100%;
+  background-color: var(--kf-color-background);
+  transform: scaleX(var(--kf-scrub-progress, 0));
+  transform-origin: 0 50%;
+}
+
+/* ==========================================================================
+   Pinned
+
+   `:not([data-scrub-failed])` is the script's escape hatch: <kf-scroll-video>
+   sets that attribute when no duration ever arrives — Safari on a phone does
+   not always load one — and pinning simply never applies. Preventing it rather
+   than undoing it is deliberate: an undo block would have to out-specify the
+   pinned rules below, and quietly loses to them if it does not.
+
+   `prefers-reduced-motion: no-preference` rather than a separate withdrawal
+   block. A picture moving in lockstep with the scroll is exactly the coupling
+   WCAG 2.3.3 is about, so the effect is never turned on for a visitor who has
+   asked for less motion — instead of being turned on and then taken away.
+   It also fails safe: a browser that does not know the feature does not match,
+   and gets the stacked layout.
+   ========================================================================== */
+
+@media (min-width: 750px) and (prefers-reduced-motion: no-preference) {
+  .kf-js .kf-scrub:not([data-scrub-failed]) {
+    --sv-region-height: calc(var(--kf-scrub-length, 300) * 1svh);
+    --sv-stage-position: sticky;
+    --sv-stage-height: calc(100svh - var(--kf-sticky-offset, 0px));
+    --sv-stage-display: block;
+    --sv-frame-ratio: auto;
+    --sv-frame-height: 100%;
+    --sv-frame-radius: 0;
+    --sv-captions-position: absolute;
+    --sv-captions-display: grid;
+    --sv-captions-padding: var(--kf-space-xl);
+    --sv-captions-gap: 0;
+    --sv-caption-opacity: 0;
+    --sv-caption-visibility: hidden;
+    --sv-caption-width: 34rem;
+    --sv-overlay-display: block;
+
+    /* Pinned means the captions are over moving pictures, so they take the
+       background colour and lean on the shadow rather than a wash. */
+    --sv-caption-color: var(--kf-color-background);
+    --sv-number-color: inherit;
+    --sv-caption-shadow: 0 1px 2px color-mix(in oklab, var(--kf-color-overlay) 62%, transparent),
+                         0 2px 18px color-mix(in oklab, var(--kf-color-overlay) 52%, transparent);
+    --sv-rule-opacity: 0.6;
+    --sv-heading-color: inherit;
+    --sv-link-color: inherit;
+    --sv-button-color: inherit;
+  }
+
+}
+
+/* Opted in on small screens. Same switches, no width floor — above 750px it
+   simply agrees with the block above. */
+@media (prefers-reduced-motion: no-preference) {
+  .kf-js .kf-scrub--small:not([data-scrub-failed]) {
+    --sv-region-height: calc(var(--kf-scrub-length, 300) * 1svh);
+    --sv-stage-position: sticky;
+    --sv-stage-height: calc(100svh - var(--kf-sticky-offset, 0px));
+    --sv-stage-display: block;
+    --sv-frame-ratio: auto;
+    --sv-frame-height: 100%;
+    --sv-frame-radius: 0;
+    --sv-captions-position: absolute;
+    --sv-captions-display: grid;
+    --sv-captions-padding: var(--kf-space-md);
+    --sv-captions-gap: 0;
+    --sv-caption-opacity: 0;
+    --sv-caption-visibility: hidden;
+    /* Full width on a phone, but still bounded so a long caption does not run
+       the entire screen edge to edge. */
+    --sv-caption-width: 34rem;
+    --sv-overlay-display: block;
+
+    /* Pinned means the captions are over moving pictures, so they take the
+       background colour and lean on the shadow rather than a wash. */
+    --sv-caption-color: var(--kf-color-background);
+    --sv-number-color: inherit;
+    --sv-caption-shadow: 0 1px 2px color-mix(in oklab, var(--kf-color-overlay) 62%, transparent),
+                         0 2px 18px color-mix(in oklab, var(--kf-color-overlay) 52%, transparent);
+    --sv-rule-opacity: 0.6;
+    --sv-heading-color: inherit;
+    --sv-link-color: inherit;
+    --sv-button-color: inherit;
+  }
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-scrub__video {
+    will-change: auto;
+  }
+
+  .kf-scrub__caption {
+    transition: none;
+  }
+}

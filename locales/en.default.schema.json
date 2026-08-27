@@ -3025,6 +3025,206 @@
         "name": "Rich text"
       }
     },
+    "kf-scroll-video": {
+      "name": "Scroll video",
+      "settings": {
+        "header__1": {
+          "content": "Video"
+        },
+        "video": {
+          "label": "Video",
+          "info": "Must be a video uploaded to Shopify. A YouTube or Vimeo link cannot be tied to scrolling."
+        },
+        "paragraph__2": {
+          "content": "For the smoothest result, export the video with frequent keyframes. Browsers jump between keyframes when seeking, so a standard export steps rather than glides."
+        },
+        "poster": {
+          "label": "Cover image",
+          "info": "Shown until the video is ready. Falls back to the video's own thumbnail."
+        },
+        "video_ratio": {
+          "label": "Video shape",
+          "info": "Applies on small screens and with reduced motion, where the video is not pinned.",
+          "options__1": {
+            "label": "Widescreen"
+          },
+          "options__2": {
+            "label": "Classic"
+          },
+          "options__3": {
+            "label": "Square"
+          },
+          "options__4": {
+            "label": "Vertical"
+          }
+        },
+        "trim_start": {
+          "label": "Start at",
+          "info": "Seconds into the video to begin. Leave empty to start at the beginning."
+        },
+        "trim_end": {
+          "label": "End at",
+          "info": "Seconds into the video to stop. Leave empty to run to the end. Trimming applies to the scrolling effect; on small screens and with reduced motion the full video plays with its own controls."
+        },
+        "scroll_length": {
+          "label": "Scroll length",
+          "info": "How much scrolling the video is spread over, as a percentage of the screen height. Longer is slower and gentler."
+        },
+        "rest_playback": {
+          "label": "Play on when scrolling stops",
+          "info": "The video runs on for this long each time scrolling stops, so it settles rather than freezing. Set to 0 to hold on the exact frame."
+        },
+        "enable_small": {
+          "label": "Full screen on phones",
+          "info": "Pins the video full screen on small screens as well. Test it on a real phone first: seeking while scrolling is harder on touch devices and depends on how the video was encoded."
+        },
+        "smoothing": {
+          "label": "Smoothing",
+          "info": "How much the video eases behind the scroll. Higher is smoother and heavier; 0 follows the scroll exactly."
+        },
+        "header__3": {
+          "content": "Section heading"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "header__4": {
+          "content": "Captions"
+        },
+        "caption_position": {
+          "label": "Caption position",
+          "options__1": {
+            "label": "Top"
+          },
+          "options__2": {
+            "label": "Middle"
+          },
+          "options__3": {
+            "label": "Bottom"
+          }
+        },
+        "caption_alignment": {
+          "label": "Caption alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          },
+          "options__3": {
+            "label": "Right"
+          }
+        },
+        "caption_heading_size": {
+          "label": "Caption heading size",
+          "options__1": {
+            "label": "Small"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Large"
+          }
+        },
+        "show_numbers": {
+          "label": "Show caption numbers"
+        },
+        "show_progress": {
+          "label": "Show a progress bar",
+          "info": "Shows how much of the section is left to scroll."
+        },
+        "header__5": {
+          "content": "Motion"
+        },
+        "animation": {
+          "label": "Heading animation",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Fade"
+          },
+          "options__3": {
+            "label": "Fade up"
+          },
+          "options__4": {
+            "label": "Blur"
+          }
+        },
+        "animation_delay": {
+          "label": "Delay"
+        },
+        "header__6": {
+          "content": "Appearance"
+        },
+        "color_scheme": {
+          "label": "Color scheme"
+        },
+        "section_transition": {
+          "label": "Section transition",
+          "options__1": {
+            "label": "None"
+          },
+          "options__2": {
+            "label": "Rounded"
+          },
+          "options__3": {
+            "label": "Overlap"
+          }
+        },
+        "padding_top": {
+          "label": "Top padding"
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        }
+      },
+      "blocks": {
+        "caption": {
+          "name": "Caption",
+          "settings": {
+            "start": {
+              "label": "Appears at",
+              "info": "How far through the video this caption appears."
+            },
+            "eyebrow": {
+              "label": "Eyebrow"
+            },
+            "heading": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Text"
+            },
+            "link_label": {
+              "label": "Link label"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Scroll video"
+      }
+    },
     "kf-scrolling-story": {
       "name": "Scrolling story",
       "settings": {
