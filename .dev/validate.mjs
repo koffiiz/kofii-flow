@@ -306,6 +306,56 @@ for (const relPath of [
 
 /* ---------------------------------------------- 2-8. Liquid file inspection */
 
+/**
+ * A shared snippet brings its own component CSS and custom element with it,
+ * and neither can live in a section stylesheet — `component-*.css` is loaded
+ * by EVERY section that renders the snippet, per the table in CLAUDE.md.
+ *
+ * Forget one and the failure is silent and section-specific: the markup is
+ * correct, the section validates, Theme Check passes, and the component simply
+ * renders as unstyled native controls with none of its behaviour. That is
+ * exactly how `kf-video.liquid` shipped a variant picker drawn as bare radio
+ * buttons inside a default fieldset border.
+ *
+ * Only sections are checked. Blocks in /blocks are rendered inside a host
+ * section that loads the assets, and a section pulled in through the Section
+ * Rendering API arrives in a page whose runtime is already there — those opt
+ * out with the marker below.
+ */
+const HOST_PROVIDES_ASSETS = 'kf-assets-provided-by-host';
+
+const SNIPPET_REQUIRES = {
+  'kf-variant-picker': ['component-variant-picker.css', 'kf-variant-picker.js'],
+  'kf-buy-buttons': ['component-buy-buttons.css', 'kf-product-form.js', 'kf-cart.js'],
+  'kf-product-card': ['component-product-card.css'],
+  'kf-marquee-track': ['component-marquee.css', 'kf-marquee.js'],
+  'kf-article-card': ['component-article-card.css']
+};
+
+function checkSnippetAssets(relPath, source) {
+  if (!relPath.startsWith('sections/')) return;
+  if (source.includes(HOST_PROVIDES_ASSETS)) return;
+
+  for (const [snippet, assets] of Object.entries(SNIPPET_REQUIRES)) {
+    // A plain substring check rather than a regex: a `\s` built from a
+    // template literal collapses to a bare "s", silently compiling to
+    // /renders+.../ and matching nothing. That is exactly how this rule
+    // shipped once already — it "passed" by never running.
+    const rendered = source.includes("render '" + snippet + "'") || source.includes('render "' + snippet + '"');
+    if (!rendered) continue;
+
+    for (const asset of assets) {
+      if (source.includes(asset)) continue;
+      fail(
+        relPath,
+        `renders '${snippet}' but never loads "${asset}" — the component will ` +
+          `render unstyled or inert. Add the asset tag, or mark the section ` +
+          `"${HOST_PROVIDES_ASSETS}" if its host page already loads it.`
+      );
+    }
+  }
+}
+
 const liquidFiles = [
   ...listFiles('layout', '.liquid'),
   ...listFiles('sections', '.liquid'),
@@ -318,6 +368,8 @@ const presetQueue = [];
 
 for (const relPath of liquidFiles) {
   const source = read(relPath);
+
+  checkSnippetAssets(relPath, source);
 
   // 2b. Unterminated output tags.
   //

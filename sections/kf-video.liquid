@@ -30,6 +30,23 @@
 {{ 'section-video.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'kf-video.js' | asset_url }}" defer></script>
 
+{%- comment -%}
+  The buy panel's own components. `kf-variant-picker` and `kf-buy-buttons` are
+  shared snippets, so every section that renders them has to request their CSS
+  and their custom elements — a section stylesheet cannot carry another
+  component's styles.
+
+  Requested only when a product is actually chosen: a video section used purely
+  as a video downloads none of this.
+{%- endcomment -%}
+{%- if section.settings.product != blank -%}
+  {{ 'component-variant-picker.css' | asset_url | stylesheet_tag }}
+  {{ 'component-buy-buttons.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'kf-variant-picker.js' | asset_url }}" defer></script>
+  <script src="{{ 'kf-product-form.js' | asset_url }}" defer></script>
+  <script src="{{ 'kf-cart.js' | asset_url }}" defer></script>
+{%- endif -%}
+
 {%- liquid
   assign s = section.settings
   assign product = s.product

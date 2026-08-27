@@ -250,6 +250,17 @@ This is not hypothetical: `.kf-marquee` declared `--kf-marquee-duration: 30s` on
 
 The same trap applies to any pair: `product.compare_at_price` and `product.price` are independent minimums and need not belong to the same variant, so a saving computed from the two can describe a variant nobody is looking at. `kf-product-card` computes its badge from `card_variant` for that reason, which also keeps the badge and the price beneath it telling one story.
 
+**Where a component's CSS goes.** This has bitten the theme more than once, so the rule is explicit:
+
+| The markup is rendered by | Its CSS belongs in |
+| --- | --- |
+| One section only | `section-<name>.css`, loaded by that section |
+| A snippet or custom element used by **more than one** section | `component-<name>.css`, loaded by **every** section that renders it |
+| A generic `@theme` block (placeable in any section) | the block's own `{% stylesheet %}` |
+| Markup shared across unrelated components | `kf-components.css` (global) |
+
+Putting a shared component's styles in a section stylesheet is the failure mode to watch for: it looks correct on the section you built it for, and silently renders unstyled everywhere else. `<kf-quantity>` (product + cart), `.kf-stars` (product card + rating block) and the accordion block have all been moved for exactly this reason — do not move them back.
+
 **A `<template>` is the way to ship an embed that costs nothing.** Content inside one is inert: an `<iframe src>` in a template makes no request, and a `<video>` loads nothing. That is the mechanism behind `kf-video.liquid` — Liquid renders the real player up front and `<kf-video>` clones it out on click, so a YouTube or Vimeo embed (roughly a megabyte of script and cookies) is never fetched by a visitor who does not press play. Measured: zero requests for the embed before the click, exactly one after, and no second player on a second click.
 
 The frame carries the aspect ratio and every child fills it absolutely, so swapping the poster for the player causes no layout shift — verified identical box before and after. Play is always user-initiated, which is also what makes sound permissible: the click grants the user activation autoplay policies require.

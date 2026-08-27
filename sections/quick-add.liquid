@@ -11,6 +11,13 @@
 
   Deliberately not a full product page: media, title, price, variants and add
   to cart, plus a link to the product for everything else.
+
+  kf-assets-provided-by-host: this section only ever arrives injected into a
+  page that already requested a <kf-quick-add> trigger, and every section that
+  renders one — the product grid, featured collection, lookbook, search,
+  recommendations — already loads kf-variant-picker.js, kf-product-form.js and
+  kf-cart.js for its own cards. Loading them again here would just be a second
+  copy of the same script tag.
 {%- endcomment -%}
 
 {{ 'component-quick-add.css' | asset_url | stylesheet_tag }}
